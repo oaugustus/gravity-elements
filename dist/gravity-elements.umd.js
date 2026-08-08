@@ -6068,6 +6068,246 @@
 
   (function () {
 
+    // Portado de github.com/nuxt/ui v4.10.0, MIT License, Copyright (c) Nuxt Labs
+    // Upstream: theme/banner.ts — slots root/container/left/center/right/icon/
+    // title/actions/close + variants color/to + compounds hover quando to.
+    // Tailwind v3: bg-${color}/bg-inverted/text-inverted → [var(--ui-*)];
+    // opacidades /90 e /10 sobre var() NÃO compilam no TW 3.4.19 → color-mix
+    // (precedente Alert/Header); outline-(--ui-bg)/25 → color-mix.
+    // Escala outline TW3 só 0/1/2/4/8 — outline-3/-outline-offset-3 (TW4) →
+    // outline-[3px]/-outline-offset-[3px].
+    angular.module('gravityElements.element').constant('geBannerTheme', {
+      slots: {
+        root: 'relative z-50 w-full transition-colors',
+        container: 'flex items-center justify-between gap-3 h-12',
+        left: 'hidden lg:flex-1 lg:flex lg:items-center',
+        center: 'flex items-center gap-1.5 min-w-0',
+        right: 'lg:flex-1 flex items-center justify-end',
+        icon: 'size-5 shrink-0 text-[var(--ui-text-inverted)] pointer-events-none',
+        title: 'text-sm text-[var(--ui-text-inverted)] font-medium truncate',
+        actions: 'flex gap-1.5 shrink-0 isolate',
+        close:
+          'text-[var(--ui-text-inverted)] hover:bg-[color-mix(in_srgb,var(--ui-bg)_10%,transparent)] focus-visible:bg-[color-mix(in_srgb,var(--ui-bg)_10%,transparent)] -me-1.5 lg:me-0',
+      },
+      variants: {
+        color: {
+          primary: {
+            root: 'bg-[var(--ui-primary)]',
+          },
+          secondary: {
+            root: 'bg-[var(--ui-secondary)]',
+          },
+          success: {
+            root: 'bg-[var(--ui-success)]',
+          },
+          info: {
+            root: 'bg-[var(--ui-info)]',
+          },
+          warning: {
+            root: 'bg-[var(--ui-warning)]',
+          },
+          error: {
+            root: 'bg-[var(--ui-error)]',
+          },
+          neutral: {
+            root: 'bg-[var(--ui-bg-inverted)]',
+          },
+        },
+        to: {
+          true: {
+            root:
+              'outline-[color-mix(in_srgb,var(--ui-bg)_25%,transparent)] -outline-offset-[3px] has-[>a:focus-visible]:outline-[3px]',
+          },
+        },
+      },
+      compoundVariants: [
+        {
+          color: 'primary',
+          to: true,
+          class: {
+            root: 'hover:bg-[color-mix(in_srgb,var(--ui-primary)_90%,transparent)]',
+          },
+        },
+        {
+          color: 'secondary',
+          to: true,
+          class: {
+            root: 'hover:bg-[color-mix(in_srgb,var(--ui-secondary)_90%,transparent)]',
+          },
+        },
+        {
+          color: 'success',
+          to: true,
+          class: {
+            root: 'hover:bg-[color-mix(in_srgb,var(--ui-success)_90%,transparent)]',
+          },
+        },
+        {
+          color: 'info',
+          to: true,
+          class: {
+            root: 'hover:bg-[color-mix(in_srgb,var(--ui-info)_90%,transparent)]',
+          },
+        },
+        {
+          color: 'warning',
+          to: true,
+          class: {
+            root: 'hover:bg-[color-mix(in_srgb,var(--ui-warning)_90%,transparent)]',
+          },
+        },
+        {
+          color: 'error',
+          to: true,
+          class: {
+            root: 'hover:bg-[color-mix(in_srgb,var(--ui-error)_90%,transparent)]',
+          },
+        },
+        {
+          color: 'neutral',
+          to: true,
+          class: {
+            root: 'hover:bg-[color-mix(in_srgb,var(--ui-bg-inverted)_90%,transparent)]',
+          },
+        },
+      ],
+      defaultVariants: {
+        color: 'primary',
+      },
+    });
+  })();
+
+  (function () {
+
+    /**
+     * geBanner — faixa promocional/anúncio no topo (Element).
+     *
+     * Paridade com Nuxt UI Banner v4.10.0 (theme/banner.ts + Banner.vue).
+     * Bindings da §7 + `closeIcon` / `to` (§5.4.2 — slots/variants do tema).
+     * Persistência `id` + localStorage/useHead omitida (Nuxt SSR/prehydrate).
+     * Prop `actions[]` omitida — ações via transclusion até existir geButton.
+     *
+     * icon / closeIcon: classe CSS inline até existir geIcon (§5.4) — trocar
+     * por <ge-icon> quando a tarefa "Componente: Icon" for concluída.
+     *
+     * close: <button> nativo aproximando UButton md/neutral/ghost até existir
+     * geButton (§5.4.1) — trocar por <ge-button> quando a tarefa
+     * "Componente: Button" for concluída.
+     *
+     * ARIA (§5.5): role="alert" se color for error|warning; senão role="status".
+     *
+     * @param {string} [vm.title]
+     * @param {string} [vm.icon] - nome/classe CSS do ícone (passthrough)
+     * @param {string} [vm.color='primary'] - primary|secondary|success|info|warning|error|neutral
+     * @param {boolean} [vm.closable] - mostra o botão de fechar
+     * @param {Function} [vm.onClose] - callback ao fechar
+     * @param {string} [vm.closeIcon='i-lucide-x'] - classe CSS do ícone de fechar
+     * @param {string} [vm.to] - URL; ativa variant `to` + overlay <a>
+     */
+    angular.module('gravityElements.element').component('geBanner', {
+      template:
+        '<div ng-if="vm.open" role="{{ vm.role }}"' +
+        '  class="{{ vm.classes.root }}">' +
+        '  <a ng-if="vm.to"' +
+        '    ng-href="{{ vm.to }}"' +
+        '    class="absolute inset-0"' +
+        '    aria-label="{{ vm.title }}"></a>' +
+        '  <ge-container>' +
+        '    <div class="{{ vm.classes.container }}">' +
+        '      <div class="{{ vm.classes.left }}"></div>' +
+        '      <div class="{{ vm.classes.center }}">' +
+        // Ícone CSS passthrough (§5.4) até existir geIcon — trocar por <ge-icon>
+        '        <i ng-if="vm.icon"' +
+        '          class="{{ vm.icon }} {{ vm.classes.icon }}"' +
+        '          aria-hidden="true"></i>' +
+        '        <div ng-if="vm.title" class="{{ vm.classes.title }}">{{ vm.title }}</div>' +
+        '        <div ng-if="vm.hasActions"' +
+        '          class="{{ vm.classes.actions }}"' +
+        '          ng-transclude></div>' +
+        '      </div>' +
+        '      <div class="{{ vm.classes.right }}">' +
+        // Placeholder §5.4.1 — substituir por <ge-button> após Componente: Button
+        '        <button ng-if="vm.closable"' +
+        '          type="button"' +
+        '          class="rounded-md font-medium inline-flex items-center justify-center transition-colors size-8 text-sm {{ vm.classes.close }}"' +
+        '          aria-label="Fechar"' +
+        '          ng-click="vm.handleClose()">' +
+        '          <i class="{{ vm.resolvedCloseIcon }} size-5" aria-hidden="true"></i>' +
+        '        </button>' +
+        '      </div>' +
+        '    </div>' +
+        '  </ge-container>' +
+        '</div>',
+      controllerAs: 'vm',
+      transclude: true,
+      bindings: {
+        title: '@',
+        icon: '@',
+        color: '@',
+        closable: '<',
+        onClose: '&',
+        closeIcon: '@',
+        to: '@',
+      },
+      controller: BannerController,
+    });
+
+    BannerController.$inject = ['geTv', 'geBannerTheme', '$transclude'];
+
+    function BannerController(geTv, geBannerTheme, $transclude) {
+      var vm = this;
+      vm.$onInit = onInit;
+      vm.handleClose = handleClose;
+
+      function onInit() {
+        var color = vm.color || 'primary';
+        var hasTo = !!(vm.to && vm.to.length);
+
+        vm.open = true;
+        vm.resolvedCloseIcon = vm.closeIcon || 'i-lucide-x';
+        vm.hasActions = hasDefaultTransclude();
+        vm.role =
+          color === 'error' || color === 'warning' ? 'alert' : 'status';
+
+        vm.classes = geTv(geBannerTheme)({
+          color: color,
+          to: hasTo,
+        });
+      }
+
+      function handleClose() {
+        vm.open = false;
+        if (typeof vm.onClose === 'function') {
+          vm.onClose();
+        }
+      }
+
+      function hasDefaultTransclude() {
+        var filled = false;
+        $transclude(function (clone) {
+          var i;
+          for (i = 0; i < clone.length; i += 1) {
+            if (clone[i].nodeType === 1) {
+              filled = true;
+              break;
+            }
+            if (
+              clone[i].nodeType === 3 &&
+              clone[i].textContent &&
+              clone[i].textContent.trim()
+            ) {
+              filled = true;
+              break;
+            }
+          }
+        });
+        return filled;
+      }
+    }
+  })();
+
+  (function () {
+
     angular.module('gravityElements', [
       'gravityElements.core',
       'gravityElements.components',

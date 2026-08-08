@@ -1,0 +1,37 @@
+<div ng-if="vm.open" role="{{ vm.role }}" class="{{ vm.classes.root }}">
+  <a
+    ng-if="vm.to"
+    ng-href="{{ vm.to }}"
+    class="absolute inset-0"
+    aria-label="{{ vm.title }}"
+  ></a>
+  <ge-container>
+    <div class="{{ vm.classes.container }}">
+      <div class="{{ vm.classes.left }}"></div>
+      <div class="{{ vm.classes.center }}">
+        <i
+          ng-if="vm.icon"
+          class="{{ vm.icon }} {{ vm.classes.icon }}"
+          aria-hidden="true"
+        ></i>
+        <div ng-if="vm.title" class="{{ vm.classes.title }}">{{ vm.title }}</div>
+        <div
+          ng-if="vm.hasActions"
+          class="{{ vm.classes.actions }}"
+          ng-transclude
+        ></div>
+      </div>
+      <div class="{{ vm.classes.right }}">
+        <button
+          ng-if="vm.closable"
+          type="button"
+          class="rounded-md font-medium inline-flex items-center justify-center transition-colors size-8 text-sm {{ vm.classes.close }}"
+          aria-label="Fechar"
+          ng-click="vm.handleClose()"
+        >
+          <i class="{{ vm.resolvedCloseIcon }} size-5" aria-hidden="true"></i>
+        </button>
+      </div>
+    </div>
+  </ge-container>
+</div>
