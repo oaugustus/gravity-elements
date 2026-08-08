@@ -43,6 +43,7 @@ module.exports = function (config) {
       'src/components/element/avatar-group/**/*.js',
       'src/components/element/badge/**/*.js',
       'src/components/element/banner/**/*.js',
+      'src/components/element/button/**/*.js',
       'test/fixtures/theme.fixture.js',
       'test/fixtures/class-normalize.js',
       'test/**/*.spec.js',

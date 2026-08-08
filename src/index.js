@@ -36,6 +36,8 @@ import './components/element/badge/badge.theme.js';
 import './components/element/badge/badge.component.js';
 import './components/element/banner/banner.theme.js';
 import './components/element/banner/banner.component.js';
+import './components/element/button/button.theme.js';
+import './components/element/button/button.component.js';
 import './gravity-elements.module.js';
 
 // geTv (core/tv/tv.service.js) lê window.twMerge em tempo de execução para

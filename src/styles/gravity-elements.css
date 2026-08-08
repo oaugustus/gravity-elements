@@ -6,7 +6,8 @@
  * Tokens de tema — paridade Nuxt UI v4.10.0 (src/runtime/index.css).
  * --ui-container: geContainer; --ui-bg/--ui-border: geHeader;
  * --ui-border-accented / --sidebar-*: geSidebar; cores semânticas +
- * --ui-bg-elevated/--ui-bg-inverted: geAlert; --ui-text: geBadge.
+ * --ui-bg-elevated/--ui-bg-inverted: geAlert; --ui-text: geBadge;
+ * --ui-bg-accented: geButton (neutral soft/subtle).
  * Primary default ≈ green do Nuxt UI; demais ≈ Tailwind 500; neutrals via
  * hex estáveis (sem --ui-color-neutral-* ainda não portados).
  */
@@ -21,6 +22,7 @@
   --ui-error: #ef4444;
   --ui-bg: #ffffff;
   --ui-bg-elevated: #f5f5f5;
+  --ui-bg-accented: #e5e5e5;
   --ui-bg-inverted: #171717;
   --ui-border: #e5e5e5;
   --ui-border-accented: #d4d4d4;
@@ -41,6 +43,7 @@
   --ui-error: #f87171;
   --ui-bg: #171717;
   --ui-bg-elevated: #262626;
+  --ui-bg-accented: #404040;
   --ui-bg-inverted: #ffffff;
   --ui-border: #262626;
   --ui-border-accented: #404040;
