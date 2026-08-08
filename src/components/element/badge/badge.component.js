@@ -8,7 +8,9 @@
    * Bindings da §7 + `square` / `icon` / `leadingIcon` / `trailingIcon` /
    * `leading` / `trailing` (§5.4.2 — variants/slots + useComponentIcons).
    * avatar/leadingAvatar omitidos do template (prop objeto; slots no tema
-   * para safelist). fieldGroup no tema; não passado até geFieldGroup.
+   * para safelist). fieldGroup: herda size/orientation de `?^^geFieldGroup`
+   * (paridade useFieldGroup / Button.vue). Limitação: mudança de size/
+   * orientation do grupo após mount não re-renderiza este filho (§5.9).
    *
    * icon / leadingIcon / trailingIcon: classe CSS inline até existir geIcon
    * (§5.4) — trocar por <ge-icon> quando a tarefa "Componente: Icon" for
@@ -17,7 +19,7 @@
    * @param {string} [vm.label]
    * @param {string} [vm.color='primary'] - primary|secondary|success|info|warning|error|neutral
    * @param {string} [vm.variant='solid'] - solid|outline|soft|subtle
-   * @param {string} [vm.size='md'] - xs|sm|md|lg|xl
+   * @param {string} [vm.size='md'] - xs|sm|md|lg|xl (próprio vence o do grupo)
    * @param {boolean} [vm.square] - padding igual em todos os lados
    * @param {string} [vm.icon] - nome/classe CSS do ícone (passthrough)
    * @param {string} [vm.leadingIcon] - ícone à esquerda
@@ -41,6 +43,9 @@
       '</span>',
     controllerAs: 'vm',
     transclude: true,
+    require: {
+      fieldGroup: '?^^geFieldGroup',
+    },
     bindings: {
       label: '@',
       color: '@',
@@ -67,6 +72,18 @@
       var hasLabel = vm.label !== undefined && vm.label !== null && vm.label !== '';
       var hasTransclude = hasDefaultTransclude();
       var square = vm.square === true || (!hasLabel && !hasTransclude);
+      var group = vm.fieldGroup;
+      var size = vm.size || (group && group.size) || 'md';
+      var tvProps = {
+        color: vm.color || 'primary',
+        variant: vm.variant || 'solid',
+        size: size,
+        square: square,
+      };
+
+      if (group) {
+        tvProps.fieldGroup = group.orientation || 'horizontal';
+      }
 
       vm.hasLabel = hasLabel;
       vm.showLeading = resolveIsLeading();
@@ -74,12 +91,7 @@
       vm.leadingIconName = vm.leadingIcon || vm.icon || '';
       vm.trailingIconName = vm.trailingIcon || vm.icon || '';
 
-      vm.classes = geTv(geBadgeTheme)({
-        color: vm.color || 'primary',
-        variant: vm.variant || 'solid',
-        size: vm.size || 'md',
-        square: square,
-      });
+      vm.classes = geTv(geBadgeTheme)(tvProps);
     }
 
     function hasDefaultTransclude() {

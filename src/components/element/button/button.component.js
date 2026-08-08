@@ -8,7 +8,9 @@
    * Bindings da §7 + `icon` / `leadingIcon` / `trailingIcon` / `leading` /
    * `trailing` / `loadingIcon` / `type` (§5.4.2 — useComponentIcons + HTML).
    * avatar/leadingAvatar omitidos do template (prop objeto; slots no tema
-   * para safelist). fieldGroup no tema; não passado até geFieldGroup.
+   * para safelist). fieldGroup: herda size/orientation de `?^^geFieldGroup`
+   * (paridade useFieldGroup / Button.vue). Limitação: mudança de size/
+   * orientation do grupo após mount não re-renderiza este filho (§5.9).
    * Link (`to`/`active*`) e `loadingAuto` omitidos (fora do escopo desta tarefa).
    *
    * icon / leadingIcon / trailingIcon / loadingIcon: classe CSS inline até
@@ -21,7 +23,7 @@
    * @param {string} [vm.label]
    * @param {string} [vm.color='primary'] - primary|secondary|success|info|warning|error|neutral
    * @param {string} [vm.variant='solid'] - solid|outline|soft|subtle|ghost|link
-   * @param {string} [vm.size='md'] - xs|sm|md|lg|xl
+   * @param {string} [vm.size='md'] - xs|sm|md|lg|xl (próprio vence o do grupo)
    * @param {boolean} [vm.block] - largura total
    * @param {boolean} [vm.square] - padding igual em todos os lados
    * @param {boolean} [vm.loading] - estado de carregamento
@@ -55,6 +57,9 @@
       '</button>',
     controllerAs: 'vm',
     transclude: true,
+    require: {
+      fieldGroup: '?^^geFieldGroup',
+    },
     bindings: {
       label: '@',
       color: '@',
@@ -92,6 +97,22 @@
       var showLeading = resolveIsLeading(isLoading);
       var showTrailing = resolveIsTrailing(isLoading);
       var resolvedLoadingIcon = vm.loadingIcon || 'i-lucide-loader-circle';
+      var group = vm.fieldGroup;
+      var size = vm.size || (group && group.size) || 'md';
+      var tvProps = {
+        color: vm.color || 'primary',
+        variant: vm.variant || 'solid',
+        size: size,
+        block: vm.block === true,
+        square: square,
+        loading: isLoading,
+        leading: showLeading,
+        trailing: showTrailing,
+      };
+
+      if (group) {
+        tvProps.fieldGroup = group.orientation || 'horizontal';
+      }
 
       vm.hasLabel = hasLabel;
       vm.buttonType = vm.type || 'button';
@@ -106,16 +127,7 @@
         resolvedLoadingIcon
       );
 
-      vm.classes = geTv(geButtonTheme)({
-        color: vm.color || 'primary',
-        variant: vm.variant || 'solid',
-        size: vm.size || 'md',
-        block: vm.block === true,
-        square: square,
-        loading: isLoading,
-        leading: showLeading,
-        trailing: showTrailing,
-      });
+      vm.classes = geTv(geButtonTheme)(tvProps);
     }
 
     function handleClick($event) {

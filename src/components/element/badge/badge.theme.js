@@ -7,7 +7,9 @@
   // (field-group.ts) + compoundVariants (6 cores × 4 + 4 neutral + 5 square).
   // leadingAvatar* no tema para safelist/API futura; avatar não renderizado
   // nesta tarefa (prop objeto upstream — §5.4.2 / plano Badge).
-  // fieldGroup no tema para safelist; controller não passa até geFieldGroup.
+  // fieldGroup: TW v4 not-* não existe no 3.4.19 (§5.7). Reescrito como
+  // seletor arbitrário no host Angular ge-badge (o span interno é always
+  // :only-child do host — [&:not(:only-child):first-child] seria inerte).
   // Tailwind v3: bg-/text-/ring-${color} → [var(--ui-*)]; tokens inverted/
   // default/elevated/accented. Opacidades /N sobre var() NÃO compilam no
   // TW 3.4.19 → color-mix (precedente Alert/Header).
@@ -23,9 +25,9 @@
     variants: {
       fieldGroup: {
         horizontal:
-          'not-only:first:rounded-e-none not-only:last:rounded-s-none not-last:not-first:rounded-none focus-visible:z-[1]',
+          '[ge-badge:not(:only-child):first-child_&]:rounded-e-none [ge-badge:not(:only-child):last-child_&]:rounded-s-none [ge-badge:not(:last-child):not(:first-child)_&]:rounded-none focus-visible:z-[1]',
         vertical:
-          'not-only:first:rounded-b-none not-only:last:rounded-t-none not-last:not-first:rounded-none focus-visible:z-[1]',
+          '[ge-badge:not(:only-child):first-child_&]:rounded-b-none [ge-badge:not(:only-child):last-child_&]:rounded-t-none [ge-badge:not(:last-child):not(:first-child)_&]:rounded-none focus-visible:z-[1]',
       },
       color: {
         primary: '',

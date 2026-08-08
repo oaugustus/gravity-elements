@@ -9453,7 +9453,9 @@
     // (field-group.ts) + compoundVariants (6 cores × 4 + 4 neutral + 5 square).
     // leadingAvatar* no tema para safelist/API futura; avatar não renderizado
     // nesta tarefa (prop objeto upstream — §5.4.2 / plano Badge).
-    // fieldGroup no tema para safelist; controller não passa até geFieldGroup.
+    // fieldGroup: TW v4 not-* não existe no 3.4.19 (§5.7). Reescrito como
+    // seletor arbitrário no host Angular ge-badge (o span interno é always
+    // :only-child do host — [&:not(:only-child):first-child] seria inerte).
     // Tailwind v3: bg-/text-/ring-${color} → [var(--ui-*)]; tokens inverted/
     // default/elevated/accented. Opacidades /N sobre var() NÃO compilam no
     // TW 3.4.19 → color-mix (precedente Alert/Header).
@@ -9469,9 +9471,9 @@
       variants: {
         fieldGroup: {
           horizontal:
-            'not-only:first:rounded-e-none not-only:last:rounded-s-none not-last:not-first:rounded-none focus-visible:z-[1]',
+            '[ge-badge:not(:only-child):first-child_&]:rounded-e-none [ge-badge:not(:only-child):last-child_&]:rounded-s-none [ge-badge:not(:last-child):not(:first-child)_&]:rounded-none focus-visible:z-[1]',
           vertical:
-            'not-only:first:rounded-b-none not-only:last:rounded-t-none not-last:not-first:rounded-none focus-visible:z-[1]',
+            '[ge-badge:not(:only-child):first-child_&]:rounded-b-none [ge-badge:not(:only-child):last-child_&]:rounded-t-none [ge-badge:not(:last-child):not(:first-child)_&]:rounded-none focus-visible:z-[1]',
         },
         color: {
           primary: '',
@@ -9728,7 +9730,9 @@
      * Bindings da §7 + `square` / `icon` / `leadingIcon` / `trailingIcon` /
      * `leading` / `trailing` (§5.4.2 — variants/slots + useComponentIcons).
      * avatar/leadingAvatar omitidos do template (prop objeto; slots no tema
-     * para safelist). fieldGroup no tema; não passado até geFieldGroup.
+     * para safelist). fieldGroup: herda size/orientation de `?^^geFieldGroup`
+     * (paridade useFieldGroup / Button.vue). Limitação: mudança de size/
+     * orientation do grupo após mount não re-renderiza este filho (§5.9).
      *
      * icon / leadingIcon / trailingIcon: classe CSS inline até existir geIcon
      * (§5.4) — trocar por <ge-icon> quando a tarefa "Componente: Icon" for
@@ -9737,7 +9741,7 @@
      * @param {string} [vm.label]
      * @param {string} [vm.color='primary'] - primary|secondary|success|info|warning|error|neutral
      * @param {string} [vm.variant='solid'] - solid|outline|soft|subtle
-     * @param {string} [vm.size='md'] - xs|sm|md|lg|xl
+     * @param {string} [vm.size='md'] - xs|sm|md|lg|xl (próprio vence o do grupo)
      * @param {boolean} [vm.square] - padding igual em todos os lados
      * @param {string} [vm.icon] - nome/classe CSS do ícone (passthrough)
      * @param {string} [vm.leadingIcon] - ícone à esquerda
@@ -9761,6 +9765,9 @@
         '</span>',
       controllerAs: 'vm',
       transclude: true,
+      require: {
+        fieldGroup: '?^^geFieldGroup',
+      },
       bindings: {
         label: '@',
         color: '@',
@@ -9787,6 +9794,18 @@
         var hasLabel = vm.label !== undefined && vm.label !== null && vm.label !== '';
         var hasTransclude = hasDefaultTransclude();
         var square = vm.square === true || (!hasLabel && !hasTransclude);
+        var group = vm.fieldGroup;
+        var size = vm.size || (group && group.size) || 'md';
+        var tvProps = {
+          color: vm.color || 'primary',
+          variant: vm.variant || 'solid',
+          size: size,
+          square: square,
+        };
+
+        if (group) {
+          tvProps.fieldGroup = group.orientation || 'horizontal';
+        }
 
         vm.hasLabel = hasLabel;
         vm.showLeading = resolveIsLeading();
@@ -9794,12 +9813,7 @@
         vm.leadingIconName = vm.leadingIcon || vm.icon || '';
         vm.trailingIconName = vm.trailingIcon || vm.icon || '';
 
-        vm.classes = geTv(geBadgeTheme)({
-          color: vm.color || 'primary',
-          variant: vm.variant || 'solid',
-          size: vm.size || 'md',
-          square: square,
-        });
+        vm.classes = geTv(geBadgeTheme)(tvProps);
       }
 
       function hasDefaultTransclude() {
@@ -10105,8 +10119,9 @@
     // (6 cores × 6 + 6 neutral + 5 square + 2 loading).
     // leadingAvatar* no tema para safelist/API futura; avatar não renderizado
     // nesta tarefa (prop objeto upstream — §5.4.2).
-    // fieldGroup no tema para safelist; controller não passa até geFieldGroup
-    // (not-* inerte no TW 3.4.19 — §5.7 / mesmo precedente Badge).
+    // fieldGroup: TW v4 not-* não existe no 3.4.19 (§5.7). Reescrito como
+    // seletor arbitrário no host Angular ge-button (o <button> interno é
+    // always :only-child do host — [&:not(:only-child):first-child] inerte).
     // Tailwind v3: bg-/text-/ring-/outline-${color} → [var(--ui-*)]; tokens
     // inverted/default/elevated/accented/muted. Opacidades /N sobre var() NÃO
     // compilam no TW 3.4.19 → color-mix. focus-visible:outline-3 →
@@ -10124,9 +10139,9 @@
       variants: {
         fieldGroup: {
           horizontal:
-            'not-only:first:rounded-e-none not-only:last:rounded-s-none not-last:not-first:rounded-none focus-visible:z-[1]',
+            '[ge-button:not(:only-child):first-child_&]:rounded-e-none [ge-button:not(:only-child):last-child_&]:rounded-s-none [ge-button:not(:last-child):not(:first-child)_&]:rounded-none focus-visible:z-[1]',
           vertical:
-            'not-only:first:rounded-b-none not-only:last:rounded-t-none not-last:not-first:rounded-none focus-visible:z-[1]',
+            '[ge-button:not(:only-child):first-child_&]:rounded-b-none [ge-button:not(:only-child):last-child_&]:rounded-t-none [ge-button:not(:last-child):not(:first-child)_&]:rounded-none focus-visible:z-[1]',
         },
         color: {
           primary: '',
@@ -10515,7 +10530,9 @@
      * Bindings da §7 + `icon` / `leadingIcon` / `trailingIcon` / `leading` /
      * `trailing` / `loadingIcon` / `type` (§5.4.2 — useComponentIcons + HTML).
      * avatar/leadingAvatar omitidos do template (prop objeto; slots no tema
-     * para safelist). fieldGroup no tema; não passado até geFieldGroup.
+     * para safelist). fieldGroup: herda size/orientation de `?^^geFieldGroup`
+     * (paridade useFieldGroup / Button.vue). Limitação: mudança de size/
+     * orientation do grupo após mount não re-renderiza este filho (§5.9).
      * Link (`to`/`active*`) e `loadingAuto` omitidos (fora do escopo desta tarefa).
      *
      * icon / leadingIcon / trailingIcon / loadingIcon: classe CSS inline até
@@ -10528,7 +10545,7 @@
      * @param {string} [vm.label]
      * @param {string} [vm.color='primary'] - primary|secondary|success|info|warning|error|neutral
      * @param {string} [vm.variant='solid'] - solid|outline|soft|subtle|ghost|link
-     * @param {string} [vm.size='md'] - xs|sm|md|lg|xl
+     * @param {string} [vm.size='md'] - xs|sm|md|lg|xl (próprio vence o do grupo)
      * @param {boolean} [vm.block] - largura total
      * @param {boolean} [vm.square] - padding igual em todos os lados
      * @param {boolean} [vm.loading] - estado de carregamento
@@ -10562,6 +10579,9 @@
         '</button>',
       controllerAs: 'vm',
       transclude: true,
+      require: {
+        fieldGroup: '?^^geFieldGroup',
+      },
       bindings: {
         label: '@',
         color: '@',
@@ -10599,6 +10619,22 @@
         var showLeading = resolveIsLeading(isLoading);
         var showTrailing = resolveIsTrailing(isLoading);
         var resolvedLoadingIcon = vm.loadingIcon || 'i-lucide-loader-circle';
+        var group = vm.fieldGroup;
+        var size = vm.size || (group && group.size) || 'md';
+        var tvProps = {
+          color: vm.color || 'primary',
+          variant: vm.variant || 'solid',
+          size: size,
+          block: vm.block === true,
+          square: square,
+          loading: isLoading,
+          leading: showLeading,
+          trailing: showTrailing,
+        };
+
+        if (group) {
+          tvProps.fieldGroup = group.orientation || 'horizontal';
+        }
 
         vm.hasLabel = hasLabel;
         vm.buttonType = vm.type || 'button';
@@ -10613,16 +10649,7 @@
           resolvedLoadingIcon
         );
 
-        vm.classes = geTv(geButtonTheme)({
-          color: vm.color || 'primary',
-          variant: vm.variant || 'solid',
-          size: vm.size || 'md',
-          block: vm.block === true,
-          square: square,
-          loading: isLoading,
-          leading: showLeading,
-          trailing: showTrailing,
-        });
+        vm.classes = geTv(geButtonTheme)(tvProps);
       }
 
       function handleClick($event) {
@@ -12142,6 +12169,93 @@
         // Com unmount, ng-if controla presença; ng-show fica true enquanto montado.
         vm.panelVisible = vm.shouldUnmount ? true : vm.isOpen;
         vm.classes = geTv(geCollapsibleTheme)();
+      }
+    }
+  })();
+
+  (function () {
+
+    // Portado de github.com/nuxt/ui v4.10.0, MIT License, Copyright (c) Nuxt Labs
+    // Upstream: theme/field-group.ts — base top-level normalizado para slots.base
+    // (geTv) + variants size (vazios xs–xl) + orientation (horizontal/vertical).
+    // fieldGroupVariant (not-*) vive nos temas dos filhos (Badge/Button), não aqui.
+    // §5.7 N/A neste tema (sem opacidade/var()/N, sem ring/outline fora da escala,
+    // sem not-*).
+    angular.module('gravityElements.element').constant('geFieldGroupTheme', {
+      slots: {
+        base: 'relative',
+      },
+      variants: {
+        size: {
+          xs: '',
+          sm: '',
+          md: '',
+          lg: '',
+          xl: '',
+        },
+        orientation: {
+          horizontal: 'inline-flex -space-x-px',
+          vertical: 'flex flex-col -space-y-px',
+        },
+      },
+      defaultVariants: {
+        size: 'md',
+        orientation: 'horizontal',
+      },
+    });
+  })();
+
+  (function () {
+
+    /**
+     * geFieldGroup — agrupamento visual de inputs/botões adjacentes (Element).
+     *
+     * Paridade com Nuxt UI FieldGroup v4.10.0 (theme/field-group.ts +
+     * FieldGroup.vue). Nesta etapa é só o wrapper visual (bordas coladas via
+     * -space-x/y-px + variant fieldGroup nos filhos); inputs de formulário
+     * nascem na Etapa 2.
+     *
+     * Bindings §7 `size` + extra `orientation` (§5.4.2 — prop real do
+     * FieldGroup.vue com efeito no tema; default 'horizontal').
+     * Transclusion de slot único (§5.3).
+     *
+     * Filhos geBadge/geButton herdam size/orientation via
+     * `require: '?^^geFieldGroup'` (paridade useFieldGroup / AvatarGroup).
+     * Limitação conhecida (§5.9, mesmo padrão AvatarGroup): mudança de
+     * size/orientation do grupo depois que os filhos já montaram não
+     * re-renderiza filhos existentes — só leem o pai no próprio
+     * $onInit/$onChanges. O wrapper atualiza as próprias classes via
+     * $onChanges.
+     *
+     * @param {string} [vm.size='md'] - xs|sm|md|lg|xl (propaga aos filhos)
+     * @param {string} [vm.orientation='horizontal'] - horizontal|vertical
+     */
+    angular.module('gravityElements.element').component('geFieldGroup', {
+      template: '<div class="{{ vm.classes.base }}" ng-transclude></div>',
+      controllerAs: 'vm',
+      transclude: true,
+      bindings: {
+        size: '@',
+        orientation: '@',
+      },
+      controller: FieldGroupController,
+    });
+
+    FieldGroupController.$inject = ['geTv', 'geFieldGroupTheme'];
+
+    function FieldGroupController(geTv, geFieldGroupTheme) {
+      var vm = this;
+      vm.$onInit = render;
+      vm.$onChanges = render;
+
+      function render() {
+        // Expor resolvidos no controller para filhos via require
+        vm.size = vm.size || 'md';
+        vm.orientation = vm.orientation || 'horizontal';
+        vm.classes = geTv(geFieldGroupTheme)({
+          size: vm.size,
+          orientation: vm.orientation,
+        });
       }
     }
   })();
