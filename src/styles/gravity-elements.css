@@ -55,3 +55,33 @@
   --ui-text-dimmed: #737373;
   --ui-text-inverted: #171717;
 }
+
+/*
+ * geCollapsible — transição de altura via ngAnimate (CSS only, §5.8).
+ * Substitui animate-[collapsible-down|up] do Nuxt UI / --reka-collapsible-
+ * content-height. Aliases .ge-collapsible-enter/leave espelham o nome da
+ * plantask; .ng-enter/.ng-leave são as classes estruturais do AngularJS.
+ */
+.ge-collapsible.ng-enter,
+.ge-collapsible-enter {
+  overflow: hidden;
+  max-height: 0;
+  transition: max-height 200ms ease-out;
+}
+
+.ge-collapsible.ng-enter-active,
+.ge-collapsible-enter-active {
+  max-height: 100vh;
+}
+
+.ge-collapsible.ng-leave,
+.ge-collapsible-leave {
+  overflow: hidden;
+  max-height: 100vh;
+  transition: max-height 200ms ease-out;
+}
+
+.ge-collapsible.ng-leave-active,
+.ge-collapsible-leave-active {
+  max-height: 0;
+}

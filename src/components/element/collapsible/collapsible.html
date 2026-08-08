@@ -1,0 +1,17 @@
+<div class="{{ vm.classes.root }}" ng-attr-data-state="{{ vm.dataState }}">
+  <div class="ge-collapsible-trigger"
+    ng-click="vm.toggle()"
+    ng-attr-aria-expanded="{{ vm.isOpen ? 'true' : 'false' }}"
+    ng-attr-aria-controls="{{ vm.panelId }}"
+    ng-attr-aria-disabled="{{ vm.isDisabled ? 'true' : undefined }}"
+    ng-attr-data-state="{{ vm.dataState }}"
+    ng-transclude></div>
+  <div id="{{ vm.panelId }}"
+    class="{{ vm.classes.content }}"
+    ng-if="vm.panelMounted"
+    ng-show="vm.panelVisible"
+    ng-attr-data-state="{{ vm.dataState }}"
+    ng-attr-aria-hidden="{{ vm.isOpen ? undefined : 'true' }}">
+    <div ng-transclude="content"></div>
+  </div>
+</div>

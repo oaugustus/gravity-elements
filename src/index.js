@@ -60,6 +60,8 @@ import './components/element/card/card.theme.js';
 import './components/element/card/card.component.js';
 import './components/element/chip/chip.theme.js';
 import './components/element/chip/chip.component.js';
+import './components/element/collapsible/collapsible.theme.js';
+import './components/element/collapsible/collapsible.component.js';
 import './gravity-elements.module.js';
 
 // geTv (core/tv/tv.service.js) lê window.twMerge em tempo de execução para
