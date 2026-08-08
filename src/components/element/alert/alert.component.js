@@ -67,10 +67,16 @@
   function AlertController(geTv, geAlertTheme) {
     var vm = this;
     vm.$onInit = onInit;
+    vm.$onChanges = render;
     vm.handleClose = handleClose;
 
     function onInit() {
+      // open só no mount — reabrir ao mudar props apagaria o close do usuário.
       vm.open = true;
+      render();
+    }
+
+    function render() {
       vm.resolvedOrientation = vm.orientation || 'vertical';
       vm.resolvedCloseIcon = vm.closeIcon || 'i-lucide-x';
       // Dimensão booleana `title` do tema (mt-1 em description) ≠ binding string.

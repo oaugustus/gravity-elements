@@ -3,6 +3,7 @@
 describe('geAlert', function () {
   var $compile;
   var $rootScope;
+  var $timeout;
   var host;
   var appRoot;
   var geTv;
@@ -16,6 +17,7 @@ describe('geAlert', function () {
     var injector = angular.element(appRoot).injector();
     $compile = injector.get('$compile');
     $rootScope = injector.get('$rootScope');
+    $timeout = injector.get('$timeout');
     geTv = injector.get('geTv');
     geAlertTheme = injector.get('geAlertTheme');
 
@@ -97,4 +99,29 @@ describe('geAlert', function () {
     expect(closed).toBe(true);
     expect(compiled.element.children().length).toBe(0);
   });
+
+  it('atualiza classes quando color muda após montagem', function () {
+    var compiled = compileAlert(
+      '<ge-alert title="Note" color="{{ color }}"></ge-alert>',
+      { color: 'primary' }
+    );
+    var root = compiled.element.children()[0];
+
+    expect(root.className).toContain('bg-[var(--ui-primary)]');
+
+    compiled.scope.color = 'error';
+    compiled.scope.$digest();
+    // ngAnimate pode deixar classes transitórias no root (§5.8).
+    try {
+      $timeout.flush();
+    } catch (e) {
+      // sem timeouts pendentes
+    }
+    root = compiled.element.children()[0];
+
+    expect(root.className).toContain('bg-[var(--ui-error)]');
+    expect(root.className).not.toContain('bg-[var(--ui-primary)]');
+  });
 });
+
+

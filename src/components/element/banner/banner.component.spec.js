@@ -3,6 +3,7 @@
 describe('geBanner', function () {
   var $compile;
   var $rootScope;
+  var $timeout;
   var host;
   var appRoot;
   var geTv;
@@ -16,6 +17,7 @@ describe('geBanner', function () {
     var injector = angular.element(appRoot).injector();
     $compile = injector.get('$compile');
     $rootScope = injector.get('$rootScope');
+    $timeout = injector.get('$timeout');
     geTv = injector.get('geTv');
     geBannerTheme = injector.get('geBannerTheme');
 
@@ -91,4 +93,30 @@ describe('geBanner', function () {
     expect(closed).toBe(true);
     expect(compiled.element.children().length).toBe(0);
   });
+
+  it('atualiza role e classes quando color muda após montagem', function () {
+    var compiled = compileBanner(
+      '<ge-banner title="News" color="{{ color }}"></ge-banner>',
+      { color: 'primary' }
+    );
+    var root = compiled.element.children()[0];
+
+    expect(root.getAttribute('role')).toBe('status');
+    expect(root.className).toContain('bg-[var(--ui-primary)]');
+
+    compiled.scope.color = 'error';
+    compiled.scope.$digest();
+    // ngAnimate pode deixar classes transitórias no root (§5.8).
+    try {
+      $timeout.flush();
+    } catch (e) {
+      // sem timeouts pendentes
+    }
+    root = compiled.element.children()[0];
+
+    expect(root.getAttribute('role')).toBe('alert');
+    expect(root.className).toContain('bg-[var(--ui-error)]');
+    expect(root.className).not.toContain('bg-[var(--ui-primary)]');
+  });
 });
+

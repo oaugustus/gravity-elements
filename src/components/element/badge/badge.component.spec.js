@@ -79,4 +79,34 @@ describe('geBadge', function () {
     expect(root.className).not.toContain('bg-[var(--ui-primary)]');
     expect(root.textContent.trim()).toBe('Neutral');
   });
+
+  it('atualiza classes quando color muda após montagem', function () {
+    var compiled = compileBadge(
+      '<ge-badge label="Hello" color="{{ color }}"></ge-badge>',
+      { color: 'primary' }
+    );
+    var vm = compiled.element.isolateScope().vm;
+
+    expect(vm.classes.base).toContain('bg-[var(--ui-primary)]');
+
+    compiled.scope.color = 'neutral';
+    compiled.scope.$digest();
+    // Assert em vm.classes (não no className do DOM): ngAnimate deixa
+    // *-add/*-remove no atributo class até a transição assentar (§5.8).
+    vm = compiled.element.isolateScope().vm;
+    var expected = geTv(geBadgeTheme)({
+      color: 'neutral',
+      variant: 'solid',
+      size: 'md',
+      square: false,
+    });
+
+    expect(vm.classes.base).toBe(expected.base);
+    expect(vm.classes.base).toContain('bg-[var(--ui-bg-inverted)]');
+    expect(vm.classes.base).not.toContain('bg-[var(--ui-primary)]');
+  });
 });
+
+
+
+

@@ -60,9 +60,10 @@
 
   function BadgeController(geTv, geBadgeTheme, $transclude) {
     var vm = this;
-    vm.$onInit = onInit;
+    vm.$onInit = render;
+    vm.$onChanges = render;
 
-    function onInit() {
+    function render() {
       var hasLabel = vm.label !== undefined && vm.label !== null && vm.label !== '';
       var hasTransclude = hasDefaultTransclude();
       var square = vm.square === true || (!hasLabel && !hasTransclude);

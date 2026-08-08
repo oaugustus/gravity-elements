@@ -79,13 +79,19 @@
   function BannerController(geTv, geBannerTheme, $transclude) {
     var vm = this;
     vm.$onInit = onInit;
+    vm.$onChanges = render;
     vm.handleClose = handleClose;
 
     function onInit() {
+      // open só no mount — reabrir ao mudar props apagaria o close do usuário.
+      vm.open = true;
+      render();
+    }
+
+    function render() {
       var color = vm.color || 'primary';
       var hasTo = !!(vm.to && vm.to.length);
 
-      vm.open = true;
       vm.resolvedCloseIcon = vm.closeIcon || 'i-lucide-x';
       vm.hasActions = hasDefaultTransclude();
       vm.role =
