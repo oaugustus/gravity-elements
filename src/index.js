@@ -30,6 +30,8 @@ import './components/element/alert/alert.theme.js';
 import './components/element/alert/alert.component.js';
 import './components/element/avatar/avatar.theme.js';
 import './components/element/avatar/avatar.component.js';
+import './components/element/avatar-group/avatar-group.theme.js';
+import './components/element/avatar-group/avatar-group.component.js';
 import './gravity-elements.module.js';
 
 // geTv (core/tv/tv.service.js) lê window.twMerge em tempo de execução para

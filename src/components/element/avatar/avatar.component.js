@@ -50,6 +50,10 @@
       '    aria-hidden="true"></span>' +
       '</span>',
     controllerAs: 'vm',
+    // Herda size/color/base de geAvatarGroup (paridade useAvatarGroup do Nuxt UI)
+    require: {
+      avatarGroup: '?^^geAvatarGroup',
+    },
     bindings: {
       src: '@',
       alt: '@',
@@ -126,14 +130,25 @@
     }
 
     function refresh() {
-      var size = vm.size || 'md';
-      var color = vm.color || 'neutral';
+      var group = vm.avatarGroup;
+      var size = vm.size || (group && group.size) || 'md';
+      var color = vm.color || (group && group.color) || 'neutral';
       vm.classes = geTv(geAvatarTheme)({
         size: size,
         color: color,
       });
       vm.showChip = !!(vm.chipColor || vm.chipPosition);
-      vm.rootClass = vm.classes.root + (vm.showChip ? ' relative' : '');
+      var rootParts = [vm.classes.root];
+      if (group && typeof group.getBaseClass === 'function') {
+        var baseClass = group.getBaseClass();
+        if (baseClass) {
+          rootParts.push(baseClass);
+        }
+      }
+      if (vm.showChip) {
+        rootParts.push('relative');
+      }
+      vm.rootClass = rootParts.join(' ');
       if (vm.showChip) {
         var chipColor = vm.chipColor || 'primary';
         var chipPos = vm.chipPosition || 'top-right';

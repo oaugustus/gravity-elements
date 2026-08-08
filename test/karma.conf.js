@@ -40,6 +40,7 @@ module.exports = function (config) {
       'src/components/layout/theme/**/*.js',
       'src/components/element/alert/**/*.js',
       'src/components/element/avatar/**/*.js',
+      'src/components/element/avatar-group/**/*.js',
       'test/fixtures/theme.fixture.js',
       'test/fixtures/class-normalize.js',
       'test/smoke/badge/smoke.module.js',
