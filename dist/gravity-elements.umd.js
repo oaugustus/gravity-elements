@@ -11843,6 +11843,170 @@
 
   (function () {
 
+    // Portado de github.com/nuxt/ui v4.10.0, MIT License, Copyright (c) Nuxt Labs
+    // Upstream: theme/chip.ts — slots root/base + variants color/size/position/
+    // inset/standalone + compoundVariants (4 positions × inset:false translate).
+    // Tailwind v3: ring-bg → ring-[var(--ui-bg)]; text-inverted →
+    // text-[var(--ui-text-inverted)]; bg-${color} → [var(--ui-*)];
+    // neutral bg-inverted → bg-[var(--ui-bg-inverted)]. Sem opacidade /N sobre
+    // var(), sem ring-N/outline-N fora da escala, sem not-* (§5.7 N/A).
+    // Variants string caem só no slot `base` via geTv (indicador); root fica
+    // só com a base do slot.
+    angular.module('gravityElements.element').constant('geChipTheme', {
+      slots: {
+        root: 'relative inline-flex items-center justify-center shrink-0',
+        base:
+          'rounded-full ring ring-[var(--ui-bg)] flex items-center justify-center text-[var(--ui-text-inverted)] font-medium whitespace-nowrap',
+      },
+      variants: {
+        color: {
+          primary: 'bg-[var(--ui-primary)]',
+          secondary: 'bg-[var(--ui-secondary)]',
+          success: 'bg-[var(--ui-success)]',
+          info: 'bg-[var(--ui-info)]',
+          warning: 'bg-[var(--ui-warning)]',
+          error: 'bg-[var(--ui-error)]',
+          neutral: 'bg-[var(--ui-bg-inverted)]',
+        },
+        size: {
+          '3xs': 'h-[4px] min-w-[4px] text-[4px]',
+          '2xs': 'h-[5px] min-w-[5px] text-[5px]',
+          xs: 'h-[6px] min-w-[6px] text-[6px]',
+          sm: 'h-[7px] min-w-[7px] text-[7px]',
+          md: 'h-[8px] min-w-[8px] text-[8px]',
+          lg: 'h-[9px] min-w-[9px] text-[9px]',
+          xl: 'h-[10px] min-w-[10px] text-[10px]',
+          '2xl': 'h-[11px] min-w-[11px] text-[11px]',
+          '3xl': 'h-[12px] min-w-[12px] text-[12px]',
+        },
+        position: {
+          'top-right': 'top-0 right-0',
+          'bottom-right': 'bottom-0 right-0',
+          'top-left': 'top-0 left-0',
+          'bottom-left': 'bottom-0 left-0',
+        },
+        inset: {
+          false: '',
+        },
+        standalone: {
+          false: 'absolute',
+        },
+      },
+      compoundVariants: [
+        {
+          position: 'top-right',
+          inset: false,
+          class: '-translate-y-1/2 translate-x-1/2 transform',
+        },
+        {
+          position: 'bottom-right',
+          inset: false,
+          class: 'translate-y-1/2 translate-x-1/2 transform',
+        },
+        {
+          position: 'top-left',
+          inset: false,
+          class: '-translate-y-1/2 -translate-x-1/2 transform',
+        },
+        {
+          position: 'bottom-left',
+          inset: false,
+          class: 'translate-y-1/2 -translate-x-1/2 transform',
+        },
+      ],
+      defaultVariants: {
+        size: 'md',
+        color: 'primary',
+        position: 'top-right',
+      },
+    });
+  })();
+
+  (function () {
+
+    /**
+     * geChip — indicador de notificação/status (Element).
+     *
+     * Paridade com Nuxt UI Chip v4.10.0 (theme/chip.ts + Chip.vue).
+     * Usado sozinho (`standalone`) ou envolvendo outro elemento (transclusion)
+     * com posicionamento absoluto (`position`).
+     *
+     * Bindings §7 + extras `inset` / `show` (§5.4.2 — props reais do Chip.vue
+     * com efeito no tema/DOM). `label` é alias de `text` (tabela §7).
+     *
+     * Uso:
+     *   <ge-chip text="3" color="error">
+     *     <ge-avatar src="..."></ge-avatar>
+     *   </ge-chip>
+     *   <ge-chip standalone="true" color="success"></ge-chip>
+     *
+     * @param {string} [vm.text] - texto/contagem dentro do chip
+     * @param {string} [vm.label] - alias de `text` (§7)
+     * @param {string} [vm.color='primary'] - primary|secondary|success|info|warning|error|neutral
+     * @param {string} [vm.size='md'] - 3xs|2xs|xs|sm|md|lg|xl|2xl|3xl
+     * @param {string} [vm.position='top-right'] - top-right|bottom-right|top-left|bottom-left
+     * @param {boolean} [vm.standalone=false] - sem absolute (relativo ao pai)
+     * @param {boolean} [vm.inset=false] - mantém o chip dentro (sem translate)
+     * @param {boolean} [vm.show=true] - controla visibilidade do indicador
+     */
+    angular.module('gravityElements.element').component('geChip', {
+      template:
+        '<div class="{{ vm.classes.root }}">' +
+        '  <span ng-transclude></span>' +
+        '  <span ng-if="vm.showChip"' +
+        '    class="{{ vm.classes.base }}"' +
+        '    ng-attr-aria-hidden="{{ vm.displayText ? undefined : \'true\' }}">{{ vm.displayText }}</span>' +
+        '</div>',
+      controllerAs: 'vm',
+      transclude: true,
+      bindings: {
+        text: '@',
+        label: '@',
+        color: '@',
+        size: '@',
+        position: '@',
+        standalone: '<',
+        inset: '<',
+        show: '<',
+      },
+      controller: ChipController,
+    });
+
+    ChipController.$inject = ['geTv', 'geChipTheme'];
+
+    function ChipController(geTv, geChipTheme) {
+      var vm = this;
+      vm.$onInit = render;
+      vm.$onChanges = render;
+
+      function render() {
+        var text = vm.text;
+        var label = vm.label;
+        var displayText = '';
+
+        if (text !== undefined && text !== null && String(text) !== '') {
+          displayText = String(text);
+        } else if (label !== undefined && label !== null && String(label) !== '') {
+          displayText = String(label);
+        }
+
+        vm.displayText = displayText;
+        // Vue defineModel('show', { default: true })
+        vm.showChip = vm.show !== false;
+
+        vm.classes = geTv(geChipTheme)({
+          color: vm.color || 'primary',
+          size: vm.size || 'md',
+          position: vm.position || 'top-right',
+          inset: vm.inset === true,
+          standalone: vm.standalone === true,
+        });
+      }
+    }
+  })();
+
+  (function () {
+
     angular.module('gravityElements', [
       'gravityElements.core',
       'gravityElements.components',

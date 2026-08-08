@@ -47,6 +47,7 @@ module.exports = function (config) {
       'src/components/element/button/**/*.js',
       'src/components/element/calendar/**/*.js',
       'src/components/element/card/**/*.js',
+      'src/components/element/chip/**/*.js',
       'test/fixtures/theme.fixture.js',
       'test/fixtures/class-normalize.js',
       'test/**/*.spec.js',

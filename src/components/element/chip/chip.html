@@ -1,0 +1,6 @@
+<div class="{{ vm.classes.root }}">
+  <span ng-transclude></span>
+  <span ng-if="vm.showChip"
+    class="{{ vm.classes.base }}"
+    ng-attr-aria-hidden="{{ vm.displayText ? undefined : 'true' }}">{{ vm.displayText }}</span>
+</div>
