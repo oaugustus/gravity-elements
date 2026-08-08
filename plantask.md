@@ -1,58 +1,59 @@
 Você vai trabalhar em uma única tarefa do projeto Gravity Elements, definida no arquivo
 specs/spec-etapa-1-layout-element.md deste repositório.
 
-Tarefa (copiar exatamente): "Componente: Calendar"
+Tarefa (copiar exatamente): "Componente: Card"
 
 Antes de propor qualquer plano:
-1. Leia specs/spec-etapa-1-layout-element.md por completo, especialmente:
-   - Seção 7 (bindings do geCalendar: `modelValue` (`<`, Date), `onUpdate` (`&`),
-     `minDate` (`<`), `maxDate` (`<`), `locale` (`@`, opcional)).
-   - Seção 5.6 — **5 casos de teste mínimos, não 2**: navegação por seta (foco move
-     um dia), `Home`/`End` (início/fim da semana), `PageUp`/`PageDown` (troca de mês,
-     com o mês exibido atualizado), `Enter`/`Espaço` seleciona o dia focado e dispara
-     `onUpdate`, e um caso de limite (`minDate`/`maxDate` desabilita navegação além
-     do intervalo).
-   - Seção 5.5 (ARIA) — o que já existir de convenção pra grid de dias/roving tabindex.
-2. Este é o **primeiro componente "não trivial" da etapa** (rota de grid de dias com
-   navegação por teclado). Duas bibliotecas já são dependências do projeto
-   especificamente pra isso — não reimplementar na mão:
-   - `date-fns` (`startOfMonth`, `endOfMonth`, `addMonths`, `format`, `isSameDay`,
-     etc.) pra toda matemática de datas.
-   - `tabbable` (já usada na Etapa 0) pra roving tabindex do grid de dias.
+1. Leia specs/spec-etapa-1-layout-element.md por completo, especialmente a seção 6/7
+   — hoje o texto do `geCard` está assim: "Multi-slot via `transclude: { header:
+   '?geCardHeader', body: '?geCardBody', footer: '?geCardFooter' }` (ou slot único se
+   o Nuxt UI v4.10.0 original for mais simples — conferir `ui.nuxt.com/docs/components/
+   card` antes de decidir)". Ou seja: **a decisão entre multi-slot e slot único ainda
+   não está tomada** — é parte desta tarefa decidir, com base no upstream real, e
+   documentar a decisão na evidência (mesmo padrão já usado pra `geFooter`, registrado
+   como decisão explícita na spec em 2026-08-07).
+2. Sem bindings próprios documentados hoje (`geCard | —`) — confirme isso contra o
+   Nuxt UI real antes de assumir; pode ter `variant` ou props de espaçamento que a
+   tabela da seção 7 ainda não capturou.
 3. Consulte o Nuxt UI real na tag fixada pela seção 5.1 (**v4.10.0**) — busque
-   `src/theme/calendar.ts` e `src/runtime/components/Calendar.vue` em
+   `src/theme/card.ts` e `src/runtime/components/Card.vue` em
    raw.githubusercontent.com/nuxt/ui/v4.10.0/... (não use github.com/.../tree/...,
-   retorna vazio). O Calendar do Nuxt UI usa `@internationalized/date` (Reka UI) —
-   não é dependência deste projeto; portar só a estrutura visual do tema e a lógica
-   de navegação/seleção usando `date-fns` no lugar.
-4. Checklist obrigatório da seção 5.7 antes de portar qualquer classe do tema —
-   3 padrões Tailwind v4 que não compilam no TW 3.4.19 deste projeto:
+   retorna vazio).
+4. Se o plano usar `transclude` multi-slot, `geFooter` (`src/components/layout/footer/`)
+   e `geSidebar` (`src/components/layout/sidebar/`) já são precedentes funcionando desse
+   padrão neste projeto — seguir a mesma estrutura (`transclude: { slot: '?geCardSlot' }`
+   + conteúdo default via transclusion simples).
+5. Checklist obrigatório da seção 5.7 antes de portar qualquer classe do tema —
+   4 padrões que já causaram bugs reais nesta etapa (cada um exige adaptação manual,
+   não só troca de token semântico por `var()`):
    - Opacidade sobre `var()` (`bg-primary/75`, `ring-color/25`) → escrever
      `[color-mix(in_srgb,var(--ui-*)_N%,transparent)]` por extenso.
-   - `ring-N`/`outline-N` fora da escala fixa 0/1/2/4/8 → valor arbitrário
-     (`outline-[3px]`) ou a utilidade sem sufixo se cair exatamente num desses passos.
-   - Variantes `not-*` → sem equivalente no v3; reescrever como seletor arbitrário
-     ou aceitar inerte (documentar).
+   - `ring-N`/`outline-N` fora da escala fixa 0/1/2/4/8 do Tailwind v3 → valor
+     arbitrário (`outline-[3px]`) ou a utilidade sem sufixo se cair exatamente num
+     desses passos.
+   - Variantes `not-*` (`not-only:`, `not-first:` etc.) → sem equivalente no v3;
+     reescrever como seletor arbitrário (`[&:not(...)]:`) ou aceitar inerte
+     (documentar) se a variante nunca for ativada pelo controller.
+   - **Novo (seção 5.10, achado na revisão do Calendar em 2026-08-08)**: se o tema
+     usar algum atributo `data-*` condicional (`data-selected`, `data-disabled`,
+     `data-checked`, `data-required`, `data-open`, `data-multiple` — qualquer um desses
+     nomes exatos) aplicado via `ng-attr-data-<palavra>` num elemento
+     `input`/`select`/`option`/`textarea`/`button`/`form`/`details`, o atributo NUNCA
+     é escrito no DOM (colisão silenciosa com o `BOOLEAN_ATTR` do AngularJS 1.8.3 —
+     sem erro, sem aviso, `npm test` passa normalmente). Se aparecer esse padrão,
+     renomear pra uma palavra que não colida (ex. `data-is-selected`) tanto no
+     template quanto no tema (`data-[selected]:` → `data-[is-selected]:`). Ver
+     `calendar.theme.js`/`calendar.component.js` como precedente do fix.
    Depois de portar, seguir a seção 5.6 — **verificação de CSS compilado obrigatória**
-   pra qualquer classe que use um desses padrões: build isolado do Tailwind CLI +
-   confirmação por busca direta no CSS gerado (não só a safelist).
-5. **Lição da revisão do Button/Alert/Badge/Banner (2026-08-08, seção 5.8 revisada)**:
-   todo componente com bindings que podem mudar depois do `$onInit` (aqui,
-   `modelValue`/`minDate`/`maxDate`/`locale` — todos plausíveis de mudar em uso real,
-   ex. o componente pai troca o mês/intervalo permitido programaticamente) precisa de
-   `vm.$onChanges` chamando a mesma lógica de recálculo do `$onInit` (não só
-   `vm.$onInit`). Ver `alert.component.js`/`banner.component.js`/`badge.component.js`/
-   `button.component.js` como precedente do padrão (`render()` compartilhado entre os
-   dois hooks). Cuidado extra aqui: mudar `minDate`/`maxDate`/`modelValue` depois do
-   mount não deve resetar qual dia está com foco/tabindex se não for necessário.
-6. Seção 5.8 (nota `ngAnimate`) não deve afetar o Calendar diretamente (não tem
-   `ng-if` no grid), mas se o plano usar `ng-repeat` pros dias do mês, atenção ao
-   mesmo tipo de classe transitória em testes.
-7. Confira a seção 9 (Critérios de aceite) — o item 7 é específico do Calendar:
-   "Calendar navegável por teclado — os 5 casos da seção 5.6 passando, mais
-   confirmação manual no demo app". O demo app ainda não existe nesta etapa
-   (é uma tarefa separada, mais pra frente); a parte de confirmação manual fica
-   pendente até lá, mas os 5 casos automatizados são parte desta tarefa.
+   pra qualquer classe que use um dos três primeiros padrões: build isolado do
+   Tailwind CLI + confirmação por busca direta no CSS gerado (não só a safelist).
+6. **Se o componente ganhar algum binding `<`/`@` que pode mudar depois do
+   `$onInit`** (pouco provável pra um Card simples sem lógica, mas confirme): seguir
+   o padrão já estabelecido em `alert.component.js`/`banner.component.js`/
+   `badge.component.js`/`button.component.js`/`calendar.component.js` — lógica de
+   render numa função compartilhada, chamada por `vm.$onInit` **e** `vm.$onChanges`.
+7. Confira a seção 9 (Critérios de aceite) itens 1, 2 e 5 (contrato completo + teste +
+   build UMD/Rollup sem regressão) se aplicam a esta tarefa.
 
 Proponha um plano do que vai ser criado (arquivos e pastas) para completar essa
 tarefa. Não implemente nada ainda — aguarde minha aprovação do plano.

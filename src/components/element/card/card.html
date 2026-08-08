@@ -1,0 +1,23 @@
+<div class="{{ vm.classes.root }}">
+  <div
+    ng-if="vm.hasHeaderSlot"
+    class="{{ vm.classes.header }}"
+    ng-transclude="header"
+  ></div>
+  <div ng-if="!vm.hasHeaderSlot && vm.hasHeader" class="{{ vm.classes.header }}">
+    <div ng-if="vm.hasTitle" class="{{ vm.classes.title }}">
+      <span ng-if="vm.hasTitleSlot" ng-transclude="title"></span>
+      <span ng-if="!vm.hasTitleSlot">{{ vm.title }}</span>
+    </div>
+    <div ng-if="vm.hasDescription" class="{{ vm.classes.description }}">
+      <span ng-if="vm.hasDescriptionSlot" ng-transclude="description"></span>
+      <span ng-if="!vm.hasDescriptionSlot">{{ vm.description }}</span>
+    </div>
+  </div>
+  <div ng-if="vm.hasBody" class="{{ vm.classes.body }}" ng-transclude></div>
+  <div
+    ng-if="vm.hasFooter"
+    class="{{ vm.classes.footer }}"
+    ng-transclude="footer"
+  ></div>
+</div>

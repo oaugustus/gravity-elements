@@ -56,6 +56,8 @@ import './components/element/button/button.theme.js';
 import './components/element/button/button.component.js';
 import './components/element/calendar/calendar.theme.js';
 import './components/element/calendar/calendar.component.js';
+import './components/element/card/card.theme.js';
+import './components/element/card/card.component.js';
 import './gravity-elements.module.js';
 
 // geTv (core/tv/tv.service.js) lê window.twMerge em tempo de execução para

@@ -7,7 +7,8 @@
  * --ui-container: geContainer; --ui-bg/--ui-border: geHeader;
  * --ui-border-accented / --sidebar-*: geSidebar; cores semânticas +
  * --ui-bg-elevated/--ui-bg-inverted: geAlert; --ui-text: geBadge;
- * --ui-bg-accented: geButton (neutral soft/subtle).
+ * --ui-bg-accented: geButton (neutral soft/subtle);
+ * --ui-text-dimmed: geCard (variant solid description).
  * Primary default ≈ green do Nuxt UI; demais ≈ Tailwind 500; neutrals via
  * hex estáveis (sem --ui-color-neutral-* ainda não portados).
  */
@@ -29,6 +30,7 @@
   --ui-text: #404040;
   --ui-text-highlighted: #171717;
   --ui-text-muted: #737373;
+  --ui-text-dimmed: #a3a3a3;
   --ui-text-inverted: #ffffff;
   /* geSidebar — defaults espelhados do theme/sidebar.ts v4.10.0 */
   --sidebar-width: 16rem;
@@ -50,5 +52,6 @@
   --ui-text: #e5e5e5;
   --ui-text-highlighted: #ffffff;
   --ui-text-muted: #a3a3a3;
+  --ui-text-dimmed: #737373;
   --ui-text-inverted: #171717;
 }
