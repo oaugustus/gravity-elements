@@ -1,0 +1,28 @@
+<div
+  ng-if="vm.open"
+  role="alert"
+  class="{{ vm.classes.root }}"
+  data-orientation="{{ vm.resolvedOrientation }}"
+>
+  <i
+    ng-if="vm.icon"
+    class="{{ vm.icon }} {{ vm.classes.icon }}"
+    aria-hidden="true"
+  ></i>
+  <div class="{{ vm.classes.wrapper }}">
+    <div ng-if="vm.title" class="{{ vm.classes.title }}">{{ vm.title }}</div>
+    <div ng-if="vm.description" class="{{ vm.classes.description }}">
+      {{ vm.description }}
+    </div>
+  </div>
+  <div ng-if="vm.closable" class="{{ vm.classes.actions }}">
+    <button
+      type="button"
+      class="rounded-md font-medium inline-flex items-center justify-center transition-colors size-8 text-sm text-current hover:opacity-75 {{ vm.classes.close }}"
+      aria-label="Fechar"
+      ng-click="vm.handleClose()"
+    >
+      <i class="{{ vm.resolvedCloseIcon }} size-5" aria-hidden="true"></i>
+    </button>
+  </div>
+</div>

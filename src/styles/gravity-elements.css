@@ -5,15 +5,23 @@
 /*
  * Tokens de tema — paridade Nuxt UI v4.10.0 (src/runtime/index.css).
  * --ui-container: geContainer; --ui-bg/--ui-border: geHeader;
- * --ui-border-accented / --sidebar-*: geSidebar; demais: geError
- * (e próximos componentes). Primary default ≈ green-500 do Nuxt UI; neutrals
- * via hex estáveis (sem depender de --ui-color-neutral-* ainda não portados).
+ * --ui-border-accented / --sidebar-*: geSidebar; cores semânticas +
+ * --ui-bg-elevated/--ui-bg-inverted: geAlert (e próximos Element).
+ * Primary default ≈ green do Nuxt UI; demais ≈ Tailwind 500; neutrals via
+ * hex estáveis (sem --ui-color-neutral-* ainda não portados).
  */
 :root {
   --ui-container: 80rem;
   --ui-header-height: 4rem;
   --ui-primary: #00c16a;
+  --ui-secondary: #3b82f6;
+  --ui-success: #22c55e;
+  --ui-info: #3b82f6;
+  --ui-warning: #f59e0b;
+  --ui-error: #ef4444;
   --ui-bg: #ffffff;
+  --ui-bg-elevated: #f5f5f5;
+  --ui-bg-inverted: #171717;
   --ui-border: #e5e5e5;
   --ui-border-accented: #d4d4d4;
   --ui-text-highlighted: #171717;
@@ -25,7 +33,14 @@
 }
 
 .dark {
+  --ui-secondary: #60a5fa;
+  --ui-success: #4ade80;
+  --ui-info: #60a5fa;
+  --ui-warning: #fbbf24;
+  --ui-error: #f87171;
   --ui-bg: #171717;
+  --ui-bg-elevated: #262626;
+  --ui-bg-inverted: #ffffff;
   --ui-border: #262626;
   --ui-border-accented: #404040;
   --ui-text-highlighted: #ffffff;
