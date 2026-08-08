@@ -5121,6 +5121,282 @@
 
   (function () {
 
+    // Portado de github.com/nuxt/ui v4.10.0, MIT License, Copyright (c) Nuxt Labs
+    // Upstream: theme/avatar.ts — slots root/image/fallback/icon + variants
+    // color/size. Tailwind v3: bg-${color}/10 → color-mix (TW 3.4.19 não
+    // compila opacidade /N sobre var()); text-${color} → [var(--ui-*)];
+    // bg-elevated / text-muted → tokens em gravity-elements.css.
+    angular.module('gravityElements.element').constant('geAvatarTheme', {
+      slots: {
+        root: 'inline-flex items-center justify-center shrink-0 select-none rounded-full align-middle',
+        image: 'h-full w-full rounded-[inherit] object-cover',
+        fallback: 'font-medium truncate',
+        icon: 'shrink-0',
+      },
+      variants: {
+        color: {
+          primary: {
+            root: 'bg-[color-mix(in_srgb,var(--ui-primary)_10%,transparent)]',
+            fallback: 'text-[var(--ui-primary)]',
+            icon: 'text-[var(--ui-primary)]',
+          },
+          secondary: {
+            root: 'bg-[color-mix(in_srgb,var(--ui-secondary)_10%,transparent)]',
+            fallback: 'text-[var(--ui-secondary)]',
+            icon: 'text-[var(--ui-secondary)]',
+          },
+          success: {
+            root: 'bg-[color-mix(in_srgb,var(--ui-success)_10%,transparent)]',
+            fallback: 'text-[var(--ui-success)]',
+            icon: 'text-[var(--ui-success)]',
+          },
+          info: {
+            root: 'bg-[color-mix(in_srgb,var(--ui-info)_10%,transparent)]',
+            fallback: 'text-[var(--ui-info)]',
+            icon: 'text-[var(--ui-info)]',
+          },
+          warning: {
+            root: 'bg-[color-mix(in_srgb,var(--ui-warning)_10%,transparent)]',
+            fallback: 'text-[var(--ui-warning)]',
+            icon: 'text-[var(--ui-warning)]',
+          },
+          error: {
+            root: 'bg-[color-mix(in_srgb,var(--ui-error)_10%,transparent)]',
+            fallback: 'text-[var(--ui-error)]',
+            icon: 'text-[var(--ui-error)]',
+          },
+          neutral: {
+            root: 'bg-[var(--ui-bg-elevated)]',
+            fallback: 'text-[var(--ui-text-muted)]',
+            icon: 'text-[var(--ui-text-muted)]',
+          },
+        },
+        size: {
+          '3xs': {
+            root: 'size-4 text-[8px]',
+          },
+          '2xs': {
+            root: 'size-5 text-[10px]',
+          },
+          xs: {
+            root: 'size-6 text-xs',
+          },
+          sm: {
+            root: 'size-7 text-sm',
+          },
+          md: {
+            root: 'size-8 text-base',
+          },
+          lg: {
+            root: 'size-9 text-lg',
+          },
+          xl: {
+            root: 'size-10 text-xl',
+          },
+          '2xl': {
+            root: 'size-11 text-[22px]',
+          },
+          '3xl': {
+            root: 'size-12 text-2xl',
+          },
+        },
+      },
+      defaultVariants: {
+        size: 'md',
+        color: 'neutral',
+      },
+    });
+  })();
+
+  (function () {
+
+    /**
+     * geAvatar — imagem de perfil com fallback texto/ícone (Element).
+     *
+     * Paridade com Nuxt UI Avatar v4.10.0 (theme/avatar.ts + Avatar.vue).
+     * Bindings da §7 + `color` (§5.4.2 — variant do tema upstream).
+     * Fallback §7: src → text (ou iniciais de alt) → icon, no controller
+     * (upstream Vue prioriza icon sobre text; seguimos a spec Gravity).
+     *
+     * icon: classe CSS inline até existir geIcon (§5.4) — trocar por
+     * <ge-icon> quando a tarefa "Componente: Icon" for concluída.
+     *
+     * chipColor/chipPosition: indicador inline aproximando UChip inset
+     * (§5.4.1) até existir geChip — trocar por <ge-chip> quando a tarefa
+     * "Componente: Chip" for concluída.
+     *
+     * @param {string} [vm.src]
+     * @param {string} [vm.alt]
+     * @param {string} [vm.text] - fallback de iniciais/texto
+     * @param {string} [vm.icon] - nome/classe CSS do ícone (passthrough)
+     * @param {string} [vm.size='md'] - 3xs|2xs|xs|sm|md|lg|xl|2xl|3xl
+     * @param {string} [vm.color='neutral'] - primary|secondary|success|info|warning|error|neutral
+     * @param {string} [vm.chipColor] - cor do chip de status (ativa o chip)
+     * @param {string} [vm.chipPosition] - top-right|bottom-right|top-left|bottom-left
+     */
+    angular.module('gravityElements.element').component('geAvatar', {
+      template:
+        '<span class="{{ vm.rootClass }}"' +
+        '  ng-attr-aria-label="{{ vm.rootAriaLabel || undefined }}">' +
+        '  <img ng-if="vm.showImage"' +
+        '    ng-src="{{ vm.src }}"' +
+        '    alt="{{ vm.alt }}"' +
+        '    class="{{ vm.classes.image }}"' +
+        '    onerror="var $s=angular.element(this).scope();$s.$applyAsync(function(){$s.vm.onImageError();})">' +
+        '  <span ng-if="vm.showText"' +
+        '    class="{{ vm.classes.fallback }}"' +
+        '    aria-hidden="true">{{ vm.fallbackText }}</span>' +
+        // Ícone CSS passthrough (§5.4) até existir geIcon — trocar por <ge-icon>
+        '  <i ng-if="vm.showIcon"' +
+        '    class="{{ vm.icon }} {{ vm.classes.icon }}"' +
+        '    aria-hidden="true"></i>' +
+        '  <span ng-if="vm.showEmpty"' +
+        '    class="{{ vm.classes.fallback }}"' +
+        '    aria-hidden="true">&nbsp;</span>' +
+        // Placeholder §5.4.1 — substituir por <ge-chip> após Componente: Chip
+        '  <span ng-if="vm.showChip"' +
+        '    class="{{ vm.chipClass }}"' +
+        '    aria-hidden="true"></span>' +
+        '</span>',
+      controllerAs: 'vm',
+      bindings: {
+        src: '@',
+        alt: '@',
+        text: '@',
+        icon: '@',
+        size: '@',
+        color: '@',
+        chipColor: '@',
+        chipPosition: '@',
+      },
+      controller: AvatarController,
+    });
+
+    var CHIP_BG = {
+      primary: 'bg-[var(--ui-primary)]',
+      secondary: 'bg-[var(--ui-secondary)]',
+      success: 'bg-[var(--ui-success)]',
+      info: 'bg-[var(--ui-info)]',
+      warning: 'bg-[var(--ui-warning)]',
+      error: 'bg-[var(--ui-error)]',
+      neutral: 'bg-[var(--ui-bg-inverted)]',
+    };
+
+    var CHIP_SIZE = {
+      '3xs': 'h-[4px] min-w-[4px] text-[4px]',
+      '2xs': 'h-[5px] min-w-[5px] text-[5px]',
+      xs: 'h-[6px] min-w-[6px] text-[6px]',
+      sm: 'h-[7px] min-w-[7px] text-[7px]',
+      md: 'h-[8px] min-w-[8px] text-[8px]',
+      lg: 'h-[9px] min-w-[9px] text-[9px]',
+      xl: 'h-[10px] min-w-[10px] text-[10px]',
+      '2xl': 'h-[11px] min-w-[11px] text-[11px]',
+      '3xl': 'h-[12px] min-w-[12px] text-[12px]',
+    };
+
+    var CHIP_POSITION = {
+      'top-right': 'top-0 right-0',
+      'bottom-right': 'bottom-0 right-0',
+      'top-left': 'top-0 left-0',
+      'bottom-left': 'bottom-0 left-0',
+    };
+
+    AvatarController.$inject = ['geTv', 'geAvatarTheme'];
+
+    function AvatarController(geTv, geAvatarTheme) {
+      var vm = this;
+      vm.$onInit = onInit;
+      vm.$onChanges = onChanges;
+      vm.onImageError = onImageError;
+
+      function onInit() {
+        vm.imageError = false;
+        refresh();
+      }
+
+      function onChanges(changes) {
+        if (!vm.classes) {
+          return;
+        }
+        if (changes.src && !changes.src.isFirstChange()) {
+          vm.imageError = false;
+        }
+        var hasLaterChange = Object.keys(changes).some(function (key) {
+          return !changes[key].isFirstChange();
+        });
+        if (hasLaterChange) {
+          refresh();
+        }
+      }
+
+      function onImageError() {
+        vm.imageError = true;
+        resolveDisplay();
+      }
+
+      function refresh() {
+        var size = vm.size || 'md';
+        var color = vm.color || 'neutral';
+        vm.classes = geTv(geAvatarTheme)({
+          size: size,
+          color: color,
+        });
+        vm.showChip = !!(vm.chipColor || vm.chipPosition);
+        vm.rootClass = vm.classes.root + (vm.showChip ? ' relative' : '');
+        if (vm.showChip) {
+          var chipColor = vm.chipColor || 'primary';
+          var chipPos = vm.chipPosition || 'top-right';
+          vm.chipClass = [
+            'rounded-full ring ring-[var(--ui-bg)] flex items-center justify-center',
+            'text-[var(--ui-text-inverted)] font-medium whitespace-nowrap absolute',
+            CHIP_BG[chipColor] || CHIP_BG.primary,
+            CHIP_SIZE[size] || CHIP_SIZE.md,
+            CHIP_POSITION[chipPos] || CHIP_POSITION['top-right'],
+          ].join(' ');
+        } else {
+          vm.chipClass = '';
+        }
+        resolveDisplay();
+      }
+
+      function resolveDisplay() {
+        var hasSrc = !!(vm.src && !vm.imageError);
+        var fallbackText = resolveFallbackText();
+        var hasText = !!fallbackText;
+        var hasIcon = !!vm.icon;
+
+        vm.showImage = hasSrc;
+        // Ordem §7: src → text → icon
+        vm.showText = !hasSrc && hasText;
+        vm.showIcon = !hasSrc && !hasText && hasIcon;
+        vm.showEmpty = !hasSrc && !hasText && !hasIcon;
+        vm.fallbackText = fallbackText;
+
+        // ARIA §5.5: alt no <img>; fallback visual com aria-hidden; se alt
+        // existe no modo fallback, nome acessível no root.
+        vm.rootAriaLabel = !vm.showImage && vm.alt ? vm.alt : null;
+      }
+
+      function resolveFallbackText() {
+        if (vm.text) {
+          return vm.text;
+        }
+        if (!vm.alt) {
+          return '';
+        }
+        return vm.alt
+          .split(' ')
+          .map(function (word) {
+            return word.charAt(0);
+          })
+          .join('')
+          .substring(0, 2);
+      }
+    }
+  })();
+
+  (function () {
+
     angular.module('gravityElements', [
       'gravityElements.core',
       'gravityElements.components',

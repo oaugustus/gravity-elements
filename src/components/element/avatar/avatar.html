@@ -1,0 +1,31 @@
+<span
+  class="{{ vm.rootClass }}"
+  ng-attr-aria-label="{{ vm.rootAriaLabel || undefined }}"
+>
+  <img
+    ng-if="vm.showImage"
+    ng-src="{{ vm.src }}"
+    alt="{{ vm.alt }}"
+    class="{{ vm.classes.image }}"
+    onerror="var $s=angular.element(this).scope();$s.$applyAsync(function(){$s.vm.onImageError();})"
+  />
+  <span
+    ng-if="vm.showText"
+    class="{{ vm.classes.fallback }}"
+    aria-hidden="true"
+    >{{ vm.fallbackText }}</span
+  >
+  <i
+    ng-if="vm.showIcon"
+    class="{{ vm.icon }} {{ vm.classes.icon }}"
+    aria-hidden="true"
+  ></i>
+  <span ng-if="vm.showEmpty" class="{{ vm.classes.fallback }}" aria-hidden="true"
+    >&nbsp;</span
+  >
+  <span
+    ng-if="vm.showChip"
+    class="{{ vm.chipClass }}"
+    aria-hidden="true"
+  ></span>
+</span>
