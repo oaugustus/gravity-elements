@@ -1,5 +1,21 @@
 import angular from 'angular';
 import { twMerge } from 'tailwind-merge';
+import {
+  addDays,
+  addMonths,
+  eachDayOfInterval,
+  endOfMonth,
+  endOfWeek,
+  format,
+  isAfter,
+  isBefore,
+  isSameDay,
+  isSameMonth,
+  isToday,
+  startOfMonth,
+  startOfWeek,
+} from 'date-fns';
+import { enUS, ptBR } from 'date-fns/locale';
 
 import './core/core.module.js';
 import './core/tv/tv.service.js';
@@ -38,6 +54,8 @@ import './components/element/banner/banner.theme.js';
 import './components/element/banner/banner.component.js';
 import './components/element/button/button.theme.js';
 import './components/element/button/button.component.js';
+import './components/element/calendar/calendar.theme.js';
+import './components/element/calendar/calendar.component.js';
 import './gravity-elements.module.js';
 
 // geTv (core/tv/tv.service.js) lê window.twMerge em tempo de execução para
@@ -50,8 +68,30 @@ import './gravity-elements.module.js';
 // src/index.js), corrige o bundle sem tocar nos testes existentes. Roda antes
 // de qualquer $onInit de componente, porque a avaliação deste módulo termina
 // bem antes de qualquer angular.bootstrap() do app consumidor.
+//
+// geCalendar lê window.dateFns (mesmo padrão $window.focusTrap). No Karma o
+// global vem de date-fns/cdn.js; no UMD publicado setamos o subconjunto usado.
 if (typeof window !== 'undefined') {
   window.twMerge = twMerge;
+  window.dateFns = {
+    addDays: addDays,
+    addMonths: addMonths,
+    eachDayOfInterval: eachDayOfInterval,
+    endOfMonth: endOfMonth,
+    endOfWeek: endOfWeek,
+    format: format,
+    isAfter: isAfter,
+    isBefore: isBefore,
+    isSameDay: isSameDay,
+    isSameMonth: isSameMonth,
+    isToday: isToday,
+    startOfMonth: startOfMonth,
+    startOfWeek: startOfWeek,
+    locale: {
+      enUS: enUS,
+      ptBR: ptBR,
+    },
+  };
 }
 
 export default angular.module('gravityElements');

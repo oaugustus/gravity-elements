@@ -10,6 +10,7 @@ module.exports = function (config) {
       'node_modules/tabbable/dist/index.umd.js',
       'node_modules/focus-trap/dist/focus-trap.umd.js',
       'node_modules/mousetrap/mousetrap.js',
+      'node_modules/date-fns/cdn.js',
 
       'test/shims/cjs-exports-prelude.js',
       'node_modules/tailwind-merge/dist/bundle-cjs.js',
@@ -44,6 +45,7 @@ module.exports = function (config) {
       'src/components/element/badge/**/*.js',
       'src/components/element/banner/**/*.js',
       'src/components/element/button/**/*.js',
+      'src/components/element/calendar/**/*.js',
       'test/fixtures/theme.fixture.js',
       'test/fixtures/class-normalize.js',
       'test/**/*.spec.js',
