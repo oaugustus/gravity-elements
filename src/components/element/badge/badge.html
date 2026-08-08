@@ -1,0 +1,14 @@
+<span class="{{ vm.classes.base }}">
+  <i
+    ng-if="vm.showLeading"
+    class="{{ vm.leadingIconName }} {{ vm.classes.leadingIcon }}"
+    aria-hidden="true"
+  ></i>
+  <span ng-if="vm.hasLabel" class="{{ vm.classes.label }}">{{ vm.label }}</span>
+  <span ng-transclude></span>
+  <i
+    ng-if="vm.showTrailing"
+    class="{{ vm.trailingIconName }} {{ vm.classes.trailingIcon }}"
+    aria-hidden="true"
+  ></i>
+</span>
