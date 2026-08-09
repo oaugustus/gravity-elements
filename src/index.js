@@ -68,6 +68,8 @@ import './components/element/icon/icon.theme.js';
 import './components/element/icon/icon.component.js';
 import './components/element/kbd/kbd.theme.js';
 import './components/element/kbd/kbd.component.js';
+import './components/element/progress/progress.theme.js';
+import './components/element/progress/progress.component.js';
 import './gravity-elements.module.js';
 
 // geTv (core/tv/tv.service.js) lê window.twMerge em tempo de execução para

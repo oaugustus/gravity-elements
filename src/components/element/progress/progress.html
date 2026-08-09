@@ -1,0 +1,13 @@
+<div class="{{ vm.classes.root }}">
+  <div ng-if="vm.showStatus" class="{{ vm.classes.status }}"
+    ng-style="vm.statusStyle">{{ vm.percent }}%</div>
+  <div role="progressbar" class="{{ vm.classes.base }}"
+    style="transform: translateZ(0)"
+    aria-valuemin="0"
+    ng-attr-aria-valuemax="{{ vm.ariaValueMax }}"
+    ng-attr-aria-valuenow="{{ vm.ariaValueNow }}">
+    <div class="{{ vm.classes.indicator }}"
+      ng-attr-data-state="{{ vm.dataState }}"
+      ng-style="vm.indicatorStyle"></div>
+  </div>
+</div>

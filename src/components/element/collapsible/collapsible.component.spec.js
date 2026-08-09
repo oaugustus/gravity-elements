@@ -104,8 +104,9 @@ describe('geCollapsible', function () {
       expected.content
     );
 
-    trigger.click();
-    compiled.scope.$digest();
+    // triggerHandler: click() nativo em <div> nem sempre dispara ng-click
+    // no Chrome Headless atual (settle estourava 2s com isOpen intacto).
+    angular.element(trigger).triggerHandler('click');
 
     // Preferir vm (§5.8); painel no DOM pode atrasar com ngAnimate.
     settle(
@@ -165,8 +166,7 @@ describe('geCollapsible', function () {
     );
     expect(compiled.element.isolateScope().vm.panelMounted).toBe(true);
 
-    triggerEl(compiled.element).click();
-    compiled.scope.$digest();
+    angular.element(triggerEl(compiled.element)).triggerHandler('click');
 
     settle(
       function () {
@@ -217,8 +217,7 @@ describe('geCollapsible', function () {
     expect(trigger.getAttribute('aria-disabled')).toBe('true');
     expect(trigger.getAttribute('aria-expanded')).toBe('false');
 
-    trigger.click();
-    compiled.scope.$digest();
+    angular.element(trigger).triggerHandler('click');
 
     vm = compiled.element.isolateScope().vm;
     expect(vm.isOpen).toBe(false);

@@ -12636,6 +12636,222 @@
 
   (function () {
 
+    // Portado de github.com/nuxt/ui v4.10.0, MIT License, Copyright (c) Nuxt Labs
+    // Upstream: theme/progress.ts — slots root/base/indicator/status (+ steps/step
+    // omitidos nesta etapa). Variants color/size; orientation/inverted/animation
+    // e compounds de animação fora do escopo (§7 barra simples). Altura da barra
+    // via compoundVariants size → slot base (string class no geTv). Tailwind v3:
+    // bg-accented → bg-[var(--ui-bg-accented)]; text-dimmed →
+    // text-[var(--ui-text-dimmed)]; bg-${color} → [var(--ui-*)]; neutral
+    // bg-inverted → bg-[var(--ui-bg-inverted)]. §5.7 N/A (sem /N sobre var(),
+    // sem ring/outline fora da escala, sem not-*). Indeterminate: uma animação
+    // simples data-[state=indeterminate]:animate-pulse (sem as 4 variantes
+    // carousel/swing/elastic do upstream).
+    angular.module('gravityElements.element').constant('geProgressTheme', {
+      slots: {
+        root: 'gap-2 w-full flex flex-col',
+        base: 'relative overflow-hidden rounded-full bg-[var(--ui-bg-accented)] w-full',
+        indicator:
+          'rounded-full size-full transition-transform duration-200 ease-out data-[state=indeterminate]:animate-pulse',
+        status:
+          'flex text-[var(--ui-text-dimmed)] transition-[width] duration-200 flex-row items-center justify-end min-w-fit',
+      },
+      variants: {
+        color: {
+          primary: {
+            indicator: 'bg-[var(--ui-primary)]',
+          },
+          secondary: {
+            indicator: 'bg-[var(--ui-secondary)]',
+          },
+          success: {
+            indicator: 'bg-[var(--ui-success)]',
+          },
+          info: {
+            indicator: 'bg-[var(--ui-info)]',
+          },
+          warning: {
+            indicator: 'bg-[var(--ui-warning)]',
+          },
+          error: {
+            indicator: 'bg-[var(--ui-error)]',
+          },
+          neutral: {
+            indicator: 'bg-[var(--ui-bg-inverted)]',
+          },
+        },
+        size: {
+          '2xs': {
+            status: 'text-xs',
+          },
+          xs: {
+            status: 'text-xs',
+          },
+          sm: {
+            status: 'text-sm',
+          },
+          md: {
+            status: 'text-sm',
+          },
+          lg: {
+            status: 'text-sm',
+          },
+          xl: {
+            status: 'text-base',
+          },
+          '2xl': {
+            status: 'text-base',
+          },
+        },
+      },
+      compoundVariants: [
+        {
+          size: '2xs',
+          class: 'h-px',
+        },
+        {
+          size: 'xs',
+          class: 'h-0.5',
+        },
+        {
+          size: 'sm',
+          class: 'h-1',
+        },
+        {
+          size: 'md',
+          class: 'h-2',
+        },
+        {
+          size: 'lg',
+          class: 'h-3',
+        },
+        {
+          size: 'xl',
+          class: 'h-4',
+        },
+        {
+          size: '2xl',
+          class: 'h-5',
+        },
+      ],
+      defaultVariants: {
+        color: 'primary',
+        size: 'md',
+      },
+    });
+  })();
+
+  (function () {
+
+    /**
+     * geProgress — barra de progresso (Element).
+     *
+     * Paridade com Nuxt UI Progress v4.10.0 (theme/progress.ts + Progress.vue),
+     * escopo §7: barra horizontal simples.
+     *
+     * Decisões de escopo:
+     * - Estado visual indeterminate quando `value` é null/undefined (sem
+     *   aria-valuenow, indicador sem transform fixo, data-state="indeterminate").
+     * - Feedback indeterminate: uma animação simples
+     *   `data-[state=indeterminate]:animate-pulse` — as 4 variantes
+     *   carousel/carousel-inverse/swing/elastic e a prop `animation` do upstream
+     *   ficam fora do binding contract desta etapa.
+     * - Fora: steps/step, orientation vertical, inverted, max como array.
+     *
+     * Uso:
+     *   <ge-progress value="value" max="100" status="true"></ge-progress>
+     *   <ge-progress color="success" size="lg"></ge-progress>
+     *
+     * @param {number|null} [vm.value] - valor atual; null/omitido = indeterminate
+     * @param {number} [vm.max=100] - máximo
+     * @param {string} [vm.color='primary'] - primary|secondary|success|info|warning|error|neutral
+     * @param {string} [vm.size='md'] - 2xs|xs|sm|md|lg|xl|2xl
+     * @param {boolean} [vm.status] - mostra label de %
+     */
+    angular.module('gravityElements.element').component('geProgress', {
+      template:
+        '<div class="{{ vm.classes.root }}">' +
+        '  <div ng-if="vm.showStatus" class="{{ vm.classes.status }}"' +
+        '    ng-style="vm.statusStyle">{{ vm.percent }}%</div>' +
+        '  <div role="progressbar" class="{{ vm.classes.base }}"' +
+        '    style="transform: translateZ(0)"' +
+        '    aria-valuemin="0"' +
+        '    ng-attr-aria-valuemax="{{ vm.ariaValueMax }}"' +
+        '    ng-attr-aria-valuenow="{{ vm.ariaValueNow }}">' +
+        '    <div class="{{ vm.classes.indicator }}"' +
+        '      ng-attr-data-state="{{ vm.dataState }}"' +
+        '      ng-style="vm.indicatorStyle"></div>' +
+        '  </div>' +
+        '</div>',
+      controllerAs: 'vm',
+      bindings: {
+        value: '<',
+        max: '<',
+        color: '@',
+        size: '@',
+        status: '<',
+      },
+      controller: ProgressController,
+    });
+
+    ProgressController.$inject = ['geTv', 'geProgressTheme'];
+
+    function ProgressController(geTv, geProgressTheme) {
+      var vm = this;
+      vm.$onInit = render;
+      vm.$onChanges = render;
+
+      function render() {
+        var isIndeterminate = vm.value === null || vm.value === undefined;
+        var realMax;
+        var percent;
+        var numericValue;
+
+        if (isIndeterminate) {
+          realMax = undefined;
+          percent = undefined;
+        } else {
+          realMax =
+            vm.max !== undefined &&
+            vm.max !== null &&
+            !isNaN(Number(vm.max)) &&
+            Number(vm.max) > 0
+              ? Number(vm.max)
+              : 100;
+          numericValue = Number(vm.value);
+          if (isNaN(numericValue) || numericValue < 0) {
+            percent = 0;
+          } else if (numericValue > realMax) {
+            percent = 100;
+          } else {
+            percent = Math.round((numericValue / realMax) * 100);
+          }
+        }
+
+        vm.isIndeterminate = isIndeterminate;
+        vm.percent = percent;
+        vm.showStatus = !isIndeterminate && !!vm.status;
+        vm.ariaValueMax = isIndeterminate ? undefined : realMax;
+        vm.ariaValueNow = isIndeterminate ? undefined : numericValue;
+        vm.dataState = isIndeterminate ? 'indeterminate' : undefined;
+        vm.indicatorStyle =
+          percent === undefined
+            ? undefined
+            : { transform: 'translateX(-' + (100 - percent) + '%)' };
+        vm.statusStyle = {
+          width: Math.max(percent === undefined ? 0 : percent, 0) + '%',
+        };
+
+        vm.classes = geTv(geProgressTheme)({
+          color: vm.color || 'primary',
+          size: vm.size || 'md',
+        });
+      }
+    }
+  })();
+
+  (function () {
+
     angular.module('gravityElements', [
       'gravityElements.core',
       'gravityElements.components',
