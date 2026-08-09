@@ -51,6 +51,7 @@ module.exports = function (config) {
       'src/components/element/collapsible/**/*.js',
       'src/components/element/field-group/**/*.js',
       'src/components/element/icon/**/*.js',
+      'src/components/element/kbd/**/*.js',
       'test/fixtures/theme.fixture.js',
       'test/fixtures/class-normalize.js',
       'test/**/*.spec.js',
