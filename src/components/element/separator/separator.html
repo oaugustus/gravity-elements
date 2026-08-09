@@ -1,0 +1,9 @@
+<div role="separator"
+  ng-attr-aria-orientation="{{ vm.resolvedOrientation }}"
+  class="{{ vm.classes.root }}">
+  <div class="{{ vm.classes.border }}"></div>
+  <div ng-if="vm.hasLabel" class="{{ vm.classes.container }}">
+    <span class="{{ vm.classes.label }}">{{ vm.label }}</span>
+  </div>
+  <div ng-if="vm.hasLabel" class="{{ vm.classes.border }}"></div>
+</div>
