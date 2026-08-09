@@ -54,6 +54,7 @@ module.exports = function (config) {
       'src/components/element/kbd/**/*.js',
       'src/components/element/progress/**/*.js',
       'src/components/element/separator/**/*.js',
+      'src/components/element/skeleton/**/*.js',
       'test/fixtures/theme.fixture.js',
       'test/fixtures/class-normalize.js',
       'test/**/*.spec.js',

@@ -67,6 +67,7 @@
   "after:w-px",
   "align-center",
   "align-middle",
+  "animate-pulse",
   "animate-spin",
   "aria-disabled:bg-[color-mix(in_srgb,var(--ui-error)_10%,transparent)]",
   "aria-disabled:bg-[color-mix(in_srgb,var(--ui-info)_10%,transparent)]",

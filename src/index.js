@@ -72,6 +72,8 @@ import './components/element/progress/progress.theme.js';
 import './components/element/progress/progress.component.js';
 import './components/element/separator/separator.theme.js';
 import './components/element/separator/separator.component.js';
+import './components/element/skeleton/skeleton.theme.js';
+import './components/element/skeleton/skeleton.component.js';
 import './gravity-elements.module.js';
 
 
