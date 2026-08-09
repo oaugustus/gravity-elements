@@ -12262,6 +12262,83 @@
 
   (function () {
 
+    // Tema próprio do Gravity Elements — NÃO portado de upstream.
+    // Nuxt UI v4.10.0 não tem theme/icon.ts (Icon.vue delega size em px bruto
+    // para @nuxt/icon). A escala abaixo alinha xs–xl aos leadingIcon/trailingIcon
+    // do geButton (size-4 / size-5 / size-6) e estende 3xs–3xl com as mesmas
+    // chaves de API do geAvatar/geChip.
+    // §5.7 N/A (só size-* / shrink-0 / inline-block).
+    angular.module('gravityElements.element').constant('geIconTheme', {
+      slots: {
+        base: 'shrink-0 inline-block',
+      },
+      variants: {
+        size: {
+          '3xs': 'size-3',
+          '2xs': 'size-3.5',
+          xs: 'size-4',
+          sm: 'size-4',
+          md: 'size-5',
+          lg: 'size-5',
+          xl: 'size-6',
+          '2xl': 'size-7',
+          '3xl': 'size-8',
+        },
+      },
+      defaultVariants: {
+        size: 'md',
+      },
+    });
+  })();
+
+  (function () {
+
+    /**
+     * geIcon — ícone fino via classe CSS (Element).
+     *
+     * Deliberadamente sem sistema de ícones embutido (fora de escopo §5.4 / §10).
+     * O binding `name` é aplicado como classe CSS no `<i>`; cabe ao app
+     * consumidor registrar uma fonte compatível (Iconify via
+     * `@iconify/tailwind`, Font Awesome, etc.).
+     *
+     * Paridade com Nuxt UI Icon v4.10.0 é só de API (`name` / `size`) — o
+     * upstream resolve via `@nuxt/icon` e não tem `theme/icon.ts`; o tamanho
+     * aqui é variant do `geTv` (decisão interna — ver `icon.theme.js`).
+     *
+     * Uso:
+     *   <ge-icon name="i-lucide-check" size="md"></ge-icon>
+     *
+     * @param {string} vm.name - classe CSS do ícone (ex. `i-lucide-check`)
+     * @param {string} [vm.size='md'] - 3xs|2xs|xs|sm|md|lg|xl|2xl|3xl
+     */
+    angular.module('gravityElements.element').component('geIcon', {
+      template:
+        '<i class="{{ vm.name }} {{ vm.classes.base }}" aria-hidden="true"></i>',
+      controllerAs: 'vm',
+      bindings: {
+        name: '@',
+        size: '@',
+      },
+      controller: IconController,
+    });
+
+    IconController.$inject = ['geTv', 'geIconTheme'];
+
+    function IconController(geTv, geIconTheme) {
+      var vm = this;
+      vm.$onInit = render;
+      vm.$onChanges = render;
+
+      function render() {
+        vm.classes = geTv(geIconTheme)({
+          size: vm.size || 'md',
+        });
+      }
+    }
+  })();
+
+  (function () {
+
     angular.module('gravityElements', [
       'gravityElements.core',
       'gravityElements.components',

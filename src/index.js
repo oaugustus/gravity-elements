@@ -64,6 +64,8 @@ import './components/element/collapsible/collapsible.theme.js';
 import './components/element/collapsible/collapsible.component.js';
 import './components/element/field-group/field-group.theme.js';
 import './components/element/field-group/field-group.component.js';
+import './components/element/icon/icon.theme.js';
+import './components/element/icon/icon.component.js';
 import './gravity-elements.module.js';
 
 // geTv (core/tv/tv.service.js) lê window.twMerge em tempo de execução para
