@@ -3,6 +3,7 @@ node_modules/
 
 # Build output
 dist/
+demo/demo-icons.css
 
 # Test coverage
 coverage/

@@ -1,0 +1,68 @@
+<section class="demo-section">
+  <h2>geBadge</h2>
+  <p class="demo-hint">
+    Badge com label, color, variant e size. Espelha os exemplos Label, Color,
+    Variant, Size, Icon da doc — <code>avatar</code> não está no template
+    (§5.4.2, avatar/leadingAvatar omitidos, prop objeto).
+  </p>
+  <div class="demo-row" style="flex-direction: column; width: 100%">
+    <div class="demo-item">
+      <span class="label">Label</span>
+      <ge-badge label="Badge"></ge-badge>
+    </div>
+    <div class="demo-item">
+      <span class="label">Color (neutral)</span>
+      <ge-badge label="Badge" color="neutral"></ge-badge>
+    </div>
+    <div class="demo-item">
+      <span class="label">Variant (neutral / outline)</span>
+      <ge-badge label="Badge" color="neutral" variant="outline"></ge-badge>
+    </div>
+    <div class="demo-item">
+      <span class="label">Size (xl)</span>
+      <ge-badge label="Badge" size="xl"></ge-badge>
+    </div>
+    <div class="demo-item">
+      <span class="label">Icon</span>
+      <ge-badge label="Badge" icon="i-lucide-rocket" size="md" color="primary" variant="solid"></ge-badge>
+    </div>
+    <div class="demo-item">
+      <span class="label">Trailing icon</span>
+      <ge-badge label="Badge" trailing-icon="i-lucide-arrow-right" size="md"></ge-badge>
+    </div>
+  </div>
+</section>
+
+<section class="demo-section">
+  <h3>Variações (extensão Gravity — cobertura de color/variant/size)</h3>
+  <div class="demo-row">
+    <div class="demo-item">
+      <span class="label">cores (solid)</span>
+      <div class="demo-row">
+        <ge-badge label="primary" color="primary"></ge-badge>
+        <ge-badge label="success" color="success"></ge-badge>
+        <ge-badge label="warning" color="warning"></ge-badge>
+        <ge-badge label="error" color="error"></ge-badge>
+        <ge-badge label="neutral" color="neutral"></ge-badge>
+      </div>
+    </div>
+    <div class="demo-item">
+      <span class="label">variants</span>
+      <div class="demo-row">
+        <ge-badge label="solid" color="primary" variant="solid"></ge-badge>
+        <ge-badge label="outline" color="primary" variant="outline"></ge-badge>
+        <ge-badge label="soft" color="primary" variant="soft"></ge-badge>
+        <ge-badge label="subtle" color="primary" variant="subtle"></ge-badge>
+      </div>
+    </div>
+    <div class="demo-item">
+      <span class="label">sizes</span>
+      <div class="demo-row">
+        <ge-badge label="xs" size="xs" color="info"></ge-badge>
+        <ge-badge label="sm" size="sm" color="info"></ge-badge>
+        <ge-badge label="md" size="md" color="info"></ge-badge>
+        <ge-badge label="lg" size="lg" color="info"></ge-badge>
+      </div>
+    </div>
+  </div>
+</section>

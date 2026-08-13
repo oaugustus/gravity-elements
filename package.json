@@ -14,8 +14,11 @@
     "test": "npm run bundle:tv-shim && karma start test/karma.conf.js --single-run",
     "generate:safelist": "node scripts/generate-tailwind-safelist.js",
     "build:css": "npm run generate:safelist && tailwindcss -i ./src/styles/gravity-elements.css -o ./dist/gravity-elements.css --minify",
-    "demo": "vite",
-    "build:js": "rollup -c"
+    "postbuild:css": "node scripts/inject-demo-cachebust.js",
+    "build:demo-icons": "node scripts/generate-demo-icons.js",
+    "demo": "npm run build:demo-icons && vite",
+    "build:js": "rollup -c",
+    "postbuild:js": "node scripts/inject-demo-cachebust.js"
   },
   "dependencies": {
     "@floating-ui/dom": "^1.8.0",
@@ -29,8 +32,10 @@
     "tailwind-merge": "^3.6.0"
   },
   "devDependencies": {
+    "@iconify-json/lucide": "^1.2.123",
     "@rollup/plugin-commonjs": "^29.0.3",
     "@rollup/plugin-node-resolve": "^16.0.3",
+    "angular-route": "1.8.3",
     "autoprefixer": "^10.5.4",
     "esbuild": "^0.28.1",
     "eslint": "^8.57.1",

@@ -1,0 +1,51 @@
+<section class="demo-section">
+  <h2>geFooter</h2>
+  <p class="demo-hint">
+    Multi-slot: top / left / center (default) / right / bottom. Espelha o
+    exemplo "Usage" da doc (left = copyright, center = links, right = ações) —
+    a doc usa <code>NavigationMenu</code> no centro e ícones de marca
+    (Discord/X/GitHub) na direita; como <code>NavigationMenu</code> é
+    Navigation (fora da Etapa 1) e esses ícones de marca não estão no set do
+    demo (§5.4 — só Lucide), aproximamos com links de texto simples e
+    <code>ge-button</code> ghost com labels.
+  </p>
+  <ge-footer>
+    <ge-footer-left>
+      <p class="demo-hint" style="margin: 0">Copyright © 2026</p>
+    </ge-footer-left>
+    <a href="#" style="margin-right: 1rem">Figma Kit</a>
+    <a href="#" style="margin-right: 1rem">Playground</a>
+    <a href="#">Releases</a>
+    <ge-footer-right>
+      <ge-button label="Discord" color="neutral" variant="ghost" size="sm"></ge-button>
+      <ge-button label="X" color="neutral" variant="ghost" size="sm"></ge-button>
+      <ge-button label="GitHub" color="neutral" variant="ghost" size="sm"></ge-button>
+    </ge-footer-right>
+  </ge-footer>
+</section>
+
+<section class="demo-section">
+  <h3>Variações (extensão Gravity — top/bottom não aparecem no exemplo da doc)</h3>
+  <div class="demo-row" style="flex-direction: column; width: 100%">
+    <div class="demo-item" style="width: 100%">
+      <span class="label">com top + bottom</span>
+      <ge-footer>
+        <ge-footer-top>
+          <div class="demo-placeholder" style="margin: 0">Top slot</div>
+        </ge-footer-top>
+        <ge-footer-left>Left</ge-footer-left>
+        Center
+        <ge-footer-right>Right</ge-footer-right>
+        <ge-footer-bottom>
+          <div class="demo-placeholder" style="margin: 0">Bottom slot</div>
+        </ge-footer-bottom>
+      </ge-footer>
+    </div>
+    <div class="demo-item" style="width: 100%">
+      <span class="label">só center</span>
+      <ge-footer>
+        <span class="demo-hint" style="margin: 0">Apenas conteúdo default (center)</span>
+      </ge-footer>
+    </div>
+  </div>
+</section>

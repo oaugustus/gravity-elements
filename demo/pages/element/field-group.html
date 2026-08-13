@@ -1,0 +1,68 @@
+<section class="demo-section">
+  <h2>geFieldGroup</h2>
+  <p class="demo-hint">
+    Agrupa botões/badges com bordas coladas (orientation + size). Espelha
+    Usage, Size, Orientation da doc — os exemplos "With input"/"With dropdown
+    menu" usam Input/DropdownMenu (Form/Overlay, fora da Etapa 1).
+  </p>
+  <div class="demo-row" style="flex-direction: column; width: 100%">
+    <div class="demo-item">
+      <span class="label">Usage</span>
+      <ge-field-group>
+        <ge-button color="neutral" variant="subtle" label="Button"></ge-button>
+        <ge-button color="neutral" variant="outline" icon="i-lucide-chevron-down"></ge-button>
+      </ge-field-group>
+    </div>
+    <div class="demo-item">
+      <span class="label">Size (xl)</span>
+      <ge-field-group size="xl">
+        <ge-button color="neutral" variant="subtle" label="Button"></ge-button>
+        <ge-button color="neutral" variant="outline" icon="i-lucide-chevron-down"></ge-button>
+      </ge-field-group>
+    </div>
+    <div class="demo-item" style="align-items: flex-start">
+      <span class="label">Orientation (vertical)</span>
+      <ge-field-group orientation="vertical">
+        <ge-button color="neutral" variant="subtle" label="Submit"></ge-button>
+        <ge-button color="neutral" variant="outline" label="Cancel"></ge-button>
+      </ge-field-group>
+    </div>
+    <div class="demo-item">
+      <span class="label">With badge</span>
+      <ge-field-group>
+        <ge-badge color="neutral" variant="outline" size="lg" label="https://"></ge-badge>
+        <ge-button color="neutral" variant="outline" label="www.example.com"></ge-button>
+      </ge-field-group>
+    </div>
+  </div>
+</section>
+
+<section class="demo-section">
+  <h3>Variações (extensão Gravity)</h3>
+  <div class="demo-row">
+    <div class="demo-item">
+      <span class="label">horizontal + size=sm</span>
+      <ge-field-group size="sm" orientation="horizontal">
+        <ge-button label="A" color="primary" variant="outline"></ge-button>
+        <ge-button label="B" color="primary" variant="outline"></ge-button>
+        <ge-button label="C" color="primary" variant="outline"></ge-button>
+      </ge-field-group>
+    </div>
+    <div class="demo-item" style="align-items: flex-start">
+      <span class="label">vertical</span>
+      <ge-field-group orientation="vertical">
+        <ge-button label="Topo" color="neutral" variant="outline"></ge-button>
+        <ge-button label="Meio" color="neutral" variant="outline"></ge-button>
+        <ge-button label="Base" color="neutral" variant="outline"></ge-button>
+      </ge-field-group>
+    </div>
+    <div class="demo-item">
+      <span class="label">badges</span>
+      <ge-field-group size="sm">
+        <ge-badge label="One" color="primary" variant="outline"></ge-badge>
+        <ge-badge label="Two" color="primary" variant="outline"></ge-badge>
+        <ge-badge label="Three" color="primary" variant="outline"></ge-badge>
+      </ge-field-group>
+    </div>
+  </div>
+</section>

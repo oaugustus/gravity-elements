@@ -1,0 +1,38 @@
+<section class="demo-section">
+  <h2>geSkeleton</h2>
+  <p class="demo-hint">
+    Placeholder com pulse. Dimensões via style no host (demo). Espelha o
+    único exemplo "Usage" da doc: avatar circular + 2 linhas de texto.
+  </p>
+  <div style="display: flex; align-items: center; gap: 1rem">
+    <ge-skeleton style="display: block; height: 3rem; width: 3rem; border-radius: 9999px"></ge-skeleton>
+    <div style="display: grid; gap: 0.5rem">
+      <ge-skeleton style="display: block; height: 1rem; width: 250px"></ge-skeleton>
+      <ge-skeleton style="display: block; height: 1rem; width: 200px"></ge-skeleton>
+    </div>
+  </div>
+</section>
+
+<section class="demo-section">
+  <h3>Variações (extensão Gravity)</h3>
+  <div class="demo-row">
+    <div class="demo-item">
+      <span class="label">linha de texto</span>
+      <ge-skeleton style="display: block; height: 0.75rem; width: 16rem"></ge-skeleton>
+    </div>
+    <div class="demo-item">
+      <span class="label">avatar circular</span>
+      <ge-skeleton
+        style="display: block; height: 3rem; width: 3rem; border-radius: 9999px"
+      ></ge-skeleton>
+    </div>
+    <div class="demo-item">
+      <span class="label">card placeholder</span>
+      <div style="width: 12rem; display: flex; flex-direction: column; gap: 0.5rem">
+        <ge-skeleton style="display: block; height: 6rem; width: 100%"></ge-skeleton>
+        <ge-skeleton style="display: block; height: 0.75rem; width: 75%"></ge-skeleton>
+        <ge-skeleton style="display: block; height: 0.75rem; width: 50%"></ge-skeleton>
+      </div>
+    </div>
+  </div>
+</section>

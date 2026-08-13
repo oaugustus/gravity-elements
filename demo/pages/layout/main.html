@@ -1,0 +1,32 @@
+<section class="demo-section">
+  <h2>geMain</h2>
+  <p class="demo-hint">Wrapper semântico <code>&lt;main&gt;</code> com altura mínima da viewport.</p>
+  <ge-main>
+    <div class="demo-placeholder">
+      <h3 style="margin-top: 0">Conteúdo principal</h3>
+      <p class="demo-hint" style="margin: 0">Uso básico dentro de ge-main.</p>
+    </div>
+  </ge-main>
+</section>
+
+<section class="demo-section">
+  <h3>Variações</h3>
+  <div class="demo-row" style="flex-direction: column; width: 100%">
+    <div class="demo-item" style="width: 100%">
+      <span class="label">com container</span>
+      <ge-main>
+        <ge-container size="lg">
+          <div class="demo-placeholder">Main + Container lg</div>
+        </ge-container>
+      </ge-main>
+    </div>
+    <div class="demo-item" style="width: 100%">
+      <span class="label">com card</span>
+      <ge-main>
+        <ge-card title="Dentro do Main" description="Composição tipica de página" variant="outline">
+          Corpo do card.
+        </ge-card>
+      </ge-main>
+    </div>
+  </div>
+</section>

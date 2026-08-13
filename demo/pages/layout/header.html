@@ -1,0 +1,51 @@
+<section class="demo-section">
+  <h2>geHeader</h2>
+  <p class="demo-hint">
+    Barra sticky com slots title / left / right / top / bottom. Espelha o
+    exemplo "Usage" da doc (title + nav central + geTheme/GitHub à direita) —
+    a doc usa <code>NavigationMenu</code> (Navigation, fora da Etapa 1) pra
+    nav central; aproximamos com links de texto simples.
+  </p>
+  <ge-header title="Gravity Elements">
+    <a href="#" style="margin-right: 1rem">Docs</a>
+    <a href="#" style="margin-right: 1rem">Components</a>
+    <a href="#" style="margin-right: 1rem">Figma</a>
+    <a href="#">Releases</a>
+    <ge-header-right>
+      <ge-theme></ge-theme>
+      <ge-button label="GitHub" color="neutral" variant="ghost" size="sm"></ge-button>
+    </ge-header-right>
+  </ge-header>
+</section>
+
+<section class="demo-section">
+  <h3>Variações</h3>
+  <div class="demo-row" style="flex-direction: column; width: 100%">
+    <div class="demo-item" style="width: 100%">
+      <span class="label">title slot + left + right</span>
+      <ge-header>
+        <ge-header-title>
+          <ge-badge label="GE" color="primary" size="sm"></ge-badge>
+        </ge-header-title>
+        <ge-header-left>
+          <ge-button label="Menu" color="neutral" variant="ghost" size="sm"></ge-button>
+        </ge-header-left>
+        Nav center
+        <ge-header-right>
+          <ge-button label="Login" color="primary" size="sm"></ge-button>
+        </ge-header-right>
+      </ge-header>
+    </div>
+    <div class="demo-item" style="width: 100%">
+      <span class="label">com top + bottom</span>
+      <ge-header title="Com faixas">
+        <ge-header-top>
+          <ge-banner title="Banner no top do header" color="info"></ge-banner>
+        </ge-header-top>
+        <ge-header-bottom>
+          <div class="demo-placeholder" style="margin: 0; padding: 0.5rem">Bottom slot</div>
+        </ge-header-bottom>
+      </ge-header>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,54 @@
+<section class="demo-section">
+  <h2>geButton</h2>
+  <p class="demo-hint">
+    Botão com label, color, variant, size, loading e disabled. Espelha os
+    exemplos Label, Color, Variant, Size, Icon, Link, Loading, Disabled da
+    doc — <code>avatar</code>/<code>active-color</code>/<code>loading-auto</code>
+    não estão no binding contract desta etapa (§5.4.2).
+  </p>
+  <div class="demo-row" style="flex-wrap: wrap; gap: 0.75rem">
+    <ge-button label="Button"></ge-button>
+    <ge-button label="Button" color="neutral"></ge-button>
+    <ge-button label="Button" color="neutral" variant="outline"></ge-button>
+    <ge-button label="Button" size="xl"></ge-button>
+    <ge-button label="Button" icon="i-lucide-rocket" size="md" color="primary" variant="solid"></ge-button>
+    <ge-button label="Button" trailing-icon="i-lucide-arrow-right" size="md"></ge-button>
+    <ge-button icon="i-lucide-search" size="md" color="primary" variant="solid" aria-label="Buscar"></ge-button>
+    <ge-button label="Button" to="#" target="_blank"></ge-button>
+    <ge-button label="Button" loading="true"></ge-button>
+    <ge-button label="Button" disabled="true"></ge-button>
+  </div>
+</section>
+
+<section class="demo-section">
+  <h3>Variações (extensão Gravity — cobertura de variant/color/estados)</h3>
+  <div class="demo-row">
+    <div class="demo-item">
+      <span class="label">variants</span>
+      <div class="demo-row">
+        <ge-button label="Solid" color="primary" variant="solid"></ge-button>
+        <ge-button label="Outline" color="primary" variant="outline"></ge-button>
+        <ge-button label="Soft" color="primary" variant="soft"></ge-button>
+        <ge-button label="Ghost" color="primary" variant="ghost"></ge-button>
+        <ge-button label="Link" color="primary" variant="link"></ge-button>
+      </div>
+    </div>
+    <div class="demo-item">
+      <span class="label">cores</span>
+      <div class="demo-row">
+        <ge-button label="Success" color="success" size="sm"></ge-button>
+        <ge-button label="Warning" color="warning" size="sm"></ge-button>
+        <ge-button label="Error" color="error" size="sm"></ge-button>
+        <ge-button label="Neutral" color="neutral" size="sm"></ge-button>
+      </div>
+    </div>
+    <div class="demo-item">
+      <span class="label">estados</span>
+      <div class="demo-row">
+        <ge-button label="Loading" color="primary" loading="true"></ge-button>
+        <ge-button label="Disabled" color="primary" disabled="true"></ge-button>
+        <ge-button label="Block" color="info" block="true"></ge-button>
+      </div>
+    </div>
+  </div>
+</section>

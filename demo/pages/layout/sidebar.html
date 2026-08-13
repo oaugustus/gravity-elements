@@ -1,0 +1,99 @@
+<section class="demo-section">
+  <h2>geSidebar</h2>
+  <p class="demo-hint">
+    Desktop: <code>side</code>, <code>collapsible</code>, <code>variant</code>,
+    <code>open</code> two-way. Use o botão × no header ou o toggle abaixo.
+    Espelha a estrutura do exemplo "Usage" da doc (header com workspace, nav
+    com badge de contagem, footer com perfil) — o exemplo upstream usa
+    <code>DropdownMenu</code> pro seletor de workspace e ícones por item
+    (fora do binding contract desta etapa — §5.4.1/§5.4.2, sem overlay/menu),
+    então aproximamos com <code>ge-avatar</code>/<code>ge-badge</code> e texto.
+  </p>
+  <p class="demo-hint">
+    open = <strong>{{ demo.sidebarOpen }}</strong>
+    —
+    <ge-button
+      label="Toggle open"
+      color="neutral"
+      variant="outline"
+      size="sm"
+      on-click="demo.toggleSidebar()"
+    ></ge-button>
+  </p>
+  <div class="demo-sidebar-host">
+    <ge-sidebar
+      collapsible="offcanvas"
+      variant="sidebar"
+      open="demo.sidebarOpen"
+      on-open-change="demo.onSidebarOpenChange(open)"
+    >
+      <ge-sidebar-header>
+        <ge-avatar text="N" size="sm"></ge-avatar>
+        <span style="margin-left: 0.5rem; font-weight: 600">Nuxt</span>
+      </ge-sidebar-header>
+      <p class="demo-hint" style="display: flex; justify-content: space-between">
+        <span>Inbox</span> <ge-badge label="4" color="neutral" variant="subtle" size="sm"></ge-badge>
+      </p>
+      <p class="demo-hint">Issues</p>
+      <p class="demo-hint">Activity</p>
+      <p class="demo-hint">Settings</p>
+      <ge-sidebar-footer>
+        <ge-avatar text="BC" size="sm"></ge-avatar>
+        <span style="margin-left: 0.5rem">Benjamin Canac</span>
+      </ge-sidebar-footer>
+    </ge-sidebar>
+    <div class="demo-sidebar-content">
+      <p>Área de conteúdo ao lado da sidebar.</p>
+    </div>
+  </div>
+</section>
+
+<section class="demo-section">
+  <h3>Title / Description</h3>
+  <p class="demo-hint">
+    Espelha os exemplos "Title" (<code>title="Navigation"</code>) e
+    "Description" (<code>description="Browse your workspace"</code>) da doc —
+    mostrados separadamente, cada um com só um placeholder de conteúdo.
+  </p>
+  <div class="demo-sidebar-host">
+    <ge-sidebar title="Navigation" description="Browse your workspace" collapsible="none">
+      <div class="demo-placeholder" style="height: 100%"></div>
+    </ge-sidebar>
+    <div class="demo-sidebar-content"><p>Host</p></div>
+  </div>
+</section>
+
+<section class="demo-section">
+  <h3>Variações</h3>
+  <div class="demo-row" style="flex-direction: column; width: 100%">
+    <div class="demo-item" style="width: 100%">
+      <span class="label">variant="floating" + side="right"</span>
+      <div class="demo-sidebar-host" style="flex-direction: row-reverse">
+        <ge-sidebar
+          title="Floating"
+          description="lado direito"
+          side="right"
+          variant="floating"
+          collapsible="none"
+        >
+          <p class="demo-hint">Conteúdo</p>
+        </ge-sidebar>
+        <div class="demo-sidebar-content"><p>Host</p></div>
+      </div>
+    </div>
+    <div class="demo-item" style="width: 100%">
+      <span class="label">variant="inset" + collapsible="icon"</span>
+      <div class="demo-sidebar-host">
+        <ge-sidebar
+          title="Inset"
+          collapsible="icon"
+          variant="inset"
+          open="true"
+        >
+          <p class="demo-hint">Colapsável em ícone</p>
+        </ge-sidebar>
+        <div class="demo-sidebar-content"><p>Host</p></div>
+      </div>
+    </div>
+  </div>
+</section>

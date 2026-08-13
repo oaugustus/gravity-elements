@@ -1,0 +1,77 @@
+<section class="demo-section">
+  <h2>geChip</h2>
+  <p class="demo-hint">
+    Indicador de notificação (standalone ou sobre outro elemento). Espelha
+    Usage, Color, Size, Text, Position, Inset, Standalone.
+  </p>
+  <div class="demo-row" style="flex-wrap: wrap; gap: 1.5rem">
+    <div class="demo-item">
+      <span class="label">Usage</span>
+      <ge-chip>
+        <ge-button icon="i-lucide-mail" color="neutral" variant="subtle"></ge-button>
+      </ge-chip>
+    </div>
+    <div class="demo-item">
+      <span class="label">Color (neutral)</span>
+      <ge-chip color="neutral">
+        <ge-button icon="i-lucide-mail" color="neutral" variant="subtle"></ge-button>
+      </ge-chip>
+    </div>
+    <div class="demo-item">
+      <span class="label">Size (3xl)</span>
+      <ge-chip size="3xl">
+        <ge-button icon="i-lucide-mail" color="neutral" variant="subtle"></ge-button>
+      </ge-chip>
+    </div>
+    <div class="demo-item">
+      <span class="label">Text</span>
+      <ge-chip text="5" size="3xl">
+        <ge-button icon="i-lucide-mail" color="neutral" variant="subtle"></ge-button>
+      </ge-chip>
+    </div>
+    <div class="demo-item">
+      <span class="label">Position (bottom-left)</span>
+      <ge-chip position="bottom-left">
+        <ge-button icon="i-lucide-mail" color="neutral" variant="subtle"></ge-button>
+      </ge-chip>
+    </div>
+    <div class="demo-item">
+      <span class="label">Inset</span>
+      <ge-chip inset="true">
+        <ge-avatar alt="Benjamin Canac"></ge-avatar>
+      </ge-chip>
+    </div>
+    <div class="demo-item">
+      <span class="label">Standalone</span>
+      <ge-chip standalone="true" inset="true"></ge-chip>
+    </div>
+  </div>
+</section>
+
+<section class="demo-section">
+  <h3>Variações (extensão Gravity — cobertura standalone/inset com avatar)</h3>
+  <div class="demo-row">
+    <div class="demo-item">
+      <span class="label">cores standalone</span>
+      <div class="demo-row">
+        <ge-chip text="1" color="primary" standalone="true"></ge-chip>
+        <ge-chip text="2" color="success" standalone="true"></ge-chip>
+        <ge-chip text="9+" color="error" standalone="true"></ge-chip>
+      </div>
+    </div>
+    <div class="demo-item">
+      <span class="label">sobre avatar (inset)</span>
+      <ge-chip text="5" color="error" position="top-right" inset="true">
+        <ge-avatar text="CH" size="lg" color="neutral"></ge-avatar>
+      </ge-chip>
+    </div>
+    <div class="demo-item">
+      <span class="label">sizes</span>
+      <div class="demo-row">
+        <ge-chip text="sm" size="sm" color="info" standalone="true"></ge-chip>
+        <ge-chip text="md" size="md" color="info" standalone="true"></ge-chip>
+        <ge-chip text="lg" size="lg" color="info" standalone="true"></ge-chip>
+      </div>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,57 @@
+<section class="demo-section">
+  <h2>geBanner</h2>
+  <p class="demo-hint">
+    Faixa de destaque; role alert se color for error|warning. Espelha os
+    exemplos Title, Icon, Color, Close, Close Icon, Link da doc —
+    <code>actions</code> (lista de <code>ge-button</code>) não está no
+    binding contract desta etapa (§5.4.2).
+  </p>
+  <div class="demo-row" style="flex-direction: column; width: 100%">
+    <div class="demo-item" style="width: 100%">
+      <span class="label">Title</span>
+      <ge-banner title="This is a banner with an important message."></ge-banner>
+    </div>
+    <div class="demo-item" style="width: 100%">
+      <span class="label">Icon</span>
+      <ge-banner icon="i-lucide-info" title="This is a banner with an icon."></ge-banner>
+    </div>
+    <div class="demo-item" style="width: 100%">
+      <span class="label">Color (neutral)</span>
+      <ge-banner color="neutral" icon="i-lucide-info" title="This is a banner with an icon."></ge-banner>
+    </div>
+    <div class="demo-item" style="width: 100%">
+      <span class="label">Close</span>
+      <ge-banner title="This is a closable banner." closable="true"></ge-banner>
+    </div>
+    <div class="demo-item" style="width: 100%">
+      <span class="label">Close Icon (x-circle)</span>
+      <ge-banner
+        title="This is a closable banner with a custom close icon."
+        closable="true"
+        close-icon="i-lucide-x-circle"
+      ></ge-banner>
+    </div>
+    <div class="demo-item" style="width: 100%">
+      <span class="label">Link (to)</span>
+      <ge-banner to="#" color="primary" title="NuxtLabs is joining Vercel!"></ge-banner>
+    </div>
+  </div>
+</section>
+
+<section class="demo-section">
+  <h3>Variações (extensão Gravity — cobertura de color/role)</h3>
+  <div class="demo-row" style="flex-direction: column; width: 100%">
+    <div class="demo-item" style="width: 100%">
+      <span class="label">info + closable</span>
+      <ge-banner title="Informação importante" color="info" closable="true"></ge-banner>
+    </div>
+    <div class="demo-item" style="width: 100%">
+      <span class="label">warning (role=alert)</span>
+      <ge-banner title="Atenção: manutenção programada" color="warning"></ge-banner>
+    </div>
+    <div class="demo-item" style="width: 100%">
+      <span class="label">error + closable</span>
+      <ge-banner title="Falha na sincronização" color="error" closable="true"></ge-banner>
+    </div>
+  </div>
+</section>

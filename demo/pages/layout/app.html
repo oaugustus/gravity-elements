@@ -1,0 +1,36 @@
+<section class="demo-section">
+  <h2>geApp</h2>
+  <p class="demo-hint">
+    Stub da Etapa 1: container raiz + transclusion. No <code>$onInit</code> aplica o
+    modo persistido de <code>geColorMode</code>. O shell deste demo já está envolvido
+    por <code>&lt;ge-app&gt;</code>.
+  </p>
+  <div class="demo-box">
+    <ge-app>
+      <p>Conteúdo transcluído dentro de <strong>ge-app</strong>.</p>
+    </ge-app>
+  </div>
+</section>
+
+<section class="demo-section">
+  <h3>Variações</h3>
+  <div class="demo-row">
+    <div class="demo-item">
+      <span class="label">aninhado</span>
+      <div class="demo-box">
+        <ge-app>
+          <ge-badge label="dentro do App" color="primary"></ge-badge>
+        </ge-app>
+      </div>
+    </div>
+    <div class="demo-item">
+      <span class="label">com Theme</span>
+      <div class="demo-box" style="display: flex; gap: 0.5rem; align-items: center">
+        <ge-app>
+          <ge-theme></ge-theme>
+        </ge-app>
+        <span class="demo-hint" style="margin: 0">toggle via geColorMode</span>
+      </div>
+    </div>
+  </div>
+</section>

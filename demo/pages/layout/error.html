@@ -1,0 +1,64 @@
+<section class="demo-section">
+  <h2>geError</h2>
+  <p class="demo-hint">
+    Página de erro genérica (404 / 500). Espelha o exemplo "Error" da doc
+    (<code>ui.nuxt.com/docs/components/error</code>): 404 / "Page not found" /
+    mensagem + botão "Back to home". Clear dispara <code>on-clear</code>.
+  </p>
+  <div ng-if="!demo.errorCleared">
+    <ge-error
+      status-code="404"
+      status-message="Page not found"
+      message="The page you are looking for does not exist."
+      clear="true"
+      on-clear="demo.onErrorClear()"
+    ></ge-error>
+  </div>
+  <p ng-if="demo.errorCleared" class="demo-box">Clear acionado — recarregue a página para ver de novo.</p>
+</section>
+
+<section class="demo-section">
+  <h3>Icon</h3>
+  <p class="demo-hint">Exemplo "Icon" da doc: prop <code>icon</code> acima do status code.</p>
+  <ge-error
+    icon="i-lucide-file-x"
+    status-code="404"
+    status-message="Page not found"
+    message="The page you are looking for does not exist."
+    clear="true"
+  ></ge-error>
+</section>
+
+<section class="demo-section">
+  <h3>Variações (extensão Gravity — cobertura de status codes)</h3>
+  <p class="demo-hint">
+    A doc upstream não mostra outros status codes; os exemplos "Clear"
+    (objeto <code>ButtonProps</code>), "Redirect" e o slot <code>#leading</code>
+    (logo customizado) não estão no binding contract desta etapa (§5.4.1/§5.4.2
+    — <code>clear</code> aqui é só booleano, sem <code>redirect</code> nem slot
+    leading) — fora de escopo.
+  </p>
+  <div class="demo-row" style="flex-direction: column">
+    <div class="demo-item" style="width: 100%">
+      <span class="label">500 + clear=false</span>
+      <div class="demo-box">
+        <ge-error
+          status-code="500"
+          status-message="Server error"
+          message="Algo deu errado no servidor."
+          clear="false"
+        ></ge-error>
+      </div>
+    </div>
+    <div class="demo-item" style="width: 100%">
+      <span class="label">403 sem message</span>
+      <div class="demo-box">
+        <ge-error
+          status-code="403"
+          status-message="Forbidden"
+          clear="false"
+        ></ge-error>
+      </div>
+    </div>
+  </div>
+</section>

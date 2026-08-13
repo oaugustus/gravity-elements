@@ -1,0 +1,46 @@
+<section class="demo-section">
+  <h2>geAvatar</h2>
+  <p class="demo-hint">
+    Fallback: src → text → icon → iniciais do alt. Espelha os exemplos da doc
+    (Icon, Text, Alt, Color, Chip) — os exemplos "Src"/"Size" upstream usam
+    <code>src</code> de imagem via rede (<code>github.com/benjamincanac.png</code>),
+    evitado aqui pra não gerar 404 no console do demo.
+  </p>
+  <div class="demo-row" style="flex-direction: column; width: 100%">
+    <div class="demo-item">
+      <span class="label">Icon</span>
+      <ge-avatar icon="demo-icon" size="md"></ge-avatar>
+    </div>
+    <div class="demo-item">
+      <span class="label">Text</span>
+      <ge-avatar text="+1" size="md"></ge-avatar>
+    </div>
+    <div class="demo-item">
+      <span class="label">Alt (iniciais)</span>
+      <ge-avatar alt="Benjamin Canac" size="md"></ge-avatar>
+    </div>
+    <div class="demo-item">
+      <span class="label">Color (primary)</span>
+      <ge-avatar color="primary" alt="Benjamin Canac"></ge-avatar>
+    </div>
+    <div class="demo-item">
+      <span class="label">Chip (inset)</span>
+      <ge-avatar
+        alt="Benjamin Canac"
+        chip-color="success"
+        chip-position="bottom-right"
+      ></ge-avatar>
+    </div>
+  </div>
+</section>
+
+<section class="demo-section">
+  <h3>Variações (extensão Gravity — cobertura de sizes)</h3>
+  <div class="demo-row">
+    <ge-avatar text="XS" size="xs" color="neutral"></ge-avatar>
+    <ge-avatar text="SM" size="sm" color="primary"></ge-avatar>
+    <ge-avatar text="MD" size="md" color="success"></ge-avatar>
+    <ge-avatar text="LG" size="lg" color="warning"></ge-avatar>
+    <ge-avatar text="XL" size="xl" color="error"></ge-avatar>
+  </div>
+</section>

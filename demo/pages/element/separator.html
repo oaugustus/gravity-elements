@@ -1,0 +1,60 @@
+<section class="demo-section">
+  <h2>geSeparator</h2>
+  <p class="demo-hint">
+    Separador com orientation, label, color, size e type. Espelha Usage,
+    Orientation, Label, Color, Type, Size — <code>icon</code>/
+    <code>avatar</code>/<code>position</code> não estão no binding contract
+    desta etapa (§7 — só <code>label</code> como conteúdo; posição é fixa em
+    "center" no tema).
+  </p>
+  <div class="demo-row" style="flex-direction: column; width: 100%">
+    <div class="demo-item" style="width: 100%">
+      <span class="label">Usage</span>
+      <ge-separator></ge-separator>
+    </div>
+    <div class="demo-item">
+      <span class="label">Orientation (vertical)</span>
+      <ge-separator orientation="vertical" style="height: 3rem"></ge-separator>
+    </div>
+    <div class="demo-item" style="width: 100%">
+      <span class="label">Label</span>
+      <ge-separator label="Hello World"></ge-separator>
+    </div>
+    <div class="demo-item" style="width: 100%">
+      <span class="label">Color (primary) + Type (solid)</span>
+      <ge-separator color="primary" type="solid"></ge-separator>
+    </div>
+    <div class="demo-item" style="width: 100%">
+      <span class="label">Type (dashed)</span>
+      <ge-separator type="dashed"></ge-separator>
+    </div>
+    <div class="demo-item" style="width: 100%">
+      <span class="label">Size (lg)</span>
+      <ge-separator size="lg"></ge-separator>
+    </div>
+  </div>
+</section>
+
+<section class="demo-section">
+  <h3>Variações (extensão Gravity)</h3>
+  <div class="demo-row" style="flex-direction: column; width: 100%">
+    <div class="demo-item" style="width: 100%">
+      <span class="label">horizontal dashed primary</span>
+      <ge-separator label="Continuar" color="primary" type="dashed" size="md"></ge-separator>
+    </div>
+    <div class="demo-item" style="width: 100%">
+      <span class="label">dotted sem label</span>
+      <ge-separator type="dotted" color="neutral"></ge-separator>
+    </div>
+    <div class="demo-item">
+      <span class="label">vertical</span>
+      <div class="demo-row" style="height: 4rem; align-items: stretch">
+        <span>A</span>
+        <ge-separator orientation="vertical" color="primary" size="md"></ge-separator>
+        <span>B</span>
+        <ge-separator orientation="vertical" type="dashed"></ge-separator>
+        <span>C</span>
+      </div>
+    </div>
+  </div>
+</section>

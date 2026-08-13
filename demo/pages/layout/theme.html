@@ -1,0 +1,33 @@
+<section class="demo-section">
+  <h2>geTheme</h2>
+  <p class="demo-hint">
+    Toggle claro/escuro via <code>geColorMode</code>. A classe <code>dark</code>
+    é aplicada no <code>&lt;html&gt;</code>.
+  </p>
+  <div class="demo-box" style="display: flex; align-items: center; gap: 0.75rem">
+    <ge-theme></ge-theme>
+    <span>Clique para alternar o tema</span>
+  </div>
+</section>
+
+<section class="demo-section">
+  <h3>Variações</h3>
+  <div class="demo-row">
+    <div class="demo-item">
+      <span class="label">ao lado de botões</span>
+      <div class="demo-box" style="display: flex; gap: 0.5rem; align-items: center">
+        <ge-button label="Primary" color="primary" size="sm"></ge-button>
+        <ge-theme></ge-theme>
+        <ge-button label="Neutral" color="neutral" variant="outline" size="sm"></ge-button>
+      </div>
+    </div>
+    <div class="demo-item">
+      <span class="label">no header</span>
+      <ge-header title="Theme demo">
+        <ge-header-right>
+          <ge-theme></ge-theme>
+        </ge-header-right>
+      </ge-header>
+    </div>
+  </div>
+</section>

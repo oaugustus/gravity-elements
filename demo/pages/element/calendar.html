@@ -1,0 +1,58 @@
+<section class="demo-section">
+  <h2>geCalendar</h2>
+  <p class="demo-hint">
+    <strong>Interativo (teclado):</strong> Tab até o grid, depois setas (dia a dia),
+    Home/End (semana), PageUp/PageDown (mês), Enter/Espaço (selecionar).
+  </p>
+  <div class="demo-row">
+    <div class="demo-item">
+      <span class="label">selecionado: {{ demo.calendarValue | date:'fullDate' }}</span>
+      <ge-calendar
+        model-value="demo.calendarValue"
+        on-update="demo.onCalendarUpdate(value)"
+        locale="pt-BR"
+        color="primary"
+        variant="solid"
+        size="md"
+      ></ge-calendar>
+    </div>
+  </div>
+</section>
+
+<section class="demo-section">
+  <h3>Variações</h3>
+  <div class="demo-row">
+    <div class="demo-item">
+      <span class="label">color=success / size=sm</span>
+      <ge-calendar
+        model-value="demo.calendarValue"
+        on-update="demo.onCalendarUpdate(value)"
+        locale="pt-BR"
+        color="success"
+        size="sm"
+      ></ge-calendar>
+    </div>
+    <div class="demo-item">
+      <span class="label">variant=outline / size=lg</span>
+      <ge-calendar
+        model-value="demo.calendarValue"
+        on-update="demo.onCalendarUpdate(value)"
+        locale="en-US"
+        color="primary"
+        variant="outline"
+        size="lg"
+      ></ge-calendar>
+    </div>
+    <div class="demo-item">
+      <span class="label">soft / warning</span>
+      <ge-calendar
+        model-value="demo.calendarValue"
+        on-update="demo.onCalendarUpdate(value)"
+        locale="pt-BR"
+        color="warning"
+        variant="soft"
+        size="md"
+      ></ge-calendar>
+    </div>
+  </div>
+</section>

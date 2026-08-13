@@ -1,0 +1,48 @@
+<section class="demo-section">
+  <h2>geCollapsible</h2>
+  <p class="demo-hint">
+    Abrir/fechar com <code>model-value</code> / <code>on-update</code>.
+    Espelha o exemplo "Usage" da doc (botão "Open" + placeholder h-48).
+    Aberto = <strong>{{ demo.collapsibleOpen }}</strong>
+  </p>
+  <ge-collapsible
+    model-value="demo.collapsibleOpen"
+    on-update="demo.onCollapsibleUpdate(value)"
+    style="display: flex; flex-direction: column; gap: 0.5rem; width: 12rem"
+  >
+    <ge-button
+      label="Open"
+      color="neutral"
+      variant="subtle"
+      trailing-icon="i-lucide-chevron-down"
+      block="true"
+    ></ge-button>
+    <ge-collapsible-content>
+      <div class="demo-placeholder" style="height: 12rem"></div>
+    </ge-collapsible-content>
+  </ge-collapsible>
+</section>
+
+<section class="demo-section">
+  <h3>Variações</h3>
+  <div class="demo-row" style="flex-direction: column; width: 100%">
+    <div class="demo-item" style="width: 100%">
+      <span class="label">default-open</span>
+      <ge-collapsible default-open="true">
+        <button type="button">Trigger nativo (default-open)</button>
+        <ge-collapsible-content>
+          <p class="demo-hint">Painel inicia aberto.</p>
+        </ge-collapsible-content>
+      </ge-collapsible>
+    </div>
+    <div class="demo-item" style="width: 100%">
+      <span class="label">disabled</span>
+      <ge-collapsible disabled="true" default-open="false">
+        <button type="button" disabled>Desabilitado</button>
+        <ge-collapsible-content>
+          <p>Não deve abrir.</p>
+        </ge-collapsible-content>
+      </ge-collapsible>
+    </div>
+  </div>
+</section>

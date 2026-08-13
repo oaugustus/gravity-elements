@@ -1,0 +1,104 @@
+<section class="demo-section">
+  <h2>geAlert</h2>
+  <p class="demo-hint">
+    Espelha os exemplos da doc, um a um: Title, Description, Icon, Color,
+    Variant, Close, Close Icon. <code>avatar</code>/<code>actions</code> não
+    estão no binding contract desta etapa (§5.4.2 — dependem de geAvatar
+    composto e lista de geButton, fora do template atual).
+  </p>
+  <div class="demo-row" style="flex-direction: column; width: 100%">
+    <div class="demo-item" style="width: 100%">
+      <span class="label">Title</span>
+      <ge-alert title="Heads up!"></ge-alert>
+    </div>
+    <div class="demo-item" style="width: 100%">
+      <span class="label">Description</span>
+      <ge-alert
+        title="Heads up!"
+        description="You can change the primary color in your app config."
+      ></ge-alert>
+    </div>
+    <div class="demo-item" style="width: 100%">
+      <span class="label">Icon</span>
+      <ge-alert
+        title="Heads up!"
+        description="You can change the primary color in your app config."
+        icon="i-lucide-terminal"
+      ></ge-alert>
+    </div>
+    <div class="demo-item" style="width: 100%">
+      <span class="label">Color (neutral)</span>
+      <ge-alert
+        color="neutral"
+        title="Heads up!"
+        description="You can change the primary color in your app config."
+        icon="i-lucide-terminal"
+      ></ge-alert>
+    </div>
+    <div class="demo-item" style="width: 100%">
+      <span class="label">Variant (neutral / subtle)</span>
+      <ge-alert
+        color="neutral"
+        variant="subtle"
+        title="Heads up!"
+        description="You can change the primary color in your app config."
+        icon="i-lucide-terminal"
+      ></ge-alert>
+    </div>
+    <div class="demo-item" style="width: 100%">
+      <span class="label">Close</span>
+      <ge-alert
+        title="Heads up!"
+        description="You can change the primary color in your app config."
+        color="neutral"
+        variant="outline"
+        closable="true"
+      ></ge-alert>
+    </div>
+    <div class="demo-item" style="width: 100%">
+      <span class="label">Close Icon (arrow-right)</span>
+      <ge-alert
+        title="Heads up!"
+        description="You can change the primary color in your app config."
+        color="neutral"
+        variant="outline"
+        closable="true"
+        close-icon="i-lucide-arrow-right"
+      ></ge-alert>
+    </div>
+  </div>
+</section>
+
+<section class="demo-section">
+  <h3>Variações (extensão Gravity — cobertura de color/variant)</h3>
+  <div class="demo-row" style="flex-direction: column; width: 100%">
+    <div class="demo-item" style="width: 100%">
+      <span class="label">success / soft</span>
+      <ge-alert
+        title="Sucesso"
+        description="Operação concluída."
+        color="success"
+        variant="soft"
+      ></ge-alert>
+    </div>
+    <div class="demo-item" style="width: 100%">
+      <span class="label">warning / outline + closable</span>
+      <ge-alert
+        title="Aviso"
+        description="Revise os dados antes de continuar."
+        color="warning"
+        variant="outline"
+        closable="true"
+      ></ge-alert>
+    </div>
+    <div class="demo-item" style="width: 100%">
+      <span class="label">error / subtle</span>
+      <ge-alert
+        title="Erro"
+        description="Não foi possível salvar."
+        color="error"
+        variant="subtle"
+      ></ge-alert>
+    </div>
+  </div>
+</section>

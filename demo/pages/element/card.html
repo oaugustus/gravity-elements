@@ -1,0 +1,75 @@
+<section class="demo-section">
+  <h2>geCard</h2>
+  <p class="demo-hint">
+    Card com variant, title, description e slots header/footer. Espelha
+    Usage (header/body/footer com placeholder), Title, Description, Variant.
+  </p>
+  <div class="demo-row" style="flex-direction: column; width: 100%">
+    <div class="demo-item" style="width: 100%">
+      <span class="label">Usage</span>
+      <ge-card>
+        <ge-card-header>
+          <div class="demo-placeholder" style="height: 2rem"></div>
+        </ge-card-header>
+        <div class="demo-placeholder" style="height: 8rem"></div>
+        <ge-card-footer>
+          <div class="demo-placeholder" style="height: 2rem"></div>
+        </ge-card-footer>
+      </ge-card>
+    </div>
+    <div class="demo-item" style="width: 100%">
+      <span class="label">Title</span>
+      <ge-card title="Card with title">
+        <div class="demo-placeholder" style="height: 8rem"></div>
+      </ge-card>
+    </div>
+    <div class="demo-item" style="width: 100%">
+      <span class="label">Description</span>
+      <ge-card
+        title="Card with description"
+        description="Lorem ipsum dolor sit amet, consectetur adipiscing elit."
+      >
+        <div class="demo-placeholder" style="height: 8rem"></div>
+      </ge-card>
+    </div>
+    <div class="demo-item" style="width: 100%">
+      <span class="label">Variant (subtle)</span>
+      <ge-card variant="subtle">
+        <ge-card-header>
+          <div class="demo-placeholder" style="height: 2rem"></div>
+        </ge-card-header>
+        <div class="demo-placeholder" style="height: 8rem"></div>
+        <ge-card-footer>
+          <div class="demo-placeholder" style="height: 2rem"></div>
+        </ge-card-footer>
+      </ge-card>
+    </div>
+  </div>
+</section>
+
+<section class="demo-section">
+  <h3>Variações (extensão Gravity — cobertura de variant)</h3>
+  <div class="demo-row">
+    <div class="demo-item" style="flex: 1; min-width: 12rem">
+      <span class="label">solid</span>
+      <ge-card title="Solid" description="Fundo elevado" variant="solid">
+        Conteúdo
+      </ge-card>
+    </div>
+    <div class="demo-item" style="flex: 1; min-width: 12rem">
+      <span class="label">soft</span>
+      <ge-card title="Soft" description="Suave" variant="soft">
+        Conteúdo
+      </ge-card>
+    </div>
+    <div class="demo-item" style="flex: 1; min-width: 12rem">
+      <span class="label">subtle + footer</span>
+      <ge-card title="Subtle" description="Com rodapé" variant="subtle">
+        Corpo
+        <ge-card-footer>
+          <ge-button label="Ação" color="primary" size="sm"></ge-button>
+        </ge-card-footer>
+      </ge-card>
+    </div>
+  </div>
+</section>

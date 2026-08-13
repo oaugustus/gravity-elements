@@ -1,0 +1,74 @@
+<section class="demo-section">
+  <h2>geAvatarGroup</h2>
+  <p class="demo-hint">
+    Agrupa avatares com overlap; excedente vira <code>+N</code>. Espelha os
+    exemplos Usage/Size/Max/Color da doc (usando <code>alt</code>/iniciais em
+    vez de <code>src</code> de rede — mesma razão do geAvatar, evita 404 no
+    console).
+  </p>
+  <div class="demo-row" style="flex-direction: column; width: 100%">
+    <div class="demo-item">
+      <span class="label">Usage</span>
+      <ge-avatar-group>
+        <ge-avatar alt="Benjamin Canac"></ge-avatar>
+        <ge-avatar alt="Romain Hamel"></ge-avatar>
+        <ge-avatar alt="Neil Richter"></ge-avatar>
+      </ge-avatar-group>
+    </div>
+    <div class="demo-item">
+      <span class="label">Size (xl)</span>
+      <ge-avatar-group size="xl">
+        <ge-avatar alt="Benjamin Canac"></ge-avatar>
+        <ge-avatar alt="Romain Hamel"></ge-avatar>
+        <ge-avatar alt="Neil Richter"></ge-avatar>
+      </ge-avatar-group>
+    </div>
+    <div class="demo-item">
+      <span class="label">Max (2 → +1)</span>
+      <ge-avatar-group max="2">
+        <ge-avatar alt="Benjamin Canac"></ge-avatar>
+        <ge-avatar alt="Romain Hamel"></ge-avatar>
+        <ge-avatar alt="Neil Richter"></ge-avatar>
+      </ge-avatar-group>
+    </div>
+    <div class="demo-item">
+      <span class="label">Color (primary)</span>
+      <ge-avatar-group color="primary">
+        <ge-avatar alt="Benjamin Canac"></ge-avatar>
+        <ge-avatar alt="Romain Hamel"></ge-avatar>
+        <ge-avatar alt="Neil Richter"></ge-avatar>
+      </ge-avatar-group>
+    </div>
+  </div>
+</section>
+
+<section class="demo-section">
+  <h3>Variações (extensão Gravity — cobertura de max)</h3>
+  <div class="demo-row">
+    <div class="demo-item">
+      <span class="label">abaixo do max (2 &lt; 3)</span>
+      <ge-avatar-group max="3" size="sm">
+        <ge-avatar text="A" color="primary"></ge-avatar>
+        <ge-avatar text="B" color="info"></ge-avatar>
+      </ge-avatar-group>
+    </div>
+    <div class="demo-item">
+      <span class="label">igual ao max (3 = 3)</span>
+      <ge-avatar-group max="3" size="sm">
+        <ge-avatar text="A" color="primary"></ge-avatar>
+        <ge-avatar text="B" color="success"></ge-avatar>
+        <ge-avatar text="C" color="neutral"></ge-avatar>
+      </ge-avatar-group>
+    </div>
+    <div class="demo-item">
+      <span class="label">acima do max (5 &gt; 3 → +2)</span>
+      <ge-avatar-group max="3" size="md" color="primary">
+        <ge-avatar text="A"></ge-avatar>
+        <ge-avatar text="B"></ge-avatar>
+        <ge-avatar text="C"></ge-avatar>
+        <ge-avatar text="D"></ge-avatar>
+        <ge-avatar text="E"></ge-avatar>
+      </ge-avatar-group>
+    </div>
+  </div>
+</section>
