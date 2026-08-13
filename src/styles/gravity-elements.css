@@ -10,7 +10,9 @@
  * --ui-bg-accented: geButton (neutral soft/subtle);
  * --ui-text-dimmed: geCard (variant solid description).
  * Primary default ≈ green do Nuxt UI; demais ≈ Tailwind 500; neutrals via
- * hex estáveis (sem --ui-color-neutral-* ainda não portados).
+ * hex estáveis de Tailwind `slate` (default oficial de --ui-color-neutral
+ * no Nuxt UI v4 — ui.colors.neutral: 'slate' — não Tailwind `neutral`
+ * genérico; confirmado batendo com getComputedStyle() de ui.nuxt.com).
  */
 :root {
   --ui-container: 80rem;
@@ -22,15 +24,15 @@
   --ui-warning: #f59e0b;
   --ui-error: #ef4444;
   --ui-bg: #ffffff;
-  --ui-bg-elevated: #f5f5f5;
-  --ui-bg-accented: #e5e5e5;
-  --ui-bg-inverted: #171717;
-  --ui-border: #e5e5e5;
-  --ui-border-accented: #d4d4d4;
-  --ui-text: #404040;
-  --ui-text-highlighted: #171717;
-  --ui-text-muted: #737373;
-  --ui-text-dimmed: #a3a3a3;
+  --ui-bg-elevated: #f1f5f9;
+  --ui-bg-accented: #e2e8f0;
+  --ui-bg-inverted: #0f172a;
+  --ui-border: #e2e8f0;
+  --ui-border-accented: #cbd5e1;
+  --ui-text: #334155;
+  --ui-text-highlighted: #0f172a;
+  --ui-text-muted: #64748b;
+  --ui-text-dimmed: #94a3b8;
   --ui-text-inverted: #ffffff;
   /* geSidebar — defaults espelhados do theme/sidebar.ts v4.10.0 */
   --sidebar-width: 16rem;
@@ -43,17 +45,17 @@
   --ui-info: #60a5fa;
   --ui-warning: #fbbf24;
   --ui-error: #f87171;
-  --ui-bg: #171717;
-  --ui-bg-elevated: #262626;
-  --ui-bg-accented: #404040;
+  --ui-bg: #0f172a;
+  --ui-bg-elevated: #1e293b;
+  --ui-bg-accented: #334155;
   --ui-bg-inverted: #ffffff;
-  --ui-border: #262626;
-  --ui-border-accented: #404040;
-  --ui-text: #e5e5e5;
+  --ui-border: #1e293b;
+  --ui-border-accented: #334155;
+  --ui-text: #e2e8f0;
   --ui-text-highlighted: #ffffff;
-  --ui-text-muted: #a3a3a3;
-  --ui-text-dimmed: #737373;
-  --ui-text-inverted: #171717;
+  --ui-text-muted: #94a3b8;
+  --ui-text-dimmed: #64748b;
+  --ui-text-inverted: #0f172a;
 }
 
 /*
@@ -84,4 +86,161 @@
 .ge-collapsible.ng-leave-active,
 .ge-collapsible-leave-active {
   max-height: 0;
+}
+
+/*
+ * geProgress — keyframes indeterminate (paridade Nuxt UI v4.10.0
+ * src/runtime/keyframes.css). As classes do tema usam
+ * animate-[carousel_2s_ease-in-out_infinite] etc.; o TW 3.4.19 emite
+ * `animation: carousel 2s …` mas NÃO gera @keyframes a partir de valores
+ * arbitrarios — sem este bloco a barra indeterminate some (as keyframes
+ * definem width/height 50%).
+ */
+@keyframes carousel {
+  0%,
+  100% {
+    width: 50%;
+  }
+
+  0% {
+    transform: translateX(-100%);
+  }
+
+  100% {
+    transform: translateX(200%);
+  }
+}
+
+@keyframes carousel-rtl {
+  0%,
+  100% {
+    width: 50%;
+  }
+
+  0% {
+    transform: translateX(100%);
+  }
+
+  100% {
+    transform: translateX(-200%);
+  }
+}
+
+@keyframes carousel-vertical {
+  0%,
+  100% {
+    height: 50%;
+  }
+
+  0% {
+    transform: translateY(-100%);
+  }
+
+  100% {
+    transform: translateY(200%);
+  }
+}
+
+@keyframes carousel-inverse {
+  0%,
+  100% {
+    width: 50%;
+  }
+
+  0% {
+    transform: translateX(200%);
+  }
+
+  100% {
+    transform: translateX(-100%);
+  }
+}
+
+@keyframes carousel-inverse-rtl {
+  0%,
+  100% {
+    width: 50%;
+  }
+
+  0% {
+    transform: translateX(-200%);
+  }
+
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+@keyframes carousel-inverse-vertical {
+  0%,
+  100% {
+    height: 50%;
+  }
+
+  0% {
+    transform: translateY(200%);
+  }
+
+  100% {
+    transform: translateY(-100%);
+  }
+}
+
+@keyframes swing {
+  0%,
+  100% {
+    width: 50%;
+  }
+
+  0%,
+  100% {
+    transform: translateX(-25%);
+  }
+
+  50% {
+    transform: translateX(125%);
+  }
+}
+
+@keyframes swing-vertical {
+  0%,
+  100% {
+    height: 50%;
+  }
+
+  0%,
+  100% {
+    transform: translateY(-25%);
+  }
+
+  50% {
+    transform: translateY(125%);
+  }
+}
+
+@keyframes elastic {
+  /* Firefox doesn't do "margin: 0 auto", we have to play with margin-left */
+  0%,
+  100% {
+    width: 50%;
+    margin-left: 25%;
+  }
+
+  50% {
+    width: 90%;
+    margin-left: 5%;
+  }
+}
+
+@keyframes elastic-vertical {
+  0%,
+  100% {
+    height: 50%;
+    margin-top: 25%;
+  }
+
+  50% {
+    height: 90%;
+    margin-top: 5%;
+  }
 }

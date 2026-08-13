@@ -4,10 +4,15 @@
   <div role="progressbar" class="{{ vm.classes.base }}"
     style="transform: translateZ(0)"
     aria-valuemin="0"
+    ng-attr-aria-orientation="{{ vm.resolvedOrientation }}"
     ng-attr-aria-valuemax="{{ vm.ariaValueMax }}"
     ng-attr-aria-valuenow="{{ vm.ariaValueNow }}">
     <div class="{{ vm.classes.indicator }}"
       ng-attr-data-state="{{ vm.dataState }}"
       ng-style="vm.indicatorStyle"></div>
+  </div>
+  <div ng-if="vm.hasSteps" class="{{ vm.classes.steps }}">
+    <div ng-repeat="step in vm.steps track by $index"
+      class="{{ step.classes }}">{{ step.label }}</div>
   </div>
 </div>

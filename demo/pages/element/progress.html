@@ -1,0 +1,79 @@
+<section class="demo-section">
+  <h2>geProgress</h2>
+  <p class="demo-hint">
+    Barra determinate (value) ou indeterminate (value omitido/null). Espelha
+    Usage (50), Max numérico, Max como array de steps, Status, Indeterminate,
+    Animation, Orientation, Color, Size, Inverted.
+  </p>
+  <div class="demo-row" style="flex-direction: column; width: 100%">
+    <div class="demo-item" style="width: 100%">
+      <span class="label">Usage</span>
+      <ge-progress value="50"></ge-progress>
+    </div>
+    <div class="demo-item" style="width: 100%">
+      <span class="label">Max</span>
+      <ge-progress value="3" max="4"></ge-progress>
+    </div>
+    <div class="demo-item" style="width: 100%">
+      <span class="label">Max (array de steps)</span>
+      <ge-progress value="3" max="demo.progressMaxSteps"></ge-progress>
+    </div>
+    <div class="demo-item" style="width: 100%">
+      <span class="label">Status</span>
+      <ge-progress value="50" status="true"></ge-progress>
+    </div>
+    <div class="demo-item" style="width: 100%">
+      <span class="label">Indeterminate</span>
+      <ge-progress></ge-progress>
+    </div>
+    <div class="demo-item" style="width: 100%">
+      <span class="label">Animation</span>
+      <div class="demo-row" style="flex-direction: column; align-items: stretch; width: 100%; gap: 0.75rem">
+        <ge-progress animation="carousel"></ge-progress>
+        <ge-progress animation="carousel-inverse"></ge-progress>
+        <ge-progress animation="swing"></ge-progress>
+        <ge-progress animation="elastic"></ge-progress>
+      </div>
+    </div>
+    <div class="demo-item">
+      <span class="label">Orientation (vertical)</span>
+      <div style="height: 12rem">
+        <ge-progress
+          value="50"
+          orientation="vertical"
+          style="display: block; height: 100%"
+        ></ge-progress>
+      </div>
+    </div>
+    <div class="demo-item" style="width: 100%">
+      <span class="label">Color (neutral)</span>
+      <ge-progress color="neutral"></ge-progress>
+    </div>
+    <div class="demo-item" style="width: 100%">
+      <span class="label">Size (xl)</span>
+      <ge-progress size="xl"></ge-progress>
+    </div>
+    <div class="demo-item" style="width: 100%">
+      <span class="label">Inverted</span>
+      <ge-progress value="50" inverted="true" status="true"></ge-progress>
+    </div>
+  </div>
+</section>
+
+<section class="demo-section">
+  <h3>Variações (extensão Gravity)</h3>
+  <div class="demo-row" style="flex-direction: column; width: 100%">
+    <div class="demo-item" style="width: 100%">
+      <span class="label">success 80% + status</span>
+      <ge-progress value="80" color="success" size="md" status="true"></ge-progress>
+    </div>
+    <div class="demo-item" style="width: 100%">
+      <span class="label">warning size=lg</span>
+      <ge-progress value="30" color="warning" size="lg"></ge-progress>
+    </div>
+    <div class="demo-item" style="width: 100%">
+      <span class="label">indeterminate (sem value)</span>
+      <ge-progress color="info" size="sm"></ge-progress>
+    </div>
+  </div>
+</section>
