@@ -81,6 +81,9 @@
       .when('/element/skeleton', {
         templateUrl: '/demo/pages/element/skeleton.html',
       })
+      .when('/form/checkbox', {
+        templateUrl: '/demo/pages/form/checkbox.html',
+      })
       .otherwise({
         redirectTo: '/layout/app',
       });

@@ -7688,9 +7688,18 @@
 
   (function () {
 
+    // Dependências ngMessages / ngFileUpload entram nas tarefas
+    // "Componente: Form (integração ngMessages)" e
+    // "Componente: FileUpload (wrapper ng-file-upload)" — geCheckbox não usa.
+    angular.module('gravityElements.form', []);
+  })();
+
+  (function () {
+
     angular.module('gravityElements.components', [
       'gravityElements.layout',
       'gravityElements.element',
+      'gravityElements.form',
     ]);
   })();
 
@@ -13504,6 +13513,495 @@
 
       function onInit() {
         vm.classes = geTv(geSkeletonTheme)({});
+      }
+    }
+  })();
+
+  (function () {
+
+    // Portado de github.com/nuxt/ui v4.10.0, MIT License, Copyright (c) Nuxt Labs
+    // Upstream: theme/checkbox.ts — slots root/container/base/indicator/icon/
+    // wrapper/label/description + color/variant/indicator/size/required/disabled/
+    // highlight/checked + compoundVariants (card padding × size, card × color
+    // has-data-[state=checked], card × disabled, highlight × color).
+    // Tailwind v3: ring-accented/text-default/text-muted/text-inverted/
+    // border-muted/bg-inverted/outline-inverted/text-error → tokens --ui-*;
+    // outline-${color}/25 → color-mix (TW 3.4.19 não gera /N sobre var());
+    // focus-visible:outline-3 → focus-visible:outline-[3px] (precedente Banner);
+    // has-data-[state=checked] → data-[is-checked] no próprio root (§5.11 —
+    // BOOLEAN_ATTR engole data-checked em <input>/<label>).
+    // size-4.5 / p-4.5 (TW4) → size-[1.125rem] / p-[1.125rem]: a escala de
+    // spacing do 3.4.19 tem 3.5 mas NÃO 4.5 (confirmado: safelist inclui as
+    // classes crus e o CSS compilado as descarta em silêncio).
+    // appearance-none cursor-pointer no slots.base: adaptação Gravity — o
+    // upstream usa Reka CheckboxRoot (button), aqui o visual pousa num
+    // <input type="checkbox"> nativo. Indicator absolute inset-0 + pointer-events-
+    // none: o input não tem filhos, o ícone é irmão sobreposto.
+    // rounded-sm (TW4 = 0.25rem) → `rounded` (TW3 = 0.25rem). O rounded-sm
+    // do 3.4.19 é 2px; rounded-[0.25rem] entra na safelist e o CLI descarta.
+    // overflow-hidden+radius também no wrapper do overlay — overflow-hidden
+    // no <input> não recorta o indicador irmão, e o fill sem radius virava
+    // quadrado.
+    // Ícone: <i> direto (não <ge-icon>) — o host ge-icon é inline, default
+    // size-5, e o CSS do demo (.i-lucide-* { width:1em; display:inline-block })
+    // alinha na baseline; overflow-hidden recortava o check no canto inferior
+    // direito (xs sumia). icon slot usa !block !size-full para vencer o 1em.
+    angular.module('gravityElements.form').constant('geCheckboxTheme', {
+      slots: {
+        root: 'relative flex items-start',
+        container: 'flex items-center',
+        base:
+          'appearance-none cursor-pointer rounded ring ring-inset ring-[var(--ui-border-accented)] overflow-hidden focus-visible:outline-[3px]',
+        indicator:
+          'flex items-center justify-center size-full rounded text-[var(--ui-text-inverted)] pointer-events-none absolute inset-0 leading-none',
+        icon: '!block !size-full min-w-0 min-h-0',
+        wrapper: 'w-full',
+        label: 'block font-medium text-[var(--ui-text)]',
+        description: 'text-[var(--ui-text-muted)]',
+      },
+      variants: {
+        color: {
+          primary: {
+            base:
+              'outline-[color-mix(in_srgb,var(--ui-primary)_25%,transparent)] focus-visible:ring-[var(--ui-primary)]',
+            indicator: 'bg-[var(--ui-primary)]',
+          },
+          secondary: {
+            base:
+              'outline-[color-mix(in_srgb,var(--ui-secondary)_25%,transparent)] focus-visible:ring-[var(--ui-secondary)]',
+            indicator: 'bg-[var(--ui-secondary)]',
+          },
+          success: {
+            base:
+              'outline-[color-mix(in_srgb,var(--ui-success)_25%,transparent)] focus-visible:ring-[var(--ui-success)]',
+            indicator: 'bg-[var(--ui-success)]',
+          },
+          info: {
+            base:
+              'outline-[color-mix(in_srgb,var(--ui-info)_25%,transparent)] focus-visible:ring-[var(--ui-info)]',
+            indicator: 'bg-[var(--ui-info)]',
+          },
+          warning: {
+            base:
+              'outline-[color-mix(in_srgb,var(--ui-warning)_25%,transparent)] focus-visible:ring-[var(--ui-warning)]',
+            indicator: 'bg-[var(--ui-warning)]',
+          },
+          error: {
+            base:
+              'outline-[color-mix(in_srgb,var(--ui-error)_25%,transparent)] focus-visible:ring-[var(--ui-error)]',
+            indicator: 'bg-[var(--ui-error)]',
+          },
+          neutral: {
+            base:
+              'outline-[color-mix(in_srgb,var(--ui-bg-inverted)_25%,transparent)] focus-visible:ring-[var(--ui-bg-inverted)]',
+            indicator: 'bg-[var(--ui-bg-inverted)]',
+          },
+        },
+        variant: {
+          list: {
+            root: '',
+          },
+          card: {
+            root: 'border border-[var(--ui-border)] rounded-lg',
+          },
+        },
+        indicator: {
+          start: {
+            root: 'flex-row',
+            wrapper: 'ms-2',
+          },
+          end: {
+            root: 'flex-row-reverse',
+            wrapper: 'me-2',
+          },
+          hidden: {
+            base: 'sr-only',
+            wrapper: 'text-center',
+          },
+        },
+        size: {
+          xs: {
+            base: 'size-3',
+            container: 'h-4',
+            wrapper: 'text-xs',
+          },
+          sm: {
+            base: 'size-3.5',
+            container: 'h-4',
+            wrapper: 'text-xs',
+          },
+          md: {
+            base: 'size-4',
+            container: 'h-5',
+            wrapper: 'text-sm',
+          },
+          lg: {
+            base: 'size-[1.125rem]',
+            container: 'h-5',
+            wrapper: 'text-sm',
+          },
+          xl: {
+            base: 'size-5',
+            container: 'h-6',
+            wrapper: 'text-base',
+          },
+        },
+        required: {
+          true: {
+            label: "after:content-['*'] after:ms-0.5 after:text-[var(--ui-error)]",
+          },
+        },
+        disabled: {
+          true: {
+            root: 'opacity-75',
+            base: 'cursor-not-allowed',
+            label: 'cursor-not-allowed',
+            description: 'cursor-not-allowed',
+          },
+        },
+        highlight: {
+          true: '',
+        },
+        checked: {
+          true: '',
+        },
+      },
+      compoundVariants: [
+        { size: 'xs', variant: 'card', class: { root: 'p-2.5' } },
+        { size: 'sm', variant: 'card', class: { root: 'p-3' } },
+        { size: 'md', variant: 'card', class: { root: 'p-3.5' } },
+        { size: 'lg', variant: 'card', class: { root: 'p-4' } },
+        { size: 'xl', variant: 'card', class: { root: 'p-[1.125rem]' } },
+        {
+          color: 'primary',
+          variant: 'card',
+          class: {
+            root: 'data-[is-checked]:border-[var(--ui-primary)]',
+          },
+        },
+        {
+          color: 'secondary',
+          variant: 'card',
+          class: {
+            root: 'data-[is-checked]:border-[var(--ui-secondary)]',
+          },
+        },
+        {
+          color: 'success',
+          variant: 'card',
+          class: {
+            root: 'data-[is-checked]:border-[var(--ui-success)]',
+          },
+        },
+        {
+          color: 'info',
+          variant: 'card',
+          class: {
+            root: 'data-[is-checked]:border-[var(--ui-info)]',
+          },
+        },
+        {
+          color: 'warning',
+          variant: 'card',
+          class: {
+            root: 'data-[is-checked]:border-[var(--ui-warning)]',
+          },
+        },
+        {
+          color: 'error',
+          variant: 'card',
+          class: {
+            root: 'data-[is-checked]:border-[var(--ui-error)]',
+          },
+        },
+        {
+          color: 'neutral',
+          variant: 'card',
+          class: {
+            root: 'data-[is-checked]:border-[var(--ui-bg-inverted)]',
+          },
+        },
+        {
+          variant: 'card',
+          disabled: true,
+          class: {
+            root: 'cursor-not-allowed',
+          },
+        },
+        {
+          color: 'primary',
+          highlight: true,
+          class: {
+            base: 'ring-[var(--ui-primary)]',
+          },
+        },
+        {
+          color: 'secondary',
+          highlight: true,
+          class: {
+            base: 'ring-[var(--ui-secondary)]',
+          },
+        },
+        {
+          color: 'success',
+          highlight: true,
+          class: {
+            base: 'ring-[var(--ui-success)]',
+          },
+        },
+        {
+          color: 'info',
+          highlight: true,
+          class: {
+            base: 'ring-[var(--ui-info)]',
+          },
+        },
+        {
+          color: 'warning',
+          highlight: true,
+          class: {
+            base: 'ring-[var(--ui-warning)]',
+          },
+        },
+        {
+          color: 'error',
+          highlight: true,
+          class: {
+            base: 'ring-[var(--ui-error)]',
+          },
+        },
+        {
+          color: 'neutral',
+          highlight: true,
+          class: {
+            base: 'ring-[var(--ui-bg-inverted)]',
+          },
+        },
+      ],
+      defaultVariants: {
+        size: 'md',
+        color: 'primary',
+        variant: 'list',
+        indicator: 'start',
+      },
+    });
+  })();
+
+  (function () {
+
+    /**
+     * geCheckbox — caixa de seleção (Form).
+     *
+     * Paridade com Nuxt UI Checkbox v4.10.0 (theme/checkbox.ts + Checkbox.vue).
+     * Primeiro componente de Form: ngModel customizado (§5.3) no host
+     * (`<ge-checkbox ng-model="vm.aceito">`), valor boolean. $formatters /
+     * $parsers identidade (boolean↔boolean) para manter o padrão dos próximos.
+     *
+     * `indeterminate` NÃO é valor do modelo — é HTMLInputElement.indeterminate
+     * (propriedade de exibição nativa). Clique do usuário zera a flag visual
+     * localmente; o binding `<` do pai só volta a valer se mudar de novo.
+     *
+     * Semântica: `<input type="checkbox">` nativo (spec §5.8), não o
+     * CheckboxRoot/button do Reka. Root é sempre `<label>` sem `for` (o input
+     * é descendente — associação implícita; `for` no ancestral do próprio
+     * input faz `input.click()` nativo togglear duas vezes). No upstream,
+     * `list` usa `<div>`+`<Label for>` e `card` usa `<Label>` na raiz — clique
+     * na description também marca, divergência pequena e deliberada para um
+     * único input no DOM, evitando ng-if+ngAnimate com dois roots.
+     * `$isEmpty` no host trata `value !== true` como vazio, paridade com
+     * input[checkbox] nativo do Angular (senão ng-required aceita `false`).
+     *
+     * Bindings da tabela §6 + extras da v4.10.0: `indicator`, `highlight`,
+     * `icon`, `indeterminateIcon`, `describedBy` (gancho aria-describedby para
+     * geFormField — decisão §5.4 em aberto). Omitidos: `as`, `trueValue`/
+     * `falseValue`, `defaultValue`, `ui`/`class`, slots Vue label/description.
+     * `name` no host é o atributo HTML nativo do ngModel/FormController.
+     *
+     * Ícone do indicador: `<i class="i-lucide-*">` direto (não `<ge-icon>`).
+     * O host do geIcon é inline com default size-5, e o CSS do demo fixa
+     * width/height 1em em .i-lucide-* — juntos deslocam o check pra
+     * baseline e o overflow-hidden recorta (xs praticamente some).
+     *
+     * Interação: proxy `ng-model="vm.viewValue"` + `ng-change` no input
+     * interno (ng-change do Angular não dispara em mudança programática, então
+     * $render não entra em loop). O NgModelController do consumidor é o do
+     * host (`require: ngModel`), não o do input interno.
+     *
+     * ARIA no input interno (não no host): o ngAria aplica aria-invalid/
+     * aria-required no `<ge-checkbox>` (onde está o ng-model do consumidor),
+     * mas o host não é focável — o leitor de tela anuncia o `<input>`. O
+     * ngModel interno (`vm.viewValue`) não tem $validators.required, então o
+     * ngAria deixaria aria-invalid="false" no input para sempre. Por isso
+     * `aria-invalid` é atributo interpolado (não ng-attr): no post-link o
+     * ngAria só recua se elem.attr('aria-invalid') já existir; ng-attr ainda
+     * não materializou o atributo nesse momento. Valor = host $invalid &&
+     * $dirty — não anunciar "inválido" em campo pristine (mesmo raciocínio
+     * da spec §5.4). $touched no host nunca é setado (blur cai no input);
+     * form.$submitted fica para geForm/geFormField (`require: '?^^form'`).
+     * aria-required lê $validators.required (cobre required="true" e
+     * ng-required), não vm.isRequired. O host continua com os attrs do ngAria.
+     *
+     * @param {string} [vm.label]
+     * @param {string} [vm.description]
+     * @param {string} [vm.color='primary'] - primary|secondary|success|info|warning|error|neutral
+     * @param {string} [vm.size='md'] - xs|sm|md|lg|xl
+     * @param {string} [vm.variant='list'] - list|card
+     * @param {string} [vm.indicator='start'] - start|end|hidden
+     * @param {boolean} [vm.indeterminate] - só visual (prop nativa)
+     * @param {boolean} [vm.disabled]
+     * @param {boolean} [vm.required] - asterisk do tema + required no input
+     * @param {boolean} [vm.highlight] - ring de cor como foco permanente
+     * @param {string} [vm.icon='i-lucide-check']
+     * @param {string} [vm.indeterminateIcon='i-lucide-minus']
+     * @param {string} [vm.describedBy] - aria-describedby no input interno
+     */
+    angular.module('gravityElements.form').component('geCheckbox', {
+      template:
+        '<label class="{{ vm.classes.root }}"' +
+        '  ng-attr-data-is-checked="{{ vm.dataChecked }}"' +
+        '  ng-attr-data-is-disabled="{{ vm.dataDisabled }}"' +
+        '  ng-attr-data-is-indeterminate="{{ vm.dataIndeterminate }}">' +
+        '  <div class="{{ vm.classes.container }}">' +
+        '    <span class="relative inline-flex shrink-0 overflow-hidden rounded">' +
+        '      <input type="checkbox"' +
+        '        id="{{ vm.inputId }}"' +
+        '        class="{{ vm.classes.base }}"' +
+        '        ng-model="vm.viewValue"' +
+        '        ng-change="vm.onChange()"' +
+        '        ng-disabled="vm.isDisabled"' +
+        '        aria-invalid="{{ !!(vm.ngModelCtrl.$invalid && vm.ngModelCtrl.$dirty) }}"' +
+        '        ng-attr-aria-required="{{ vm.ngModelCtrl.$validators.required ? \'true\' : undefined }}"' +
+        '        ng-attr-aria-describedby="{{ vm.describedByAttr }}"' +
+        '        ng-attr-data-is-checked="{{ vm.dataChecked }}"' +
+        '        ng-attr-data-is-disabled="{{ vm.dataDisabled }}"' +
+        '        ng-attr-data-is-indeterminate="{{ vm.dataIndeterminate }}">' +
+        '      <span ng-if="vm.showIndicator" class="{{ vm.classes.indicator }}">' +
+        '        <i class="{{ vm.resolvedIcon }} {{ vm.classes.icon }}" aria-hidden="true"></i>' +
+        '      </span>' +
+        '    </span>' +
+        '  </div>' +
+        '  <div ng-if="vm.hasText" class="{{ vm.classes.wrapper }}">' +
+        '    <span ng-if="vm.hasLabel" class="{{ vm.classes.label }}">{{ vm.label }}</span>' +
+        '    <p ng-if="vm.hasDescription" class="{{ vm.classes.description }}">{{ vm.description }}</p>' +
+        '  </div>' +
+        '</label>',
+      controllerAs: 'vm',
+      require: { ngModelCtrl: 'ngModel' },
+      bindings: {
+        label: '@',
+        description: '@',
+        color: '@',
+        size: '@',
+        variant: '@',
+        indicator: '@',
+        indeterminate: '<',
+        disabled: '<',
+        required: '<',
+        highlight: '<',
+        icon: '@',
+        indeterminateIcon: '@',
+        describedBy: '@',
+      },
+      controller: CheckboxController,
+    });
+
+    CheckboxController.$inject = ['$element', 'geTv', 'geCheckboxTheme', 'geId'];
+
+    function CheckboxController($element, geTv, geCheckboxTheme, geId) {
+      var vm = this;
+      vm.inputId = geId.next('ge-checkbox');
+      vm.classes = {};
+      vm.viewValue = false;
+      vm.userClearedIndeterminate = false;
+      vm.$onInit = onInit;
+      vm.$onChanges = onChanges;
+      vm.onChange = onChange;
+
+      function onInit() {
+        // Paridade com input[type=checkbox] do Angular 1.8: só `true` preenche
+        // o required. O $isEmpty default NÃO considera `false` vazio, então
+        // ng-required no host passaria com desmarcado.
+        vm.ngModelCtrl.$isEmpty = isUnchecked;
+        vm.ngModelCtrl.$render = renderValue;
+        vm.ngModelCtrl.$formatters.push(identity);
+        vm.ngModelCtrl.$parsers.push(identity);
+        syncView();
+      }
+
+      function onChanges(changes) {
+        if (changes.indeterminate && !changes.indeterminate.isFirstChange()) {
+          vm.userClearedIndeterminate = false;
+        }
+        syncView();
+      }
+
+      function renderValue() {
+        vm.viewValue = !!vm.ngModelCtrl.$viewValue;
+        syncView();
+      }
+
+      function onChange() {
+        if (vm.isDisabled) {
+          return;
+        }
+        // Clique nativo em indeterminate marca checked=true e NÃO limpa
+        // a propriedade sozinho — zerar só a exibição, modelo continua boolean.
+        vm.userClearedIndeterminate = true;
+        vm.ngModelCtrl.$setViewValue(!!vm.viewValue);
+        syncView();
+      }
+
+      function syncView() {
+        var resolvedIndicator = vm.indicator || 'start';
+        vm.isChecked = !!vm.viewValue;
+        vm.isDisabled = vm.disabled === true;
+        vm.isRequired = vm.required === true;
+        vm.isIndeterminate =
+          vm.indeterminate === true && !vm.userClearedIndeterminate;
+        vm.hasLabel = hasText(vm.label);
+        vm.hasDescription = hasText(vm.description);
+        vm.hasText = vm.hasLabel || vm.hasDescription;
+        vm.showIndicator =
+          (vm.isChecked || vm.isIndeterminate) && resolvedIndicator !== 'hidden';
+        vm.resolvedIcon = vm.isIndeterminate
+          ? vm.indeterminateIcon || 'i-lucide-minus'
+          : vm.icon || 'i-lucide-check';
+        vm.describedByAttr = hasText(vm.describedBy) ? vm.describedBy : undefined;
+        vm.dataChecked = vm.isChecked ? 'true' : undefined;
+        vm.dataDisabled = vm.isDisabled ? 'true' : undefined;
+        vm.dataIndeterminate = vm.isIndeterminate ? 'true' : undefined;
+        vm.classes = geTv(geCheckboxTheme)({
+          color: vm.color || 'primary',
+          size: vm.size || 'md',
+          variant: vm.variant || 'list',
+          indicator: resolvedIndicator,
+          required: vm.isRequired,
+          disabled: vm.isDisabled,
+          highlight: vm.highlight === true,
+          checked: vm.isChecked,
+        });
+        applyInputProps();
+      }
+
+      function applyInputProps() {
+        var input = $element[0].querySelector('input[type="checkbox"]');
+        if (!input) {
+          return;
+        }
+        input.indeterminate = vm.isIndeterminate;
+        input.required = vm.isRequired;
+      }
+
+      function hasText(value) {
+        return value !== undefined && value !== null && String(value) !== '';
+      }
+
+      function identity(value) {
+        return value;
+      }
+
+      function isUnchecked(value) {
+        return value !== true;
       }
     }
   })();

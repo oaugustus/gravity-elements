@@ -30,12 +30,14 @@ const lucide = require('@iconify-json/lucide/icons.json');
 
 // Nomes usados de fato pelos componentes em produção (confirmado via
 // `grep -rEo "i-lucide-[a-z-]+" src/ demo/`), excluindo classes que só
-// aparecem em specs Jasmine (i-lucide-user, i-lucide-check, i-lucide-star,
-// i-lucide-bug — não renderizadas no demo real), MAIS os ícones usados nos
-// exemplos do demo equalizados com ui.nuxt.com (2026-08-10 — ver spec §9.7).
+// aparecem em specs Jasmine (i-lucide-user, i-lucide-star, i-lucide-bug —
+// não renderizadas no demo real), MAIS os ícones usados nos exemplos do
+// demo equalizados com ui.nuxt.com (2026-08-10 — ver spec §9.7).
 const ICON_NAMES = [
   'chevron-left', // Calendar: mês anterior
   'chevron-right', // Calendar: próximo mês
+  'check', // Checkbox: indicador marcado
+  'minus', // Checkbox: indicador indeterminate
   'x', // Alert / Banner: botão fechar
   'sun', // Theme: toggle claro
   'moon', // Theme: toggle escuro

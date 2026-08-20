@@ -27,6 +27,7 @@ import './core/id/id.service.js';
 import './core/color-mode/color-mode.service.js';
 import './components/layout/layout.module.js';
 import './components/element/element.module.js';
+import './components/form/form.module.js';
 import './components/components.module.js';
 import './components/layout/app/app.component.js';
 import './components/layout/container/container.theme.js';
@@ -74,6 +75,8 @@ import './components/element/separator/separator.theme.js';
 import './components/element/separator/separator.component.js';
 import './components/element/skeleton/skeleton.theme.js';
 import './components/element/skeleton/skeleton.component.js';
+import './components/form/checkbox/checkbox.theme.js';
+import './components/form/checkbox/checkbox.component.js';
 import './gravity-elements.module.js';
 
 

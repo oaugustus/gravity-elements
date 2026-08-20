@@ -1,0 +1,86 @@
+<section class="demo-section">
+  <h2>geCheckbox</h2>
+  <p class="demo-hint">
+    Checkbox nativo com <code>ng-model</code> boolean. Espelha os exemplos
+    Usage, Color, Variant (list/card), Size, Disabled e Indeterminate da doc
+    Nuxt UI v4.10.0 —
+    <a href="https://ui.nuxt.com/docs/components/checkbox">ui.nuxt.com/docs/components/checkbox</a>.
+    Modelo atual do uso básico: <code>{{ demo.checkboxValue }}</code>.
+  </p>
+  <div class="demo-row" style="flex-direction: column; align-items: flex-start; gap: 0.75rem">
+    <div class="demo-item">
+      <span class="label">Uso básico (ng-model)</span>
+      <ge-checkbox
+        ng-model="demo.checkboxValue"
+        label="Accept terms and conditions"
+        description="You agree to our Terms of Service and Privacy Policy."
+      ></ge-checkbox>
+    </div>
+  </div>
+</section>
+
+<section class="demo-section">
+  <h3>Color</h3>
+  <div class="demo-row" style="flex-wrap: wrap; gap: 1rem; align-items: flex-start">
+    <ge-checkbox ng-model="demo.checkboxValue" color="primary" label="Primary"></ge-checkbox>
+    <ge-checkbox ng-model="demo.checkboxValue" color="secondary" label="Secondary"></ge-checkbox>
+    <ge-checkbox ng-model="demo.checkboxValue" color="success" label="Success"></ge-checkbox>
+    <ge-checkbox ng-model="demo.checkboxValue" color="info" label="Info"></ge-checkbox>
+    <ge-checkbox ng-model="demo.checkboxValue" color="warning" label="Warning"></ge-checkbox>
+    <ge-checkbox ng-model="demo.checkboxValue" color="error" label="Error"></ge-checkbox>
+    <ge-checkbox ng-model="demo.checkboxValue" color="neutral" label="Neutral"></ge-checkbox>
+  </div>
+</section>
+
+<section class="demo-section">
+  <h3>Variant</h3>
+  <div class="demo-row" style="flex-direction: column; align-items: stretch; gap: 0.75rem; max-width: 24rem">
+    <ge-checkbox
+      ng-model="demo.checkboxValue"
+      variant="list"
+      label="List"
+      description="Default variant."
+    ></ge-checkbox>
+    <ge-checkbox
+      ng-model="demo.checkboxCard"
+      variant="card"
+      label="Card"
+      description="The checkbox is wrapped in a card."
+    ></ge-checkbox>
+  </div>
+</section>
+
+<section class="demo-section">
+  <h3>Size</h3>
+  <div class="demo-row" style="flex-wrap: wrap; gap: 1rem; align-items: flex-start">
+    <ge-checkbox ng-model="demo.checkboxValue" size="xs" label="xs"></ge-checkbox>
+    <ge-checkbox ng-model="demo.checkboxValue" size="sm" label="sm"></ge-checkbox>
+    <ge-checkbox ng-model="demo.checkboxValue" size="md" label="md"></ge-checkbox>
+    <ge-checkbox ng-model="demo.checkboxValue" size="lg" label="lg"></ge-checkbox>
+    <ge-checkbox ng-model="demo.checkboxValue" size="xl" label="xl"></ge-checkbox>
+  </div>
+</section>
+
+<section class="demo-section">
+  <h3>Disabled / Indeterminate / Required</h3>
+  <div class="demo-row" style="flex-direction: column; align-items: flex-start; gap: 0.75rem">
+    <ge-checkbox
+      ng-model="demo.checkboxDisabled"
+      disabled="true"
+      label="Disabled"
+      description="Cannot be toggled."
+    ></ge-checkbox>
+    <ge-checkbox
+      ng-model="demo.checkboxIndeterminate"
+      indeterminate="true"
+      label="Indeterminate"
+      description="Visual only — ng-model stays boolean."
+    ></ge-checkbox>
+    <ge-checkbox
+      ng-model="demo.checkboxValue"
+      required="true"
+      label="Required"
+      description="Asterisk no label (binding required)."
+    ></ge-checkbox>
+  </div>
+</section>

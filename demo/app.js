@@ -11,6 +11,10 @@
     var vm = this;
 
     vm.calendarValue = new Date(2026, 7, 15);
+    vm.checkboxValue = true;
+    vm.checkboxCard = false;
+    vm.checkboxDisabled = true;
+    vm.checkboxIndeterminate = false;
     vm.collapsibleOpen = true;
     vm.sidebarOpen = true;
     vm.errorCleared = false;

@@ -1,0 +1,34 @@
+<label
+  class="{{ vm.classes.root }}"
+  ng-attr-data-is-checked="{{ vm.dataChecked }}"
+  ng-attr-data-is-disabled="{{ vm.dataDisabled }}"
+  ng-attr-data-is-indeterminate="{{ vm.dataIndeterminate }}"
+>
+  <div class="{{ vm.classes.container }}">
+    <span class="relative inline-flex shrink-0 overflow-hidden rounded">
+      <input
+        type="checkbox"
+        id="{{ vm.inputId }}"
+        class="{{ vm.classes.base }}"
+        ng-model="vm.viewValue"
+        ng-change="vm.onChange()"
+        ng-disabled="vm.isDisabled"
+        aria-invalid="{{ !!(vm.ngModelCtrl.$invalid && vm.ngModelCtrl.$dirty) }}"
+        ng-attr-aria-required="{{ vm.ngModelCtrl.$validators.required ? 'true' : undefined }}"
+        ng-attr-aria-describedby="{{ vm.describedByAttr }}"
+        ng-attr-data-is-checked="{{ vm.dataChecked }}"
+        ng-attr-data-is-disabled="{{ vm.dataDisabled }}"
+        ng-attr-data-is-indeterminate="{{ vm.dataIndeterminate }}"
+      />
+      <span ng-if="vm.showIndicator" class="{{ vm.classes.indicator }}">
+        <i class="{{ vm.resolvedIcon }} {{ vm.classes.icon }}" aria-hidden="true"></i>
+      </span>
+    </span>
+  </div>
+  <div ng-if="vm.hasText" class="{{ vm.classes.wrapper }}">
+    <span ng-if="vm.hasLabel" class="{{ vm.classes.label }}">{{ vm.label }}</span>
+    <p ng-if="vm.hasDescription" class="{{ vm.classes.description }}">
+      {{ vm.description }}
+    </p>
+  </div>
+</label>
