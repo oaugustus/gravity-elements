@@ -1,0 +1,88 @@
+<section class="demo-section">
+  <h2>geColorPicker</h2>
+  <p class="demo-hint">
+    Wrapper do Pickr com <code>ng-model</code> string de cor. Superfície:
+    trigger + painel (exemplo “As a color chooser” da doc Nuxt UI v4.10.0,
+    não o picker HSV inline do <code>ColorPicker.vue</code>) —
+    <a href="https://ui.nuxt.com/docs/components/color-picker"
+      >ui.nuxt.com/docs/components/color-picker</a
+    >.
+    Modelo atual do uso básico: <code>{{ demo.colorPickerValue }}</code>.
+  </p>
+  <div class="demo-row" style="flex-direction: column; align-items: flex-start; gap: 0.75rem">
+    <div class="demo-item">
+      <span class="label">Uso básico (ng-model hex)</span>
+      <ge-color-picker ng-model="demo.colorPickerValue"></ge-color-picker>
+    </div>
+  </div>
+</section>
+
+<section class="demo-section">
+  <h3>Format</h3>
+  <div class="demo-row" style="flex-wrap: wrap; gap: 1.5rem; align-items: flex-start">
+    <div class="demo-item">
+      <span class="label">hex — {{ demo.colorPickerValue }}</span>
+      <ge-color-picker ng-model="demo.colorPickerValue" format="hex"></ge-color-picker>
+    </div>
+    <div class="demo-item">
+      <span class="label">rgba — {{ demo.colorPickerRgba }}</span>
+      <ge-color-picker ng-model="demo.colorPickerRgba" format="rgba"></ge-color-picker>
+    </div>
+    <div class="demo-item">
+      <span class="label">hsla — {{ demo.colorPickerHsla }}</span>
+      <ge-color-picker ng-model="demo.colorPickerHsla" format="hsla"></ge-color-picker>
+    </div>
+  </div>
+</section>
+
+<section class="demo-section">
+  <h3>Swatches</h3>
+  <div class="demo-row" style="flex-direction: column; align-items: flex-start; gap: 0.75rem">
+    <div class="demo-item">
+      <span class="label">Cores predefinidas — {{ demo.colorPickerSwatch }}</span>
+      <ge-color-picker
+        ng-model="demo.colorPickerSwatch"
+        swatches="demo.colorPickerSwatches"
+      ></ge-color-picker>
+    </div>
+  </div>
+</section>
+
+<section class="demo-section">
+  <h3>Size</h3>
+  <div class="demo-row" style="flex-wrap: wrap; gap: 1rem; align-items: flex-end">
+    <div class="demo-item">
+      <span class="label">xs</span>
+      <ge-color-picker ng-model="demo.colorPickerValue" size="xs"></ge-color-picker>
+    </div>
+    <div class="demo-item">
+      <span class="label">sm</span>
+      <ge-color-picker ng-model="demo.colorPickerValue" size="sm"></ge-color-picker>
+    </div>
+    <div class="demo-item">
+      <span class="label">md</span>
+      <ge-color-picker ng-model="demo.colorPickerValue" size="md"></ge-color-picker>
+    </div>
+    <div class="demo-item">
+      <span class="label">lg</span>
+      <ge-color-picker ng-model="demo.colorPickerValue" size="lg"></ge-color-picker>
+    </div>
+    <div class="demo-item">
+      <span class="label">xl</span>
+      <ge-color-picker ng-model="demo.colorPickerValue" size="xl"></ge-color-picker>
+    </div>
+  </div>
+</section>
+
+<section class="demo-section">
+  <h3>Disabled</h3>
+  <div class="demo-row" style="flex-direction: column; align-items: flex-start; gap: 0.75rem">
+    <div class="demo-item">
+      <span class="label">Não abre o painel</span>
+      <ge-color-picker
+        ng-model="demo.colorPickerDisabled"
+        disabled="true"
+      ></ge-color-picker>
+    </div>
+  </div>
+</section>

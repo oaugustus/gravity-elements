@@ -24,6 +24,7 @@ Versões conferidas em `node_modules/*/package.json` no momento da criação des
 | Mousetrap | `mousetrap` | 1.6.5 | Apache-2.0 WITH LLVM-exception |
 | date-fns | `date-fns` | 4.4.0 | MIT |
 | tailwind-merge | `tailwind-merge` | 3.6.0 | MIT |
+| Pickr | `@simonwep/pickr` | 1.10.1 | MIT |
 
 ## Dependências de desenvolvimento (CSS)
 

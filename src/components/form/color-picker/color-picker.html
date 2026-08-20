@@ -1,0 +1,28 @@
+<div
+  class="{{ vm.classes.root }}"
+  ng-attr-data-is-disabled="{{ vm.dataDisabled }}"
+>
+  <button
+    type="button"
+    id="{{ vm.triggerId }}"
+    class="{{ vm.classes.trigger }}"
+    data-ge-color-trigger
+    ng-disabled="vm.isDisabled"
+    aria-haspopup="dialog"
+    aria-expanded="{{ vm.isOpen ? 'true' : 'false' }}"
+    aria-label="{{ vm.resolvedAriaLabel }}"
+    aria-invalid="{{ !!(vm.ngModelCtrl.$invalid && vm.ngModelCtrl.$dirty) }}"
+    ng-attr-aria-required="{{ vm.ngModelCtrl.$validators.required ? 'true' : undefined }}"
+    ng-attr-aria-describedby="{{ vm.describedByAttr }}"
+    ng-attr-data-is-disabled="{{ vm.dataDisabled }}"
+    ng-attr-data-is-invalid="{{ vm.dataInvalid }}"
+  >
+    <span class="{{ vm.classes.preview }}">
+      <span
+        class="block size-full rounded-full"
+        data-ge-color-preview
+        ng-style="vm.previewStyle"
+      ></span>
+    </span>
+  </button>
+</div>

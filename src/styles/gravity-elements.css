@@ -1,3 +1,5 @@
+@import '../../node_modules/@simonwep/pickr/dist/themes/nano.min.css';
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -243,4 +245,39 @@
     height: 90%;
     margin-top: 5%;
   }
+}
+
+/*
+ * geColorPicker — override do tema nano (já importado no topo) com tokens
+ * --ui-*. Checkerboard do chip: o background-color do filho mostra a cor
+ * (com alpha) por cima deste padrão.
+ */
+.ge-color-picker-preview {
+  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2 2"><path fill="%23ffffff" d="M1,0H2V1H1V0ZM0,1H1V2H0V1Z"/><path fill="%23cbd5e1" d="M0,0H1V1H0V0ZM1,1H2V2H1V1Z"/></svg>');
+  background-size: 0.5em 0.5em;
+}
+
+.pcr-app.ge-color-picker-app {
+  background: var(--ui-bg-elevated, #f1f5f9);
+  color: var(--ui-text, #334155);
+  border: 1px solid var(--ui-border, #e2e8f0);
+  border-radius: 0.5rem;
+  font-family: inherit;
+  box-shadow: 0 0.15em 1.5em 0 color-mix(in srgb, var(--ui-bg-inverted, #0f172a) 12%, transparent);
+}
+
+.pcr-app.ge-color-picker-app .pcr-interaction input,
+.pcr-app.ge-color-picker-app .pcr-interaction .pcr-result {
+  background: var(--ui-bg-accented, #e2e8f0);
+  color: var(--ui-text, #334155);
+}
+
+.pcr-app.ge-color-picker-app .pcr-interaction .pcr-type.active {
+  background: var(--ui-primary, #00c16a);
+  color: var(--ui-text-inverted, #ffffff);
+}
+
+.pcr-app.ge-color-picker-app .pcr-interaction input:focus,
+.pcr-app.ge-color-picker-app .pcr-interaction .pcr-result:focus {
+  box-shadow: 0 0 0 1px var(--ui-bg, #ffffff), 0 0 0 3px var(--ui-primary, #00c16a);
 }

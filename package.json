@@ -22,6 +22,7 @@
   },
   "dependencies": {
     "@floating-ui/dom": "^1.8.0",
+    "@simonwep/pickr": "1.10.1",
     "angular": "1.8.3",
     "angular-animate": "1.8.3",
     "angular-aria": "1.8.3",

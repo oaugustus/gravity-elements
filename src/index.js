@@ -1,4 +1,5 @@
 import angular from 'angular';
+import Pickr from '@simonwep/pickr';
 import { twMerge } from 'tailwind-merge';
 import {
   addDays,
@@ -79,6 +80,8 @@ import './components/form/checkbox/checkbox.theme.js';
 import './components/form/checkbox/checkbox.component.js';
 import './components/form/checkbox-group/checkbox-group.theme.js';
 import './components/form/checkbox-group/checkbox-group.component.js';
+import './components/form/color-picker/color-picker.theme.js';
+import './components/form/color-picker/color-picker.component.js';
 import './gravity-elements.module.js';
 
 
@@ -95,8 +98,11 @@ import './gravity-elements.module.js';
 //
 // geCalendar lê window.dateFns (mesmo padrão $window.focusTrap). No Karma o
 // global vem de date-fns/cdn.js; no UMD publicado setamos o subconjunto usado.
+// geColorPicker lê window.Pickr (lib vanilla, mesmo padrão); no Karma o
+// global vem de @simonwep/pickr/dist/pickr.min.js.
 if (typeof window !== 'undefined') {
   window.twMerge = twMerge;
+  window.Pickr = Pickr;
   window.dateFns = {
     addDays: addDays,
     addMonths: addMonths,

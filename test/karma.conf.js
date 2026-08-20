@@ -11,6 +11,7 @@ module.exports = function (config) {
       'node_modules/focus-trap/dist/focus-trap.umd.js',
       'node_modules/mousetrap/mousetrap.js',
       'node_modules/date-fns/cdn.js',
+      'node_modules/@simonwep/pickr/dist/pickr.min.js',
 
       'test/shims/cjs-exports-prelude.js',
       'node_modules/tailwind-merge/dist/bundle-cjs.js',
@@ -58,6 +59,7 @@ module.exports = function (config) {
       'src/components/element/skeleton/**/*.js',
       'src/components/form/checkbox/**/*.js',
       'src/components/form/checkbox-group/**/*.js',
+      'src/components/form/color-picker/**/*.js',
       'test/fixtures/theme.fixture.js',
       'test/fixtures/class-normalize.js',
       'test/**/*.spec.js',
