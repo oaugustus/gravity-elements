@@ -1,79 +1,73 @@
 Você vai trabalhar em uma única tarefa do projeto Gravity Elements, definida no arquivo
-specs/spec-etapa-1-layout-element.md deste repositório.
+specs/spec-etapa-2-form.md deste repositório.
 
-Tarefa (copiar exatamente): "Componente: Progress — expansão animation/orientation/inverted/max-array (pós-Etapa 1, 2026-08-13)"
+Tarefa (copiar exatamente): "Componente: CheckboxGroup"
 
-**Contexto**: a Etapa 1 inteira já está concluída e verificada (24 componentes + demo app +
-os 2 critérios de aceite finais). `geProgress` já existe e funciona
-(`src/components/element/progress/progress.component.js`, `progress.html`,
-`progress.theme.js`, `progress.component.spec.js`) cobrindo `value`/`max` (numérico)/
-`color`/`size`/`status`, com um único `animate-pulse` genérico como feedback indeterminate.
-Essa era uma decisão de escopo deliberada da Etapa 1 ("barra simples"). O usuário decidiu
-agora expandir para paridade completa com o upstream. Esta tarefa é adicional, fora das 27
-originais do TickTick — **não mexer no TickTick por causa dela** (só eu, Claude/Cowork,
-sincronizo TickTick, e esta tarefa está deliberadamente fora desse mapeamento).
+**Contexto**: `geCheckbox` está concluído e verificado (marcado `[x]` na seção 12 da spec,
+incluindo uma correção de ARIA feita numa segunda rodada — leia a sub-linha de evidência
+completa antes de começar, e a nova seção 5.15 da spec, escrita por causa desse achado). Antes
+de propor qualquer plano:
 
-Antes de propor qualquer plano:
+1. **Inspecione o estado atual do repositório** — não assuma nada de sessões anteriores. Rode
+   `git status`/`git log -1`, confirme que `src/components/form/checkbox/` existe e está
+   completo, e que `src/components/form/checkbox_group/`(ou nome de pasta equivalente —
+   confirme a convenção kebab-case da seção 3 da spec: `checkbox-group/`) ainda não existe.
+2. Leia a seção 6 da spec (tabela de componentes Form), linha `geCheckboxGroup` — bindings de
+   partida: `options` (`<`, array de `{ value, label, description, disabled }` ou array de
+   strings), `orientation` (`@`), `color`/`size`/`variant` (`@`, propagam pros itens). **Não é
+   um contrato fechado** (seção 5.1) — confirme contra a tag `v4.10.0` real
+   (`raw.githubusercontent.com/nuxt/ui/v4.10.0/src/theme/checkbox-group.ts` e
+   `CheckboxGroup.vue`) antes de implementar.
+3. `ngModel` = **array** de valores selecionados (diferente do `geCheckbox`, que é boolean) —
+   aplique o mesmo padrão de `require: { ngModelCtrl: 'ngModel' }` no host (seção 5.3), mas com
+   `$formatters`/`$parsers` que de fato convertam array↔array (identidade é aceitável se não
+   houver necessidade de normalização, mas documente a decisão) e `$render` que marca/desmarca
+   cada `<input type="checkbox">` de opção conforme o array do modelo contém ou não o `value`
+   daquela opção.
+4. Reaproveite o que já existe em `geCheckbox` sempre que fizer sentido — mesma estrutura de
+   slots do tema (`root`/`base`/`indicator`/`icon`/`label`/`description`), mesmo tratamento de
+   `disabled` por opção, mesmos nomes seguros de `data-is-*` (seção 5.11) — mas **não** copie
+   `<ge-checkbox>` como sub-componente automaticamente sem checar a v4.10.0 primeiro: confirme
+   se o `CheckboxGroup` real do Nuxt UI reusa o `Checkbox` internamente ou tem seu próprio
+   markup de item; documente o que foi confirmado.
+5. **ARIA (seção 5.8 + a nova seção 5.15, leia com atenção)**: `role="group"` no fieldset
+   visual, `aria-label`/`aria-labelledby` apontando pro texto do grupo (se houver um label de
+   grupo — confirme se a tabela precisa de um binding `label`/`legend` que a linha da seção 6
+   não listou). A seção 5.15 é o ponto principal desta tarefa em termos de ARIA: **a
+   invalidez/obrigatoriedade pertence ao grupo, não a cada checkbox individual** — não replique
+   a correção de `aria-invalid`/`aria-required` por-input feita no `geCheckbox` (isso não faz
+   sentido aqui, um checkbox desmarcado dentro de um grupo válido não é "inválido" sozinho).
+   Aplique `aria-invalid`/`aria-required` no elemento com `role="group"` (equivalente ao "host"
+   focável certo aqui), refletindo `vm.ngModelCtrl.$invalid`/presença de
+   `vm.ngModelCtrl.$validators.required`, com o mesmo gate de `$dirty` já usado no `geCheckbox`
+   para não anunciar "inválido" antes do usuário interagir. Verifique isso por execução real
+   (jsdom ou Karma), não só por leitura de código — é exatamente o tipo de coisa que passou
+   despercebida no `geCheckbox` na primeira rodada.
+6. Checklist `ng-attr-data-*`/`BOOLEAN_ATTR` (seção 5.11) e Tailwind v3→v4 (seção 5.10) — mesma
+   atenção já aplicada em `geCheckbox`, incluindo conferir o CSS realmente compilado (não só a
+   safelist) para qualquer classe arbitrária nova que o tema de `CheckboxGroup` introduzir.
+7. Casos de teste mínimos (seção 5.9): os 4 do baseline de `ngModel` (render inicial, interação
+   do usuário, mudança externa pós-montagem, estado inválido) **mais** o caso de seleção
+   múltipla exigido para `CheckboxGroup`/`RadioGroup`/`Listbox` (marcar/desmarcar múltiplas
+   opções e confirmar que o array do modelo reflete exatamente o que está marcado, na ordem
+   certa — decida e documente se é ordem de marcação ou ordem de exibição das opções) **mais**
+   o caso de `aria-invalid`/`aria-required` no grupo (item 5 acima), com o mesmo par
+   pristine/dirty já testado no `geCheckbox`.
+8. Demo (seção 7 da spec, regra do processo — parte da própria definição de pronto): criar
+   `demo/pages/form/checkbox-group.html` + entrada em `demo/routes.js`, uso básico com
+   `ng-model` array + 2-3 variações (`orientation`, `disabled` por opção, `color`/`size`).
+   Comparação visual pontual com `ui.nuxt.com/docs/components/checkbox-group` (v4.10.0 fixada).
 
-1. Leia a seção 7 da spec (tabela de componentes Element), linha `geProgress` — foi reescrita
-   nesta data com o detalhamento completo do que falta: bindings novos (`orientation`,
-   `inverted`, `animation`, `max` aceitando array de strings), slots novos (`steps`/`step`),
-   variants novos (`orientation`, `inverted`, `animation`) e os compounds de animação.
-2. Busque o tema upstream real antes de implementar (não confiar só no resumo da seção 7):
-   `ui.nuxt.com/docs/components/progress` (exemplos e API) e o arquivo `theme/progress.ts` na
-   tag `v4.10.0` do repositório `nuxt/ui` no GitHub (mesmo processo já usado nos outros 24
-   componentes — `raw.githubusercontent.com/nuxt/ui/v4.10.0/src/theme/progress.ts`). Preste
-   atenção especial a:
-   - Os 8 `compoundVariants` de animação (`orientation` × `animation`: carousel,
-     carousel-inverse, swing, elastic — cada um horizontal e vertical) usam classes
-     `motion-safe:data-[state=indeterminate]:animate-[<keyframe>_2s_...]`. As variantes
-     `motion-safe:`/`motion-reduce:` já existem nativamente no Tailwind 3.4.19 (não é um
-     gap de v4→v3 como outros casos já resolvidos neste projeto) — mas as **keyframes em si**
-     (`carousel`, `carousel-rtl`, `carousel-inverse`, `carousel-inverse-rtl`,
-     `carousel-vertical`, `carousel-inverse-vertical`, `swing`, `swing-vertical`, `elastic`,
-     `elastic-vertical`) são customizadas do Nuxt UI (definidas via `@theme`/CSS do Tailwind
-     v4 upstream) e precisam ser portadas manualmente para `tailwind.config.js`
-     (`theme.extend.keyframes` + `theme.extend.animation`) ou para `gravity-elements.css`
-     diretamente — não existem nativamente no Tailwind 3.4.19. Buscar as definições exatas
-     dessas keyframes no CSS/tema publicado do Nuxt UI (ou no pacote `@nuxt/ui` npm,
-     `dist/runtime/...`) antes de aproximar valores.
-   - `orientation` muda o eixo de vários slots (`root`: `w-full flex flex-col` horizontal vs
-     `h-full flex flex-row-reverse` vertical; `base`: `w-full` vs `h-full`; `status`: linha vs
-     coluna) e os compounds de altura/largura por `size` precisam ser duplicados por
-     orientação (hoje só existe a versão horizontal, `h-*` fixo).
-   - `inverted` só tem efeito em conjunto com `orientation` (2 compounds `inverted×horizontal`
-     e `inverted×vertical`, mudando a direção de `status`/`step`).
-   - `max` como array de strings ativa os slots `steps`/`step` (grid de labels sob a barra,
-     step ativo com opacidade cheia, primeiro step com cor muted, os do meio com opacidade 0
-     exceto o ativo, paridade exata com o exemplo "Waiting.../Cloning.../Migrating.../
-     Deploying.../Done!" da doc upstream) — ver a lógica de `active`/`first`/`other`/`last`
-     nos compounds do tema.
-3. Confira o checklist de padrões Tailwind v4→v3 (seção 5.7 da spec) e o checklist de
-   `ng-attr-data-*`/`BOOLEAN_ATTR` (seção 5.10) contra o que for escrito — mesmo processo já
-   seguido nos outros 24 componentes.
-4. `$onChanges` precisa recomputar `vm.classes`/estado derivado (não só `$onInit`) — todos os
-   outros componentes desta etapa passaram por correção retroativa por esquecer disso (ver
-   evidências de Alert/Badge/Button/Banner no TODO da seção 12); não repetir o erro aqui.
-5. Casos de teste mínimos: pelo menos 2 casos novos por binding/variant novo (orientation,
-   inverted, animation, max como array com steps renderizados) — seguir o padrão de
-   `progress.component.spec.js` já existente (aria/percent/transform).
-6. ARIA (seção 5.5): adicionar `aria-orientation` espelhando o binding `orientation`, mesmo
-   padrão já usado em `geSeparator`.
-7. Atualize a página demo (`demo/pages/element/progress.html`) com exemplos novos cobrindo
-   pelo menos: Max simples (numérico), Max como array de steps, Animation (as 4 variantes ou
-   pelo menos 2 lado a lado), Orientation vertical, Inverted — mesmo padrão de "uso básico +
-   variações lado a lado" já usado nas outras 24 páginas (facilita comparação visual depois).
-
-Verifique que nenhuma mudança quebra o que já existe: `npm test` (Karma) continua 100%,
-`npm run lint` limpo, `npm run build:js`/`build:css` sem erro, CSS compilado realmente contém
-as classes/keyframes novas (não só a safelist — checklist da seção 9, item 3, sobre "build
-sem erro" não ser o mesmo que "CSS correto").
+Verifique que nenhuma mudança quebra o que já existe: `npm run lint` limpo, `npm run build:js`/
+`build:css` sem erro, `geCheckboxGroup` registrado em `gravityElements.components` via
+injector, CSS compilado realmente contém as classes novas (não só a safelist).
 
 Proponha um plano do que vai ser criado/alterado (arquivos e pastas) para completar essa
 tarefa. Não implemente nada ainda — aguarde minha aprovação do plano.
 
 Depois de aprovado: implemente, rode qualquer verificação aplicável, e só então marque o item
-como "- [x]" no TODO (seção 12) deste mesmo arquivo de spec, com uma sub-linha de evidência do
-que foi feito. Não altere o texto do item. Não toque em nenhum sistema de gestão de tarefas
-fora deste arquivo (e lembre-se: esta tarefa específica não existe no TickTick — não criá-la
-lá).
+como "- [x]" no TODO (seção 12) de `specs/spec-etapa-2-form.md`, com uma sub-linha de evidência
+do que foi feito (incluindo a rota de demo tocada e a decisão tomada sobre onde aplicar
+`aria-invalid`/`aria-required` de grupo, item 5). Não altere o texto do item. Não toque em
+nenhum sistema de gestão de tarefas fora deste arquivo — o TickTick é sincronizado
+exclusivamente pela sessão Claude/Cowork, nunca pelo Cursor.
