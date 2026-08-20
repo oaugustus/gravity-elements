@@ -21,6 +21,7 @@ Cada tarefa do TODO vira **um chat de Plan mode separado no Cursor** — não um
 3. **Aprovação** — Otávio revisa e aprova o plano antes do build.
 4. **Build** — o Cursor implementa e roda qualquer verificação aplicável (testes, lint).
 5. **Atualizar o TODO** — só depois de **verificar o comportamento** (não só escrever código e assumir que funciona), o Cursor marca o item como `- [x]` na seção 9 da spec da etapa, com uma sub-linha de evidência (comandos rodados, resultado, arquivos criados). Não altera o texto do item.
+6. **Próxima tarefa (regra a partir da Etapa 2)** — depois que esta sessão (Claude/Cowork) verifica de forma independente a entrega (passo "Sincronização com o TickTick" abaixo) e o Otávio confirma que está de acordo, esta sessão reescreve `plantask.md` (raiz do repo) inteiro com a instrução da **próxima** tarefa do TODO — não é o Cursor que decide a próxima tarefa nem que edita `plantask.md` sozinho. `plantask.md` é sempre sobrescrito (não acumula histórico de tarefas antigas — isso já vive na sub-linha de evidência da spec da etapa) e sempre reflete só a tarefa corrente a ser aberta num novo chat de Plan mode no Cursor.
 
 ## Sincronização com o TickTick (regra crítica)
 
@@ -32,6 +33,17 @@ Antes de marcar qualquer tarefa como concluída no TickTick:
 3. Só então marcar a tarefa como concluída no TickTick (e, se necessário, corrigir/reabrir a evidência na spec quando a verificação não bater com o que foi relatado).
 
 Esse padrão já pegou dois problemas reais neste projeto: um token do GitHub que ficou parcialmente exposto mesmo depois de um "resolvido" reportado, e uma tarefa do TODO marcada como pronta sem o ambiente de teste realmente validado.
+
+## Demo app atualizado a cada tarefa, não em lote no fim da etapa (regra a partir da Etapa 2)
+
+Na Etapa 1, o demo app (rotas + páginas) foi construído como uma tarefa separada, feita só depois dos 24 componentes já implementados. Consequência: uma quantidade grande de bugs de comparação visual com o `ui.nuxt.com` (cor `neutral`→`slate`, espessura de `ring`, span de transclude vazio desalinhando label, host/inner não herdando stretch em FieldGroup/Skeleton, ícones ausentes, etc.) só apareceu numa rodada de "equalização" tardia, todos de uma vez, em vez de serem pegos um a um logo após cada componente ficar pronto — mais caro de investigar em lote e mais fácil de confundir a causa raiz de um bug com a de outro.
+
+A partir da Etapa 2, cada tarefa `Componente: X` do TODO passa a incluir, como parte da própria definição de pronto (não como tarefa à parte):
+1. Adicionar/atualizar a rota de `X` em `demo/routes.js` e a página correspondente em `demo/pages/<categoria>/<x>.html`, espelhando os exemplos da doc `ui.nuxt.com` (mesmo padrão já estabelecido na Etapa 1 — Usage/variações principais, seções extras rotuladas "(extensão Gravity)" quando aplicável).
+2. Comparação visual pontual daquele componente com `ui.nuxt.com` **no momento em que a tarefa é verificada**, não adiada para o fim da etapa.
+3. A evidência da tarefa (sub-linha do TODO) deve citar a rota do demo tocada, não só os 4 arquivos do contrato + testes.
+
+O shell do demo (nav lateral, `index.html`, bootstrap, roteamento `ngRoute`, cache-busting) já existe desde a Etapa 1 e não precisa ser reconstruído — cada etapa nova só estende `routes.js` e adiciona páginas. Uma tarefa de "Demo app" separada só volta a fazer sentido se a etapa tiver um entregável de demo que não seja 1:1 com um componente (ex.: a Etapa 2 tem um critério de aceite de formulário composto — login + cadastro usando 100% dos componentes da etapa — que é, por natureza, uma tarefa à parte, feita depois que os componentes individuais já existem).
 
 ## Outras práticas estabelecidas
 

@@ -1,6 +1,6 @@
 # Gravity Elements — Status atual
 
-> Resumo de contexto para retomar o projeto em uma nova sessão. Última atualização: 2026-08-06 (Etapa 0 concluída; Etapa 1 em andamento — 2 de 24 componentes).
+> Resumo de contexto para retomar o projeto em uma nova sessão. Última atualização: 2026-08-20 (Etapa 0 e Etapa 1 concluídas e fechadas no TickTick; Etapa 2 — Form ainda não iniciada, spec de implementação ainda não escrita).
 
 ## O que é o projeto
 
@@ -23,18 +23,17 @@ Convenção de código adotada: prefixo `ge-`/`ge` (ex.: `geTv`, `geOverlayStack
 - GitHub: `github.com/oaugustus/gravity-elements` (renomeado de `singular-ui`; URL antiga redireciona).
 - Pasta local: `~/Projetos/htdocs/gravity-elements` (renomeada de `singular-ui`).
 - Remote local (`git remote -v`) confirmado limpo, fetch e push ambos em `gravity-elements.git`, sem token embutido.
-- Branch local sincronizada com `origin/master` (nenhum commit pendente de push) no momento desta revisão. `geApp` já commitado e enviado (`991a783`).
-- **Há mudanças não commitadas no momento desta revisão**: `geContainer` completo (`src/components/layout/container/`, ainda untracked) + a correção do `window.twMerge` (`src/index.js`, `.eslintrc.cjs`) + artefatos de build regenerados (`dist/`, `tailwind.safelist.json`) + este próprio arquivo de status e a spec da Etapa 1. Recomenda-se commitar antes da próxima tarefa do Cursor.
+- Em 2026-08-20 (fim da Etapa 1), `git status` limpo — todos os componentes, fixes e o expandido `geProgress` commitados (`1e71606` é o commit mais recente na ocasião). Sempre confirmar `git status`/`git log -1` de novo no início de uma sessão nova, já que isso muda a cada tarefa.
 
 ## Documentos de planejamento (`specs/`)
 
 - `gravity-elements-especificacao-tecnica.md` — especificação técnica completa (arquitetura, convenções, contrato de componente, `geTv`, camada de interatividade, build/tooling, testes, licenciamento, fora de escopo).
 - `gravity-elements-plano-etapas.md` — plano por etapas (0–6 + 9 no escopo da v1; 7–8 só como referência para v2).
 - `spec-etapa-0-fundacao.md` — spec de implementação da Etapa 0 para o Cursor, com TODO (seção 9) espelhando as tarefas do TickTick. **Concluída (25/25).**
-- `spec-etapa-1-layout-element.md` — spec de implementação da Etapa 1 (Layout + Element, 24 componentes), escrita em 2026-08-06 nos moldes da Etapa 0. TODO (seção 12) espelha as 27 tarefas do TickTick (24 componentes + demo app + 2 critérios de aceite). **Em andamento: 2 de 24 componentes** (`geApp`, `geContainer`). Próxima tarefa (`Componente: Error`) a preencher em `plantask.md`.
-- `processo-implementacao.md` — processo operacional (papéis Claude/Cursor/TickTick), válido para todas as etapas.
+- `spec-etapa-1-layout-element.md` — spec de implementação da Etapa 1 (Layout + Element, 24 componentes), escrita em 2026-08-06 nos moldes da Etapa 0. TODO (seção 12) espelha as tarefas do TickTick (24 componentes + demo app + critérios de aceite, mais um item pós-etapa: expansão do Progress). **Concluída — 100%, TickTick zerado** (ver seção própria abaixo).
+- `processo-implementacao.md` — processo operacional (papéis Claude/Cursor/TickTick), válido para todas as etapas. **Atualizado em 2026-08-20** com uma regra nova a partir da Etapa 2: cada tarefa `Componente: X` passa a incluir a atualização da rota/página de demo e a comparação visual com `ui.nuxt.com` como parte da própria definição de pronto, em vez de uma tarefa "Demo app" em lote no fim da etapa (ver seção própria do arquivo para o racional — vários bugs visuais da Etapa 1 só foram achados tarde por causa desse batching).
 
-Etapas 2–6 e 9 ainda não têm spec de implementação detalhada.
+Etapas 2–6 e 9 ainda não têm spec de implementação detalhada. **Etapa 2 (Form) é a próxima a ser escrita** — plano/escopo de alto nível já existe em `gravity-elements-plano-etapas.md` (21 componentes, `ngModel` customizado, `ngMessages` para validação — decisão confirmada na seção 13 desse arquivo —, ColorPicker sobre Pickr, FileUpload sobre ng-file-upload, Select/SelectMenu/InputMenu/Listbox com `ge-floating-position` + roving tabindex), mas ainda falta o documento `spec-etapa-2-form.md` no molde detalhado da Etapa 1 (contrato por componente, ARIA, casos de teste mínimos, TODO espelhando o TickTick).
 
 ## Progresso da Etapa 0 (Fundação) — **CONCLUÍDA**
 
@@ -50,19 +49,26 @@ Entregas completas: estrutura de pastas, `package.json` + dependências de terce
 - **Mitigação usada nesta revisão** — em vez de só ler o código, o bundle UMD final e os serviços `geId`/`geColorMode` foram **executados de verdade** via `jsdom` + AngularJS real (`angular.js`/`angular-aria`/`angular-animate` carregados num DOM simulado, sem depender de Chrome): confirmado que `window.gravityElements` é o módulo Angular real (`name: 'gravityElements'`, `requires: ['gravityElements.core']`), que `geId.next('aria')` gera `aria-1`, `aria-2`, `aria-3` incrementalmente, e que `geColorMode.set('dark')`/`toggle()` aplicam e removem a classe `dark` em `documentElement` corretamente. Os demais serviços/diretivas (`geTv`, `geOverlayStack`, `ge-floating-position`, `ge-focus-trap`, `ge-hotkey`, `geBadge`, Tooltip) foram confirmados por revisão de código linha a linha contra a spec, sem contradição com os resultados de Karma relatados pelo Cursor (contagem de testes cresceu de forma consistente ao longo das entregas: 11→15→18→21→24→26→29→32→37).
 - **Recomenda-se rodar `npm test` localmente (Mac do usuário, que tem Chrome de verdade) ou via CI (já configurado em `.github/workflows/ci.yml`) para confirmar a suíte completa Karma pelo menos uma vez.**
 
-## Progresso da Etapa 1 (Layout + Element) — em andamento
+## Progresso da Etapa 1 (Layout + Element) — **CONCLUÍDA**
 
-**2 de 24 componentes concluídos e verificados de forma independente**, mais uma correção retroativa no núcleo da Etapa 0:
+**24 de 24 componentes + demo app (24 rotas) + os 2 critérios de aceite (comparação visual, Calendar navegável por teclado) concluídos e verificados de forma independente.** TickTick zerado (projeto "Etapa 1 - Layout + Element" sem tarefas em aberto) em 2026-08-20. Um item adicional, fora das 27 tarefas originais do TickTick — expansão do `geProgress` (`animation`/`orientation`/`inverted`/`max` como array, paridade completa com o `Progress.vue` real) — foi adicionado à spec e implementado/verificado à parte (não está no TickTick, por decisão explícita registrada na spec).
 
-- **`geApp`** (stub) — sem `theme.js` (exceção documentada: `App` na Nuxt UI v4.10.0 é só provedor de contexto, sem `theme/app.ts`); transclusion + aplica `geColorMode` persistido no `$onInit`. Papel completo de provedor (Toast/overlays) fica para a Etapa 4.
-- **`geContainer`** — primeiro componente com tema real da etapa; validou a safelist do Tailwind (Etapa 0, nunca testada antes contra tema de verdade) capturando corretamente inclusive sintaxe de valor arbitrário (`max-w-[var(--ui-container)]`).
-- **Correção retroativa (fora do fluxo Cursor, feita nesta sessão Claude/Cowork)**: `window.twMerge` nunca era setado no bundle publicado — só no shim de teste do Karma. `geTv` (Etapa 0) degradava silenciosamente para "sem merge" em produção desde a Etapa 0; passou despercebido porque nenhum smoke test tinha classes conflitantes no mesmo slot. Descoberto ao validar `geContainer` (`size="lg"` produzia duas classes `max-w-*` conflitantes, sem quebrar visualmente só por coincidência de ordem no CSS gerado). Corrigido em `src/index.js` (import real de `tailwind-merge` + `window.twMerge`) e `.eslintrc.cjs` (exceção `angular/window-service`, mesmo padrão de `tv.service.js`). Validado via build isolado + execução real em `jsdom`.
+Histórico completo, bug a bug, com evidência técnica de cada correção, está em `spec-etapa-1-layout-element.md` (seção 12, sub-linhas dos itens `[x]`). Achados de maior impacto pra ter em mente ao começar a Etapa 2 (podem se repetir em componentes de Form):
 
-Restam 22 componentes (ver TODO da spec, seção 12). Próxima tarefa: `Componente: Error`.
+- **`ring` sem sufixo numérico compila 3px no Tailwind 3.4.19 deste projeto, mas o Nuxt UI v4.10.0/Tailwind v4 original usa 1px** — corrigido globalmente via `theme.extend.ringWidth.DEFAULT` no `tailwind.config.js`. Vale conferir de novo em qualquer tema novo que use `ring ring-inset` copiado do upstream.
+- **Token semântico `neutral` do Nuxt UI é `slate` por padrão, não um cinza genérico** — os 9 `--ui-*` tokens que dependem dele já foram corrigidos em `src/styles/gravity-elements.css`; não deveria recorrer, mas vale checar se componentes de Form introduzem novos tokens dependentes de `neutral`.
+- **Host custom-element (AngularJS) não herda automaticamente stretch/tamanho do elemento visível interno** — já mordeu `geSkeleton` (host com tamanho, `<div>` interno com `height:0`) e `geButton`/`geBadge` dentro de `geFieldGroup` (host esticado, elemento interno não). Atenção redobrada em qualquer componente de Form usado dentro de `FieldGroup`/grids — mesma classe de bug tende a se repetir.
+- **A live `ui.nuxt.com` pode mostrar uma versão de tema mais nova que a tag `v4.10.0` pinada** — sempre confirmar contra o tarball real do npm (`registry.npmjs.org/@nuxt/ui/-/ui-4.10.0.tgz`) e a tag do GitHub, nunca só a doc ao vivo, antes de reportar uma "divergência" como bug.
+- **`ng-attr-data-*` nunca resolve se colidir com `BOOLEAN_ATTR` do AngularJS** (achado no Calendar) — checklist §5.10 da spec da Etapa 1; provavelmente relevante de novo em Form (`data-invalid`, `data-checked`, etc. em Checkbox/Switch/RadioGroup).
+- **Karma/ChromeHeadless não roda neste sandbox Cowork** (sem Chrome ARM64 instalável) — todo o ciclo desta etapa foi verificado por build isolado (lint/rollup/tailwind) + execução real em navegador de verdade (Chrome do usuário via `claude-in-chrome`) ou jsdom, nunca só leitura de código. Continua valendo pra Etapa 2.
 
 ## Próximo passo
 
-Dar `git push` do que estiver pendente localmente (checar `git status` — o volume de commits pendentes muda a cada tarefa concluída). Seguir a Etapa 1 componente a componente, um chat de Plan mode no Cursor por vez, com verificação independente (Claude/Cowork) antes de marcar cada um no TickTick.
+**Escrever `spec-etapa-2-form.md`** no molde de `spec-etapa-1-layout-element.md` (contrato completo por componente, ARIA, casos de teste mínimos, checklist Tailwind v4→v3, TODO espelhando o TickTick), cobrindo os 21 componentes de Form listados em `gravity-elements-plano-etapas.md` (seção "Etapa 2"). Decisões já confirmadas a incorporar na spec: `ngMessages` para validação (não schema/zod), ColorPicker sobre Pickr, FileUpload sobre ng-file-upload, roving tabindex via `tabbable` em Select/SelectMenu/InputMenu/Listbox, `<input type=radio|checkbox>` nativo em RadioGroup/CheckboxGroup. A partir desta etapa, cada tarefa `Componente: X` já nasce incluindo a atualização da rota/página de demo e a comparação visual pontual como parte da própria definição de pronto (ver `processo-implementacao.md`, seção "Demo app atualizado a cada tarefa") — não repetir o padrão da Etapa 1 de deixar isso para uma tarefa em lote no fim.
+
+Recomendação registrada em 2026-08-20: abrir uma **nova sessão/chat** (mesmo projeto/pasta) pra conduzir a Etapa 2, em vez de continuar na sessão que fechou a Etapa 1 — o histórico dessa sessão já passou por uma compactação por tamanho, e a Etapa 2 é comparável em volume (21 componentes + lógica nova de `ngModel`/`ngMessages`). Este arquivo, mais `spec-etapa-1-layout-element.md`, `processo-implementacao.md` e `gravity-elements-plano-etapas.md`, devem ser suficientes pra uma sessão nova retomar sem perda de contexto.
+
+Antes de seguir: dar `git push` do que estiver pendente localmente (checar `git status`).
 
 ## Gestão de tarefas (TickTick)
 
