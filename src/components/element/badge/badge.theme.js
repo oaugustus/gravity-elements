@@ -13,6 +13,18 @@
   // Tailwind v3: bg-/text-/ring-${color} → [var(--ui-*)]; tokens inverted/
   // default/elevated/accented. Opacidades /N sobre var() NÃO compilam no
   // TW 3.4.19 → color-mix (precedente Alert/Header).
+  // w-full/h-full no fieldGroup (2026-08-13, bug real apontado pelo usuário
+  // no FieldGroup, precedente idêntico em geButton — ver comentário lá):
+  // sem isso, o <span> raiz visível não acompanha o <ge-badge> host quando
+  // ele estica via align-items:stretch (default do FieldGroup, sem
+  // items-center — decisão deliberada do upstream pra igualar Badge+Input
+  // de tamanhos diferentes), deixando um gap invisível e a borda do badge
+  // não bate com a do vizinho (medido: badge size=lg ficava 28px de altura
+  // dentro de um host de 32px ao lado de um Button md — no upstream os dois
+  // ficam 32px, sem gap). Só nas variants.fieldGroup (não em slots.base):
+  // fora do FieldGroup o host normalmente é `display:inline`, e width/
+  // height percentual vazaria pro containing block do ancestral em bloco
+  // mais próximo — regressão grave fora deste contexto.
   angular.module('gravityElements.element').constant('geBadgeTheme', {
     slots: {
       base: 'font-medium inline-flex items-center',
@@ -25,9 +37,9 @@
     variants: {
       fieldGroup: {
         horizontal:
-          '[ge-badge:not(:only-child):first-child_&]:rounded-e-none [ge-badge:not(:only-child):last-child_&]:rounded-s-none [ge-badge:not(:last-child):not(:first-child)_&]:rounded-none focus-visible:z-[1]',
+          'h-full [ge-badge:not(:only-child):first-child_&]:rounded-e-none [ge-badge:not(:only-child):last-child_&]:rounded-s-none [ge-badge:not(:last-child):not(:first-child)_&]:rounded-none focus-visible:z-[1]',
         vertical:
-          '[ge-badge:not(:only-child):first-child_&]:rounded-b-none [ge-badge:not(:only-child):last-child_&]:rounded-t-none [ge-badge:not(:last-child):not(:first-child)_&]:rounded-none focus-visible:z-[1]',
+          'w-full [ge-badge:not(:only-child):first-child_&]:rounded-b-none [ge-badge:not(:only-child):last-child_&]:rounded-t-none [ge-badge:not(:last-child):not(:first-child)_&]:rounded-none focus-visible:z-[1]',
       },
       color: {
         primary: '',

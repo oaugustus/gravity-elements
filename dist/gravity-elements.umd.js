@@ -8297,6 +8297,19 @@
      * collapsible === 'none': aside inline (só inner; wrapper com `contents`).
      * collapsible offcanvas|icon: gap spacer + container fixed + data-state.
      *
+     * header slot custom (2026-08-13, bug real apontado pelo usuário via
+     * screenshot — × colado ao label em vez de na borda direita): a div do
+     * slot `header` (ng-transclude="header") não tinha `flex-1`, então não
+     * empurrava a div `actions` (com o botão de toggle/×) pra ponta do header
+     * — os dois ficavam left-aligned, lado a lado, com todo o espaço vazio
+     * sobrando à direita. Corrigido com `min-w-0 flex-1` na div do slot
+     * (mesma classe que `wrapper` já usa pro caso title/description — Sidebar
+     * upstream, ao contrário do AngularJS aqui, troca o fallback inteiro
+     * (wrapper+actions) pelo conteúdo do slot custom via `<slot name="header">
+     * ...fallback...</slot>`; replicar esse comportamento full built-in do Vue
+     * exigiria reestruturar o transclude — fora de escopo dessa correção
+     * pontual, que só resolve o alinhamento visual reportado).
+     *
      * Toggle: <button> nativo (§5.4.1) até existir geButton — trocar depois.
      *
      * Uso:
@@ -8329,7 +8342,7 @@
         '    ng-attr-data-state="{{ vm.isCollapsible ? vm.dataState : undefined }}">' +
         '    <div class="{{ vm.classes.inner }}">' +
         '      <div ng-if="vm.hasHeader" class="{{ vm.classes.header }}">' +
-        '        <div ng-if="vm.hasHeaderSlot" ng-transclude="header"></div>' +
+        '        <div ng-if="vm.hasHeaderSlot" class="min-w-0 flex-1" ng-transclude="header"></div>' +
         '        <div ng-if="!vm.hasHeaderSlot && vm.hasWrapper" class="{{ vm.classes.wrapper }}">' +
         '          <p ng-if="vm.hasTitle" class="{{ vm.classes.title }}">' +
         '            <span ng-if="vm.hasTitleSlot" ng-transclude="title"></span>' +
@@ -9197,8 +9210,14 @@
 
     // Portado de github.com/nuxt/ui v4.10.0, MIT License, Copyright (c) Nuxt Labs
     // Upstream: theme/avatar-group.ts — slots root/base + variants size/color.
-    // Tailwind v3: ring-bg → ring-[var(--ui-bg)]; ring-3 → ring (DEFAULT TW3 = 3px;
-    // ring-3 não existe no tema 3.4.19).
+    // Tailwind v3: ring-bg → ring-[var(--ui-bg)]; ring-3 → ring-[3px] (ring-3
+    // não existe no TW 3.4.19 — só DEFAULT/0/1/2/4/8). Usa `ring-[3px]`
+    // explícito (não `ring` puro) desde 2026-08-13: o DEFAULT de `ring` neste
+    // projeto foi trocado de 3px pra 1px em tailwind.config.js pra bater com o
+    // comportamento do TW4 (que os outros temas — Alert/Badge/Kbd/etc. — já
+    // assumiam ao copiar `ring` puro do upstream); aqui o 3px é intencional
+    // (anel de contorno maior nos avatares sobrepostos), então precisa ficar
+    // explícito pra não encolher pra 1px junto com o resto.
     angular.module('gravityElements.element').constant('geAvatarGroupTheme', {
       slots: {
         root: 'inline-flex flex-row-reverse justify-end',
@@ -9207,13 +9226,13 @@
       variants: {
         size: {
           '3xs': {
-            base: 'ring -me-0.5',
+            base: 'ring-[3px] -me-0.5',
           },
           '2xs': {
-            base: 'ring -me-0.5',
+            base: 'ring-[3px] -me-0.5',
           },
           xs: {
-            base: 'ring -me-0.5',
+            base: 'ring-[3px] -me-0.5',
           },
           sm: {
             base: 'ring-2 -me-1.5',
@@ -9225,13 +9244,13 @@
             base: 'ring-2 -me-1.5',
           },
           xl: {
-            base: 'ring -me-2',
+            base: 'ring-[3px] -me-2',
           },
           '2xl': {
-            base: 'ring -me-2',
+            base: 'ring-[3px] -me-2',
           },
           '3xl': {
-            base: 'ring -me-2',
+            base: 'ring-[3px] -me-2',
           },
         },
         color: {
@@ -9459,6 +9478,18 @@
     // Tailwind v3: bg-/text-/ring-${color} → [var(--ui-*)]; tokens inverted/
     // default/elevated/accented. Opacidades /N sobre var() NÃO compilam no
     // TW 3.4.19 → color-mix (precedente Alert/Header).
+    // w-full/h-full no fieldGroup (2026-08-13, bug real apontado pelo usuário
+    // no FieldGroup, precedente idêntico em geButton — ver comentário lá):
+    // sem isso, o <span> raiz visível não acompanha o <ge-badge> host quando
+    // ele estica via align-items:stretch (default do FieldGroup, sem
+    // items-center — decisão deliberada do upstream pra igualar Badge+Input
+    // de tamanhos diferentes), deixando um gap invisível e a borda do badge
+    // não bate com a do vizinho (medido: badge size=lg ficava 28px de altura
+    // dentro de um host de 32px ao lado de um Button md — no upstream os dois
+    // ficam 32px, sem gap). Só nas variants.fieldGroup (não em slots.base):
+    // fora do FieldGroup o host normalmente é `display:inline`, e width/
+    // height percentual vazaria pro containing block do ancestral em bloco
+    // mais próximo — regressão grave fora deste contexto.
     angular.module('gravityElements.element').constant('geBadgeTheme', {
       slots: {
         base: 'font-medium inline-flex items-center',
@@ -9471,9 +9502,9 @@
       variants: {
         fieldGroup: {
           horizontal:
-            '[ge-badge:not(:only-child):first-child_&]:rounded-e-none [ge-badge:not(:only-child):last-child_&]:rounded-s-none [ge-badge:not(:last-child):not(:first-child)_&]:rounded-none focus-visible:z-[1]',
+            'h-full [ge-badge:not(:only-child):first-child_&]:rounded-e-none [ge-badge:not(:only-child):last-child_&]:rounded-s-none [ge-badge:not(:last-child):not(:first-child)_&]:rounded-none focus-visible:z-[1]',
           vertical:
-            '[ge-badge:not(:only-child):first-child_&]:rounded-b-none [ge-badge:not(:only-child):last-child_&]:rounded-t-none [ge-badge:not(:last-child):not(:first-child)_&]:rounded-none focus-visible:z-[1]',
+            'w-full [ge-badge:not(:only-child):first-child_&]:rounded-b-none [ge-badge:not(:only-child):last-child_&]:rounded-t-none [ge-badge:not(:last-child):not(:first-child)_&]:rounded-none focus-visible:z-[1]',
         },
         color: {
           primary: '',
@@ -9758,7 +9789,7 @@
         '    aria-hidden="true"></i>' +
         '  <span ng-if="vm.hasLabel"' +
         '    class="{{ vm.classes.label }}">{{ vm.label }}</span>' +
-        '  <span ng-transclude></span>' +
+        '  <span ng-if="vm.hasTransclude" ng-transclude></span>' +
         '  <i ng-if="vm.showTrailing"' +
         '    class="{{ vm.trailingIconName }} {{ vm.classes.trailingIcon }}"' +
         '    aria-hidden="true"></i>' +
@@ -9808,6 +9839,7 @@
         }
 
         vm.hasLabel = hasLabel;
+        vm.hasTransclude = hasTransclude;
         vm.showLeading = resolveIsLeading();
         vm.showTrailing = resolveIsTrailing();
         vm.leadingIconName = vm.leadingIcon || vm.icon || '';
@@ -10126,6 +10158,24 @@
     // inverted/default/elevated/accented/muted. Opacidades /N sobre var() NÃO
     // compilam no TW 3.4.19 → color-mix. focus-visible:outline-3 →
     // focus-visible:outline-[3px] (precedente Banner).
+    // w-full/h-full no fieldGroup (2026-08-13, bug real apontado pelo usuário
+    // no FieldGroup): no upstream Vue, <UButton> É o próprio item flex
+    // (fragment/single-root), então o align-items:stretch padrão do
+    // FieldGroup (sem items-center no tema — decisão deliberada pra igualar
+    // altura/largura de irmãos com tamanho diferente, ex. Badge+Input) estica
+    // o <button> visível direto. No AngularJS, <ge-button> é um host de
+    // verdade que ENVOLVE o <button> — o host estica (vira item flex), mas
+    // sem w-full/h-full o <button> interno mantém o tamanho natural, deixando
+    // gap invisível e desalinhando bordas com o irmão (medido: width 67.44 vs
+    // 65.45 no orientation=vertical Submit/Cancel, deveriam ser iguais como
+    // no upstream — mesma classe de bug do host/inner do geSkeleton).
+    // NÃO colocado em slots.base (global): fora de um FieldGroup, o host
+    // <ge-button> normalmente é `display:inline` (não é item flex), e
+    // width/height percentual no <button> interno acabaria resolvendo contra
+    // o containing block do ancestral em bloco mais próximo (pulando o host
+    // inline) — ex. a largura da página inteira — regressão grave. Só faz
+    // sentido width/height 100% quando o host de fato virou item flex
+    // esticado (dentro do fieldGroup), por isso vai nas variants.fieldGroup.
     angular.module('gravityElements.element').constant('geButtonTheme', {
       slots: {
         base:
@@ -10139,9 +10189,9 @@
       variants: {
         fieldGroup: {
           horizontal:
-            '[ge-button:not(:only-child):first-child_&]:rounded-e-none [ge-button:not(:only-child):last-child_&]:rounded-s-none [ge-button:not(:last-child):not(:first-child)_&]:rounded-none focus-visible:z-[1]',
+            'h-full [ge-button:not(:only-child):first-child_&]:rounded-e-none [ge-button:not(:only-child):last-child_&]:rounded-s-none [ge-button:not(:last-child):not(:first-child)_&]:rounded-none focus-visible:z-[1]',
           vertical:
-            '[ge-button:not(:only-child):first-child_&]:rounded-b-none [ge-button:not(:only-child):last-child_&]:rounded-t-none [ge-button:not(:last-child):not(:first-child)_&]:rounded-none focus-visible:z-[1]',
+            'w-full [ge-button:not(:only-child):first-child_&]:rounded-b-none [ge-button:not(:only-child):last-child_&]:rounded-t-none [ge-button:not(:last-child):not(:first-child)_&]:rounded-none focus-visible:z-[1]',
         },
         color: {
           primary: '',
@@ -10572,7 +10622,7 @@
         '    aria-hidden="true"></i>' +
         '  <span ng-if="vm.hasLabel"' +
         '    class="{{ vm.classes.label }}">{{ vm.label }}</span>' +
-        '  <span ng-transclude></span>' +
+        '  <span ng-if="vm.hasTransclude" ng-transclude></span>' +
         '  <i ng-if="vm.showTrailing"' +
         '    class="{{ vm.trailingIconName }} {{ vm.classes.trailingIcon }}"' +
         '    aria-hidden="true"></i>' +
@@ -10637,6 +10687,7 @@
         }
 
         vm.hasLabel = hasLabel;
+        vm.hasTransclude = hasTransclude;
         vm.buttonType = vm.type || 'button';
         vm.isDisabled = vm.disabled === true || isLoading;
         vm.ariaBusy = isLoading ? 'true' : undefined;
@@ -12077,6 +12128,30 @@
      *     <ge-collapsible-content>Conteúdo</ge-collapsible-content>
      *   </ge-collapsible>
      *
+     * Duplo tab-stop (2026-08-13, encontrado em revisão, não reportado pelo
+     * usuário): upstream usa `<CollapsibleTrigger as-child>` — Reka injeta
+     * aria-expanded/aria-controls/data-state direto no elemento real que o
+     * consumidor passa (ex.: um UButton), sem criar wrapper próprio, então só
+     * existe UM elemento focável. AngularJS não tem equivalente de `as-child`
+     * (clonar attrs pro filho); a única opção estrutural aqui é a `<div
+     * class="ge-collapsible-trigger">` de fato existir no DOM como host da
+     * ARIA/ng-click. Problema: o `ngAria` (módulo em gravityElements.core)
+     * detecta `ng-click` sem role nativo e injeta `role="button"` +
+     * `tabindex="0"` nessa div automaticamente — e se o conteúdo transcluído
+     * já for ele mesmo focável nativamente (ex.: o exemplo "Usage" do demo usa
+     * <ge-button>, cujo <button> interno já tem seu próprio tabindex), o
+     * resultado são DOIS tab-stops adjacentes pra um único controle lógico: a
+     * div (role=button, com todo o estado ARIA) e o botão interno (sem
+     * nenhum aria-expanded/controls, name computado só do próprio label).
+     * Confirmado via inspeção do DOM/tab order ao vivo (2 focusable stops
+     * adjacentes de 31 na página demo). Fix: `$postLink` desabilita o tab-stop
+     * de qualquer descendente nativamente focável dentro do trigger
+     * (`tabindex="-1"`), preservando a div wrapper como único elemento focável
+     * — o nome acessível da div continua computado a partir do texto do
+     * descendente (accessible-name computation não depende de tabindex).
+     * Escopo: scan único no $postLink (conteúdo do trigger é tipicamente
+     * estático); não reobserva mudanças dinâmicas no slot default.
+     *
      * @param {boolean} [vm.modelValue] - aberto/fechado (controlado)
      * @param {Function} [vm.onUpdate] - callback { value: boolean }
      * @param {boolean} [vm.disabled] - bloqueia o toggle
@@ -12116,14 +12191,15 @@
       controller: CollapsibleController,
     });
 
-    CollapsibleController.$inject = ['geTv', 'geCollapsibleTheme', 'geId'];
+    CollapsibleController.$inject = ['$element', 'geTv', 'geCollapsibleTheme', 'geId'];
 
-    function CollapsibleController(geTv, geCollapsibleTheme, geId) {
+    function CollapsibleController($element, geTv, geCollapsibleTheme, geId) {
       var vm = this;
       var initialized = false;
 
       vm.$onInit = onInit;
       vm.$onChanges = onChanges;
+      vm.$postLink = postLink;
       vm.toggle = toggle;
 
       function onInit() {
@@ -12169,6 +12245,21 @@
         // Com unmount, ng-if controla presença; ng-show fica true enquanto montado.
         vm.panelVisible = vm.shouldUnmount ? true : vm.isOpen;
         vm.classes = geTv(geCollapsibleTheme)();
+      }
+
+      // Elimina o duplo tab-stop quando o conteúdo transcluído do trigger já
+      // é nativamente focável (ver comentário no topo do arquivo).
+      function postLink() {
+        var trigger = $element[0].querySelector('.ge-collapsible-trigger');
+        if (!trigger) {
+          return;
+        }
+        var focusable = trigger.querySelectorAll(
+          'a[href], button, input, select, textarea, [tabindex]'
+        );
+        for (var i = 0; i < focusable.length; i++) {
+          focusable[i].setAttribute('tabindex', '-1');
+        }
       }
     }
   })();
@@ -12637,106 +12728,285 @@
   (function () {
 
     // Portado de github.com/nuxt/ui v4.10.0, MIT License, Copyright (c) Nuxt Labs
-    // Upstream: theme/progress.ts — slots root/base/indicator/status (+ steps/step
-    // omitidos nesta etapa). Variants color/size; orientation/inverted/animation
-    // e compounds de animação fora do escopo (§7 barra simples). Altura da barra
-    // via compoundVariants size → slot base (string class no geTv). Tailwind v3:
-    // bg-accented → bg-[var(--ui-bg-accented)]; text-dimmed →
-    // text-[var(--ui-text-dimmed)]; bg-${color} → [var(--ui-*)]; neutral
-    // bg-inverted → bg-[var(--ui-bg-inverted)]. §5.7 N/A (sem /N sobre var(),
-    // sem ring/outline fora da escala, sem not-*). Indeterminate: uma animação
-    // simples data-[state=indeterminate]:animate-pulse (sem as 4 variantes
-    // carousel/swing/elastic do upstream).
+    // Upstream: theme/progress.ts (tag v4.10.0) — slots root/base/indicator/
+    // status/steps/step; variants animation/color/size/step/orientation/inverted;
+    // compounds inverted×orientation, size×orientation (h-* / w-*), 8
+    // orientation×animation. Tailwind v3: bg-accented → bg-[var(--ui-bg-accented)];
+    // text-dimmed → text-[var(--ui-text-dimmed)]; text-muted →
+    // text-[var(--ui-text-muted)]; bg-${color}/text-${color} → [var(--ui-*)];
+    // neutral bg-inverted → bg-[var(--ui-bg-inverted)], text-inverted →
+    // text-[var(--ui-text-inverted)]. §5.7 N/A (sem /N sobre var(), sem
+    // ring/outline fora da escala, sem not-*). motion-safe:/motion-reduce: nativos
+    // no TW 3.4.19. Keyframes carousel/swing/elastic (e verticais/rtl) em
+    // gravity-elements.css — animate-[name_2s_…] não gera @keyframes sozinho.
+    // defaultVariants.orientation = 'horizontal': adaptação Gravity (Vue faz via
+    // withDefaults; o tema TS não declara).
     angular.module('gravityElements.element').constant('geProgressTheme', {
       slots: {
-        root: 'gap-2 w-full flex flex-col',
-        base: 'relative overflow-hidden rounded-full bg-[var(--ui-bg-accented)] w-full',
+        root: 'gap-2',
+        base: 'relative overflow-hidden rounded-full bg-[var(--ui-bg-accented)]',
         indicator:
-          'rounded-full size-full transition-transform duration-200 ease-out data-[state=indeterminate]:animate-pulse',
-        status:
-          'flex text-[var(--ui-text-dimmed)] transition-[width] duration-200 flex-row items-center justify-end min-w-fit',
+          'rounded-full size-full transition-transform duration-200 ease-out motion-reduce:data-[state=indeterminate]:animate-pulse',
+        status: 'flex text-[var(--ui-text-dimmed)] transition-[width] duration-200',
+        steps: 'grid items-end',
+        step: 'truncate text-end row-start-1 col-start-1 transition-opacity',
       },
       variants: {
+        animation: {
+          carousel: '',
+          'carousel-inverse': '',
+          swing: '',
+          elastic: '',
+        },
         color: {
           primary: {
             indicator: 'bg-[var(--ui-primary)]',
+            steps: 'text-[var(--ui-primary)]',
           },
           secondary: {
             indicator: 'bg-[var(--ui-secondary)]',
+            steps: 'text-[var(--ui-secondary)]',
           },
           success: {
             indicator: 'bg-[var(--ui-success)]',
+            steps: 'text-[var(--ui-success)]',
           },
           info: {
             indicator: 'bg-[var(--ui-info)]',
+            steps: 'text-[var(--ui-info)]',
           },
           warning: {
             indicator: 'bg-[var(--ui-warning)]',
+            steps: 'text-[var(--ui-warning)]',
           },
           error: {
             indicator: 'bg-[var(--ui-error)]',
+            steps: 'text-[var(--ui-error)]',
           },
           neutral: {
             indicator: 'bg-[var(--ui-bg-inverted)]',
+            steps: 'text-[var(--ui-text-inverted)]',
           },
         },
         size: {
           '2xs': {
             status: 'text-xs',
+            steps: 'text-xs',
           },
           xs: {
             status: 'text-xs',
+            steps: 'text-xs',
           },
           sm: {
             status: 'text-sm',
+            steps: 'text-sm',
           },
           md: {
             status: 'text-sm',
+            steps: 'text-sm',
           },
           lg: {
             status: 'text-sm',
+            steps: 'text-sm',
           },
           xl: {
             status: 'text-base',
+            steps: 'text-base',
           },
           '2xl': {
             status: 'text-base',
+            steps: 'text-base',
+          },
+        },
+        step: {
+          active: {
+            step: 'opacity-100',
+          },
+          first: {
+            step: 'opacity-100 text-[var(--ui-text-muted)]',
+          },
+          other: {
+            step: 'opacity-0',
+          },
+          last: {
+            step: '',
+          },
+        },
+        orientation: {
+          horizontal: {
+            root: 'w-full flex flex-col',
+            base: 'w-full',
+            status: 'flex-row items-center justify-end min-w-fit',
+          },
+          vertical: {
+            root: 'h-full flex flex-row-reverse',
+            base: 'h-full',
+            status: 'flex-col justify-end min-h-fit',
+          },
+        },
+        inverted: {
+          true: {
+            status: 'self-end',
           },
         },
       },
       compoundVariants: [
         {
+          inverted: true,
+          orientation: 'horizontal',
+          class: {
+            step: 'text-start',
+            status: 'flex-row-reverse',
+          },
+        },
+        {
+          inverted: true,
+          orientation: 'vertical',
+          class: {
+            steps: 'items-start',
+            status: 'flex-col-reverse',
+          },
+        },
+        {
+          orientation: 'horizontal',
           size: '2xs',
           class: 'h-px',
         },
         {
+          orientation: 'horizontal',
           size: 'xs',
           class: 'h-0.5',
         },
         {
+          orientation: 'horizontal',
           size: 'sm',
           class: 'h-1',
         },
         {
+          orientation: 'horizontal',
           size: 'md',
           class: 'h-2',
         },
         {
+          orientation: 'horizontal',
           size: 'lg',
           class: 'h-3',
         },
         {
+          orientation: 'horizontal',
           size: 'xl',
           class: 'h-4',
         },
         {
+          orientation: 'horizontal',
           size: '2xl',
           class: 'h-5',
         },
+        {
+          orientation: 'vertical',
+          size: '2xs',
+          class: 'w-px',
+        },
+        {
+          orientation: 'vertical',
+          size: 'xs',
+          class: 'w-0.5',
+        },
+        {
+          orientation: 'vertical',
+          size: 'sm',
+          class: 'w-1',
+        },
+        {
+          orientation: 'vertical',
+          size: 'md',
+          class: 'w-2',
+        },
+        {
+          orientation: 'vertical',
+          size: 'lg',
+          class: 'w-3',
+        },
+        {
+          orientation: 'vertical',
+          size: 'xl',
+          class: 'w-4',
+        },
+        {
+          orientation: 'vertical',
+          size: '2xl',
+          class: 'w-5',
+        },
+        {
+          orientation: 'horizontal',
+          animation: 'carousel',
+          class: {
+            indicator:
+              'motion-safe:data-[state=indeterminate]:animate-[carousel_2s_ease-in-out_infinite] motion-safe:data-[state=indeterminate]:rtl:animate-[carousel-rtl_2s_ease-in-out_infinite]',
+          },
+        },
+        {
+          orientation: 'vertical',
+          animation: 'carousel',
+          class: {
+            indicator:
+              'motion-safe:data-[state=indeterminate]:animate-[carousel-vertical_2s_ease-in-out_infinite]',
+          },
+        },
+        {
+          orientation: 'horizontal',
+          animation: 'carousel-inverse',
+          class: {
+            indicator:
+              'motion-safe:data-[state=indeterminate]:animate-[carousel-inverse_2s_ease-in-out_infinite] motion-safe:data-[state=indeterminate]:rtl:animate-[carousel-inverse-rtl_2s_ease-in-out_infinite]',
+          },
+        },
+        {
+          orientation: 'vertical',
+          animation: 'carousel-inverse',
+          class: {
+            indicator:
+              'motion-safe:data-[state=indeterminate]:animate-[carousel-inverse-vertical_2s_ease-in-out_infinite]',
+          },
+        },
+        {
+          orientation: 'horizontal',
+          animation: 'swing',
+          class: {
+            indicator:
+              'motion-safe:data-[state=indeterminate]:animate-[swing_2s_ease-in-out_infinite]',
+          },
+        },
+        {
+          orientation: 'vertical',
+          animation: 'swing',
+          class: {
+            indicator:
+              'motion-safe:data-[state=indeterminate]:animate-[swing-vertical_2s_ease-in-out_infinite]',
+          },
+        },
+        {
+          orientation: 'horizontal',
+          animation: 'elastic',
+          class: {
+            indicator:
+              'motion-safe:data-[state=indeterminate]:animate-[elastic_2s_ease-in-out_infinite]',
+          },
+        },
+        {
+          orientation: 'vertical',
+          animation: 'elastic',
+          class: {
+            indicator:
+              'motion-safe:data-[state=indeterminate]:animate-[elastic-vertical_2s_ease-in-out_infinite]',
+          },
+        },
       ],
       defaultVariants: {
+        animation: 'carousel',
         color: 'primary',
         size: 'md',
+        orientation: 'horizontal',
       },
     });
   })();
@@ -12746,43 +13016,48 @@
     /**
      * geProgress — barra de progresso (Element).
      *
-     * Paridade com Nuxt UI Progress v4.10.0 (theme/progress.ts + Progress.vue),
-     * escopo §7: barra horizontal simples.
-     *
-     * Decisões de escopo:
-     * - Estado visual indeterminate quando `value` é null/undefined (sem
-     *   aria-valuenow, indicador sem transform fixo, data-state="indeterminate").
-     * - Feedback indeterminate: uma animação simples
-     *   `data-[state=indeterminate]:animate-pulse` — as 4 variantes
-     *   carousel/carousel-inverse/swing/elastic e a prop `animation` do upstream
-     *   ficam fora do binding contract desta etapa.
-     * - Fora: steps/step, orientation vertical, inverted, max como array.
+     * Paridade com Nuxt UI Progress v4.10.0 (theme/progress.ts + Progress.vue +
+     * keyframes.css). Escopo expandido 2026-08-13: orientation, inverted,
+     * animation (carousel/carousel-inverse/swing/elastic), max como array de
+     * steps. RTL no transform determinate fica fora (só LTR); classes rtl: e
+     * keyframes *-rtl entram no tema/CSS.
      *
      * Uso:
      *   <ge-progress value="value" max="100" status="true"></ge-progress>
-     *   <ge-progress color="success" size="lg"></ge-progress>
+     *   <ge-progress max="demo.progressMaxSteps" value="3"></ge-progress>
+     *   <ge-progress orientation="vertical" animation="swing"></ge-progress>
      *
      * @param {number|null} [vm.value] - valor atual; null/omitido = indeterminate
-     * @param {number} [vm.max=100] - máximo
+     * @param {number|string[]} [vm.max=100] - máximo, ou array de labels de step
      * @param {string} [vm.color='primary'] - primary|secondary|success|info|warning|error|neutral
      * @param {string} [vm.size='md'] - 2xs|xs|sm|md|lg|xl|2xl
      * @param {boolean} [vm.status] - mostra label de %
+     * @param {string} [vm.orientation='horizontal'] - horizontal|vertical
+     * @param {boolean} [vm.inverted] - inverte direção visual da barra/status
+     * @param {string} [vm.animation='carousel'] - carousel|carousel-inverse|swing|elastic
      */
+    var progressTemplate =
+      '<div class="{{ vm.classes.root }}">' +
+      '  <div ng-if="vm.showStatus" class="{{ vm.classes.status }}"' +
+      '    ng-style="vm.statusStyle">{{ vm.percent }}%</div>' +
+      '  <div role="progressbar" class="{{ vm.classes.base }}"' +
+      '    style="transform: translateZ(0)"' +
+      '    aria-valuemin="0"' +
+      '    ng-attr-aria-orientation="{{ vm.resolvedOrientation }}"' +
+      '    ng-attr-aria-valuemax="{{ vm.ariaValueMax }}"' +
+      '    ng-attr-aria-valuenow="{{ vm.ariaValueNow }}">' +
+      '    <div class="{{ vm.classes.indicator }}"' +
+      '      ng-attr-data-state="{{ vm.dataState }}"' +
+      '      ng-style="vm.indicatorStyle"></div>' +
+      '  </div>' +
+      '  <div ng-if="vm.hasSteps" class="{{ vm.classes.steps }}">' +
+      '    <div ng-repeat="step in vm.steps track by $index"' +
+      '      class="{{ step.classes }}">{{ step.label }}</div>' +
+      '  </div>' +
+      '</div>';
+
     angular.module('gravityElements.element').component('geProgress', {
-      template:
-        '<div class="{{ vm.classes.root }}">' +
-        '  <div ng-if="vm.showStatus" class="{{ vm.classes.status }}"' +
-        '    ng-style="vm.statusStyle">{{ vm.percent }}%</div>' +
-        '  <div role="progressbar" class="{{ vm.classes.base }}"' +
-        '    style="transform: translateZ(0)"' +
-        '    aria-valuemin="0"' +
-        '    ng-attr-aria-valuemax="{{ vm.ariaValueMax }}"' +
-        '    ng-attr-aria-valuenow="{{ vm.ariaValueNow }}">' +
-        '    <div class="{{ vm.classes.indicator }}"' +
-        '      ng-attr-data-state="{{ vm.dataState }}"' +
-        '      ng-style="vm.indicatorStyle"></div>' +
-        '  </div>' +
-        '</div>',
+      template: progressTemplate,
       controllerAs: 'vm',
       bindings: {
         value: '<',
@@ -12790,6 +13065,9 @@
         color: '@',
         size: '@',
         status: '<',
+        orientation: '@',
+        inverted: '<',
+        animation: '@',
       },
       controller: ProgressController,
     });
@@ -12801,24 +13079,56 @@
       vm.$onInit = render;
       vm.$onChanges = render;
 
+      function stepVariant(index, numericValue, realMax) {
+        var isActive = index === numericValue;
+        var isFirst = index === 0;
+        var isLast = index === realMax;
+
+        if (isActive && !isFirst) {
+          return 'active';
+        }
+        if (isFirst && isActive) {
+          return 'first';
+        }
+        if (isLast && isActive) {
+          return 'last';
+        }
+        return 'other';
+      }
+
       function render() {
         var isIndeterminate = vm.value === null || vm.value === undefined;
+        var hasSteps = Array.isArray(vm.max);
+        var orientation = vm.orientation || 'horizontal';
+        var inverted = vm.inverted === true;
+        var animation = vm.animation || 'carousel';
+        var color = vm.color || 'primary';
+        var size = vm.size || 'md';
         var realMax;
         var percent;
         var numericValue;
+        var tvProps;
+        var i;
+        var steps;
 
         if (isIndeterminate) {
           realMax = undefined;
           percent = undefined;
+          numericValue = undefined;
         } else {
-          realMax =
+          numericValue = Number(vm.value);
+          if (hasSteps) {
+            realMax = vm.max.length - 1;
+          } else if (
             vm.max !== undefined &&
             vm.max !== null &&
             !isNaN(Number(vm.max)) &&
             Number(vm.max) > 0
-              ? Number(vm.max)
-              : 100;
-          numericValue = Number(vm.value);
+          ) {
+            realMax = Number(vm.max);
+          } else {
+            realMax = 100;
+          }
           if (isNaN(numericValue) || numericValue < 0) {
             percent = 0;
           } else if (numericValue > realMax) {
@@ -12828,24 +13138,62 @@
           }
         }
 
+        tvProps = {
+          color: color,
+          size: size,
+          orientation: orientation,
+          inverted: inverted,
+          animation: animation,
+        };
+
         vm.isIndeterminate = isIndeterminate;
+        vm.hasSteps = hasSteps && vm.max.length > 0;
         vm.percent = percent;
         vm.showStatus = !isIndeterminate && !!vm.status;
+        vm.resolvedOrientation = orientation;
         vm.ariaValueMax = isIndeterminate ? undefined : realMax;
         vm.ariaValueNow = isIndeterminate ? undefined : numericValue;
         vm.dataState = isIndeterminate ? 'indeterminate' : undefined;
-        vm.indicatorStyle =
-          percent === undefined
-            ? undefined
-            : { transform: 'translateX(-' + (100 - percent) + '%)' };
-        vm.statusStyle = {
-          width: Math.max(percent === undefined ? 0 : percent, 0) + '%',
-        };
+        vm.classes = geTv(geProgressTheme)(tvProps);
 
-        vm.classes = geTv(geProgressTheme)({
-          color: vm.color || 'primary',
-          size: vm.size || 'md',
-        });
+        if (percent === undefined) {
+          vm.indicatorStyle = undefined;
+        } else if (orientation === 'vertical') {
+          vm.indicatorStyle = {
+            transform:
+              'translateY(' + (inverted ? '' : '-') + (100 - percent) + '%)',
+          };
+        } else {
+          vm.indicatorStyle = {
+            transform:
+              'translateX(' + (inverted ? '' : '-') + (100 - percent) + '%)',
+          };
+        }
+
+        if (orientation === 'vertical') {
+          vm.statusStyle = {
+            height: Math.max(percent === undefined ? 0 : percent, 0) + '%',
+          };
+        } else {
+          vm.statusStyle = {
+            width: Math.max(percent === undefined ? 0 : percent, 0) + '%',
+          };
+        }
+
+        steps = [];
+        if (vm.hasSteps) {
+          for (i = 0; i < vm.max.length; i += 1) {
+            steps.push({
+              label: vm.max[i],
+              classes: geTv(geProgressTheme)(
+                angular.extend({}, tvProps, {
+                  step: stepVariant(i, numericValue, realMax),
+                })
+              ).step,
+            });
+          }
+        }
+        vm.steps = steps;
       }
     }
   })();
@@ -13100,9 +13448,22 @@
     // Upstream: theme/skeleton.ts — base top-level normalizado para slots.base (geTv).
     // Adaptação TW3: bg-elevated → bg-[var(--ui-bg-elevated)] (token já em gravity-elements.css).
     // Sem variants / compoundVariants / defaultVariants.
+    //
+    // Correção pós-revisão (2026-08-09, aplicada diretamente, sem passar pelo Cursor):
+    // upstream (Vue) aplica a `class` do consumidor (ex. `h-4 w-[250px]`) direto no
+    // MESMO elemento raiz que tem `animate-pulse`/`bg-elevated` (fallthrough attrs de
+    // componente de raiz única). Aqui `geSkeleton` é `<ge-skeleton>` (host) envolvendo
+    // um `<div>` interno (`skeleton.html`) — width/height/classes aplicados no host
+    // (via `style=` ou classe Tailwind) NÃO chegam ao `<div>` interno automaticamente,
+    // que ficava com `height: 0` (div vazio, sem conteúdo, sem tamanho próprio) mesmo
+    // com o host corretamente dimensionado. Resultado: skeleton invisível sempre que
+    // dimensionado no host (uso natural do componente, replicado em `demo/pages/element/skeleton.html`).
+    // Corrigido adicionando `w-full h-full` pro `<div>` interno herdar 100% da caixa
+    // do host — preserva a decisão de "sem tamanho próprio" (nenhum `size-*` fixo
+    // no tema, igual upstream) só resolvendo o preenchimento do host.
     angular.module('gravityElements.element').constant('geSkeletonTheme', {
       slots: {
-        base: 'animate-pulse rounded-md bg-[var(--ui-bg-elevated)]',
+        base: 'w-full h-full animate-pulse rounded-md bg-[var(--ui-bg-elevated)]',
       },
     });
   })();

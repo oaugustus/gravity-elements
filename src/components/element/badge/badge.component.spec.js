@@ -105,6 +105,15 @@ describe('geBadge', function () {
     expect(vm.classes.base).toContain('bg-[var(--ui-bg-inverted)]');
     expect(vm.classes.base).not.toContain('bg-[var(--ui-primary)]');
   });
+
+  it('não renderiza span de transclude vazio quando só label é usado (evita gap fantasma descentralizando o texto)', function () {
+    var compiled = compileBadge('<ge-badge label="Badge"></ge-badge>');
+    var root = compiled.element.children()[0];
+    var spans = root.querySelectorAll('span');
+
+    expect(spans.length).toBe(1);
+    expect(spans[0].textContent.trim()).toBe('Badge');
+  });
 });
 
 

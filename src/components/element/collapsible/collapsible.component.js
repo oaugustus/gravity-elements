@@ -23,6 +23,30 @@
    *     <ge-collapsible-content>Conteúdo</ge-collapsible-content>
    *   </ge-collapsible>
    *
+   * Duplo tab-stop (2026-08-13, encontrado em revisão, não reportado pelo
+   * usuário): upstream usa `<CollapsibleTrigger as-child>` — Reka injeta
+   * aria-expanded/aria-controls/data-state direto no elemento real que o
+   * consumidor passa (ex.: um UButton), sem criar wrapper próprio, então só
+   * existe UM elemento focável. AngularJS não tem equivalente de `as-child`
+   * (clonar attrs pro filho); a única opção estrutural aqui é a `<div
+   * class="ge-collapsible-trigger">` de fato existir no DOM como host da
+   * ARIA/ng-click. Problema: o `ngAria` (módulo em gravityElements.core)
+   * detecta `ng-click` sem role nativo e injeta `role="button"` +
+   * `tabindex="0"` nessa div automaticamente — e se o conteúdo transcluído
+   * já for ele mesmo focável nativamente (ex.: o exemplo "Usage" do demo usa
+   * <ge-button>, cujo <button> interno já tem seu próprio tabindex), o
+   * resultado são DOIS tab-stops adjacentes pra um único controle lógico: a
+   * div (role=button, com todo o estado ARIA) e o botão interno (sem
+   * nenhum aria-expanded/controls, name computado só do próprio label).
+   * Confirmado via inspeção do DOM/tab order ao vivo (2 focusable stops
+   * adjacentes de 31 na página demo). Fix: `$postLink` desabilita o tab-stop
+   * de qualquer descendente nativamente focável dentro do trigger
+   * (`tabindex="-1"`), preservando a div wrapper como único elemento focável
+   * — o nome acessível da div continua computado a partir do texto do
+   * descendente (accessible-name computation não depende de tabindex).
+   * Escopo: scan único no $postLink (conteúdo do trigger é tipicamente
+   * estático); não reobserva mudanças dinâmicas no slot default.
+   *
    * @param {boolean} [vm.modelValue] - aberto/fechado (controlado)
    * @param {Function} [vm.onUpdate] - callback { value: boolean }
    * @param {boolean} [vm.disabled] - bloqueia o toggle
@@ -62,14 +86,15 @@
     controller: CollapsibleController,
   });
 
-  CollapsibleController.$inject = ['geTv', 'geCollapsibleTheme', 'geId'];
+  CollapsibleController.$inject = ['$element', 'geTv', 'geCollapsibleTheme', 'geId'];
 
-  function CollapsibleController(geTv, geCollapsibleTheme, geId) {
+  function CollapsibleController($element, geTv, geCollapsibleTheme, geId) {
     var vm = this;
     var initialized = false;
 
     vm.$onInit = onInit;
     vm.$onChanges = onChanges;
+    vm.$postLink = postLink;
     vm.toggle = toggle;
 
     function onInit() {
@@ -115,6 +140,21 @@
       // Com unmount, ng-if controla presença; ng-show fica true enquanto montado.
       vm.panelVisible = vm.shouldUnmount ? true : vm.isOpen;
       vm.classes = geTv(geCollapsibleTheme)();
+    }
+
+    // Elimina o duplo tab-stop quando o conteúdo transcluído do trigger já
+    // é nativamente focável (ver comentário no topo do arquivo).
+    function postLink() {
+      var trigger = $element[0].querySelector('.ge-collapsible-trigger');
+      if (!trigger) {
+        return;
+      }
+      var focusable = trigger.querySelectorAll(
+        'a[href], button, input, select, textarea, [tabindex]'
+      );
+      for (var i = 0; i < focusable.length; i++) {
+        focusable[i].setAttribute('tabindex', '-1');
+      }
     }
   }
 })();

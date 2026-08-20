@@ -36,7 +36,7 @@
       '    aria-hidden="true"></i>' +
       '  <span ng-if="vm.hasLabel"' +
       '    class="{{ vm.classes.label }}">{{ vm.label }}</span>' +
-      '  <span ng-transclude></span>' +
+      '  <span ng-if="vm.hasTransclude" ng-transclude></span>' +
       '  <i ng-if="vm.showTrailing"' +
       '    class="{{ vm.trailingIconName }} {{ vm.classes.trailingIcon }}"' +
       '    aria-hidden="true"></i>' +
@@ -86,6 +86,7 @@
       }
 
       vm.hasLabel = hasLabel;
+      vm.hasTransclude = hasTransclude;
       vm.showLeading = resolveIsLeading();
       vm.showTrailing = resolveIsTrailing();
       vm.leadingIconName = vm.leadingIcon || vm.icon || '';

@@ -12,6 +12,19 @@
    * collapsible === 'none': aside inline (só inner; wrapper com `contents`).
    * collapsible offcanvas|icon: gap spacer + container fixed + data-state.
    *
+   * header slot custom (2026-08-13, bug real apontado pelo usuário via
+   * screenshot — × colado ao label em vez de na borda direita): a div do
+   * slot `header` (ng-transclude="header") não tinha `flex-1`, então não
+   * empurrava a div `actions` (com o botão de toggle/×) pra ponta do header
+   * — os dois ficavam left-aligned, lado a lado, com todo o espaço vazio
+   * sobrando à direita. Corrigido com `min-w-0 flex-1` na div do slot
+   * (mesma classe que `wrapper` já usa pro caso title/description — Sidebar
+   * upstream, ao contrário do AngularJS aqui, troca o fallback inteiro
+   * (wrapper+actions) pelo conteúdo do slot custom via `<slot name="header">
+   * ...fallback...</slot>`; replicar esse comportamento full built-in do Vue
+   * exigiria reestruturar o transclude — fora de escopo dessa correção
+   * pontual, que só resolve o alinhamento visual reportado).
+   *
    * Toggle: <button> nativo (§5.4.1) até existir geButton — trocar depois.
    *
    * Uso:
@@ -44,7 +57,7 @@
       '    ng-attr-data-state="{{ vm.isCollapsible ? vm.dataState : undefined }}">' +
       '    <div class="{{ vm.classes.inner }}">' +
       '      <div ng-if="vm.hasHeader" class="{{ vm.classes.header }}">' +
-      '        <div ng-if="vm.hasHeaderSlot" ng-transclude="header"></div>' +
+      '        <div ng-if="vm.hasHeaderSlot" class="min-w-0 flex-1" ng-transclude="header"></div>' +
       '        <div ng-if="!vm.hasHeaderSlot && vm.hasWrapper" class="{{ vm.classes.wrapper }}">' +
       '          <p ng-if="vm.hasTitle" class="{{ vm.classes.title }}">' +
       '            <span ng-if="vm.hasTitleSlot" ng-transclude="title"></span>' +

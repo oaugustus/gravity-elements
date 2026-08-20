@@ -118,5 +118,23 @@ describe('geButton', function () {
     expect(root.querySelector('i')).not.toBeNull();
     expect(root.querySelector('i').className).toContain('animate-spin');
   });
+
+  it('não renderiza span de transclude vazio quando só label é usado (evita gap fantasma descentralizando o texto)', function () {
+    var compiled = compileButton('<ge-button label="Button"></ge-button>');
+    var root = compiled.element.children()[0];
+    var spans = root.querySelectorAll('span');
+
+    expect(spans.length).toBe(1);
+    expect(spans[0].textContent.trim()).toBe('Button');
+  });
+
+  it('renderiza span de transclude quando há conteúdo transcluído', function () {
+    var compiled = compileButton('<ge-button label="Button">Extra</ge-button>');
+    var root = compiled.element.children()[0];
+    var spans = root.querySelectorAll('span');
+
+    expect(spans.length).toBe(2);
+    expect(root.textContent).toContain('Extra');
+  });
 });
 

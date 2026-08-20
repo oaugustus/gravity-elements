@@ -15,6 +15,24 @@
   // inverted/default/elevated/accented/muted. Opacidades /N sobre var() NÃO
   // compilam no TW 3.4.19 → color-mix. focus-visible:outline-3 →
   // focus-visible:outline-[3px] (precedente Banner).
+  // w-full/h-full no fieldGroup (2026-08-13, bug real apontado pelo usuário
+  // no FieldGroup): no upstream Vue, <UButton> É o próprio item flex
+  // (fragment/single-root), então o align-items:stretch padrão do
+  // FieldGroup (sem items-center no tema — decisão deliberada pra igualar
+  // altura/largura de irmãos com tamanho diferente, ex. Badge+Input) estica
+  // o <button> visível direto. No AngularJS, <ge-button> é um host de
+  // verdade que ENVOLVE o <button> — o host estica (vira item flex), mas
+  // sem w-full/h-full o <button> interno mantém o tamanho natural, deixando
+  // gap invisível e desalinhando bordas com o irmão (medido: width 67.44 vs
+  // 65.45 no orientation=vertical Submit/Cancel, deveriam ser iguais como
+  // no upstream — mesma classe de bug do host/inner do geSkeleton).
+  // NÃO colocado em slots.base (global): fora de um FieldGroup, o host
+  // <ge-button> normalmente é `display:inline` (não é item flex), e
+  // width/height percentual no <button> interno acabaria resolvendo contra
+  // o containing block do ancestral em bloco mais próximo (pulando o host
+  // inline) — ex. a largura da página inteira — regressão grave. Só faz
+  // sentido width/height 100% quando o host de fato virou item flex
+  // esticado (dentro do fieldGroup), por isso vai nas variants.fieldGroup.
   angular.module('gravityElements.element').constant('geButtonTheme', {
     slots: {
       base:
@@ -28,9 +46,9 @@
     variants: {
       fieldGroup: {
         horizontal:
-          '[ge-button:not(:only-child):first-child_&]:rounded-e-none [ge-button:not(:only-child):last-child_&]:rounded-s-none [ge-button:not(:last-child):not(:first-child)_&]:rounded-none focus-visible:z-[1]',
+          'h-full [ge-button:not(:only-child):first-child_&]:rounded-e-none [ge-button:not(:only-child):last-child_&]:rounded-s-none [ge-button:not(:last-child):not(:first-child)_&]:rounded-none focus-visible:z-[1]',
         vertical:
-          '[ge-button:not(:only-child):first-child_&]:rounded-b-none [ge-button:not(:only-child):last-child_&]:rounded-t-none [ge-button:not(:last-child):not(:first-child)_&]:rounded-none focus-visible:z-[1]',
+          'w-full [ge-button:not(:only-child):first-child_&]:rounded-b-none [ge-button:not(:only-child):last-child_&]:rounded-t-none [ge-button:not(:last-child):not(:first-child)_&]:rounded-none focus-visible:z-[1]',
       },
       color: {
         primary: '',

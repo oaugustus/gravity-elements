@@ -13,7 +13,7 @@
   >
     <div class="{{ vm.classes.inner }}">
       <div ng-if="vm.hasHeader" class="{{ vm.classes.header }}">
-        <div ng-if="vm.hasHeaderSlot" ng-transclude="header"></div>
+        <div ng-if="vm.hasHeaderSlot" class="min-w-0 flex-1" ng-transclude="header"></div>
         <div ng-if="!vm.hasHeaderSlot && vm.hasWrapper" class="{{ vm.classes.wrapper }}">
           <p ng-if="vm.hasTitle" class="{{ vm.classes.title }}">
             <span ng-if="vm.hasTitleSlot" ng-transclude="title"></span>

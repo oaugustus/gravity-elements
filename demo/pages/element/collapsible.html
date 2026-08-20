@@ -29,7 +29,10 @@
     <div class="demo-item" style="width: 100%">
       <span class="label">default-open</span>
       <ge-collapsible default-open="true">
-        <button type="button">Trigger nativo (default-open)</button>
+        <button
+          type="button"
+          class="rounded-md border border-[var(--ui-border)] bg-[var(--ui-bg-elevated)] px-3 py-1.5 text-sm font-medium text-[var(--ui-text)] transition-colors hover:bg-[var(--ui-bg-accented)] cursor-pointer"
+        >Trigger nativo (default-open)</button>
         <ge-collapsible-content>
           <p class="demo-hint">Painel inicia aberto.</p>
         </ge-collapsible-content>
@@ -38,7 +41,11 @@
     <div class="demo-item" style="width: 100%">
       <span class="label">disabled</span>
       <ge-collapsible disabled="true" default-open="false">
-        <button type="button" disabled>Desabilitado</button>
+        <button
+          type="button"
+          disabled
+          class="rounded-md border border-[var(--ui-border)] bg-[var(--ui-bg-elevated)] px-3 py-1.5 text-sm font-medium text-[var(--ui-text)] transition-colors cursor-not-allowed opacity-50"
+        >Desabilitado</button>
         <ge-collapsible-content>
           <p>Não deve abrir.</p>
         </ge-collapsible-content>
