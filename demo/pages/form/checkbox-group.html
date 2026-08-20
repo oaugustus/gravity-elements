@@ -1,0 +1,135 @@
+<section class="demo-section">
+  <h2>geCheckboxGroup</h2>
+  <p class="demo-hint">
+    Grupo de checkboxes nativos com <code>ng-model</code> array. Espelha os
+    exemplos Usage, Legend, Color, Variant (list/card/table), Size,
+    Orientation e Disabled da doc Nuxt UI v4.10.0 —
+    <a href="https://ui.nuxt.com/docs/components/checkbox-group"
+      >ui.nuxt.com/docs/components/checkbox-group</a
+    >.
+    Modelo atual do uso básico:
+    <code>{{ demo.checkboxGroupValue }}</code>.
+  </p>
+  <div class="demo-row" style="flex-direction: column; align-items: flex-start; gap: 0.75rem">
+    <div class="demo-item">
+      <span class="label">Uso básico (ng-model array)</span>
+      <ge-checkbox-group
+        ng-model="demo.checkboxGroupValue"
+        options="demo.checkboxGroupOptions"
+      ></ge-checkbox-group>
+    </div>
+  </div>
+</section>
+
+<section class="demo-section">
+  <h3>Legend + objetos (description / disabled por opção)</h3>
+  <div class="demo-row" style="flex-direction: column; align-items: flex-start; gap: 0.75rem">
+    <ge-checkbox-group
+      ng-model="demo.checkboxGroupObjectValue"
+      options="demo.checkboxGroupObjectOptions"
+      legend="Theme"
+    ></ge-checkbox-group>
+  </div>
+</section>
+
+<section class="demo-section">
+  <h3>Color</h3>
+  <div class="demo-row" style="flex-wrap: wrap; gap: 2rem; align-items: flex-start">
+    <ge-checkbox-group
+      ng-model="demo.checkboxGroupValue"
+      options="demo.checkboxGroupOptions"
+      color="primary"
+      legend="Primary"
+    ></ge-checkbox-group>
+    <ge-checkbox-group
+      ng-model="demo.checkboxGroupValue"
+      options="demo.checkboxGroupOptions"
+      color="neutral"
+      legend="Neutral"
+    ></ge-checkbox-group>
+  </div>
+</section>
+
+<section class="demo-section">
+  <h3>Variant</h3>
+  <div class="demo-row" style="flex-direction: column; align-items: stretch; gap: 1.25rem; max-width: 24rem">
+    <ge-checkbox-group
+      ng-model="demo.checkboxGroupValue"
+      options="demo.checkboxGroupOptions"
+      variant="list"
+      legend="List"
+    ></ge-checkbox-group>
+    <ge-checkbox-group
+      ng-model="demo.checkboxGroupCardValue"
+      options="demo.checkboxGroupOptions"
+      variant="card"
+      legend="Card"
+    ></ge-checkbox-group>
+    <ge-checkbox-group
+      ng-model="demo.checkboxGroupCardValue"
+      options="demo.checkboxGroupOptions"
+      variant="table"
+      legend="Table"
+    ></ge-checkbox-group>
+  </div>
+</section>
+
+<section class="demo-section">
+  <h3>Size</h3>
+  <div class="demo-row" style="flex-wrap: wrap; gap: 2rem; align-items: flex-start">
+    <ge-checkbox-group
+      ng-model="demo.checkboxGroupValue"
+      options="demo.checkboxGroupOptions"
+      size="xs"
+      legend="xs"
+    ></ge-checkbox-group>
+    <ge-checkbox-group
+      ng-model="demo.checkboxGroupValue"
+      options="demo.checkboxGroupOptions"
+      size="sm"
+      legend="sm"
+    ></ge-checkbox-group>
+    <ge-checkbox-group
+      ng-model="demo.checkboxGroupValue"
+      options="demo.checkboxGroupOptions"
+      size="md"
+      legend="md"
+    ></ge-checkbox-group>
+    <ge-checkbox-group
+      ng-model="demo.checkboxGroupValue"
+      options="demo.checkboxGroupOptions"
+      size="lg"
+      legend="lg"
+    ></ge-checkbox-group>
+    <ge-checkbox-group
+      ng-model="demo.checkboxGroupValue"
+      options="demo.checkboxGroupOptions"
+      size="xl"
+      legend="xl"
+    ></ge-checkbox-group>
+  </div>
+</section>
+
+<section class="demo-section">
+  <h3>Orientation</h3>
+  <div class="demo-row" style="flex-direction: column; align-items: flex-start; gap: 0.75rem">
+    <ge-checkbox-group
+      ng-model="demo.checkboxGroupValue"
+      options="demo.checkboxGroupOptions"
+      orientation="horizontal"
+      legend="Horizontal"
+    ></ge-checkbox-group>
+  </div>
+</section>
+
+<section class="demo-section">
+  <h3>Disabled</h3>
+  <div class="demo-row" style="flex-direction: column; align-items: flex-start; gap: 0.75rem">
+    <ge-checkbox-group
+      ng-model="demo.checkboxGroupDisabledValue"
+      options="demo.checkboxGroupOptions"
+      disabled="true"
+      legend="Grupo desabilitado"
+    ></ge-checkbox-group>
+  </div>
+</section>

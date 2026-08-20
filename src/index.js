@@ -77,6 +77,8 @@ import './components/element/skeleton/skeleton.theme.js';
 import './components/element/skeleton/skeleton.component.js';
 import './components/form/checkbox/checkbox.theme.js';
 import './components/form/checkbox/checkbox.component.js';
+import './components/form/checkbox-group/checkbox-group.theme.js';
+import './components/form/checkbox-group/checkbox-group.component.js';
 import './gravity-elements.module.js';
 
 

@@ -15,6 +15,29 @@
     vm.checkboxCard = false;
     vm.checkboxDisabled = true;
     vm.checkboxIndeterminate = false;
+    vm.checkboxGroupValue = ['System'];
+    vm.checkboxGroupOptions = ['System', 'Light', 'Dark'];
+    vm.checkboxGroupObjectOptions = [
+      {
+        value: 'system',
+        label: 'System',
+        description: 'This is the first option.',
+      },
+      {
+        value: 'light',
+        label: 'Light',
+        description: 'This is the second option.',
+      },
+      {
+        value: 'dark',
+        label: 'Dark',
+        description: 'This is the third option.',
+        disabled: true,
+      },
+    ];
+    vm.checkboxGroupObjectValue = ['system'];
+    vm.checkboxGroupCardValue = ['System'];
+    vm.checkboxGroupDisabledValue = ['System'];
     vm.collapsibleOpen = true;
     vm.sidebarOpen = true;
     vm.errorCleared = false;

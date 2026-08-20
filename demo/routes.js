@@ -84,6 +84,9 @@
       .when('/form/checkbox', {
         templateUrl: '/demo/pages/form/checkbox.html',
       })
+      .when('/form/checkbox-group', {
+        templateUrl: '/demo/pages/form/checkbox-group.html',
+      })
       .otherwise({
         redirectTo: '/layout/app',
       });

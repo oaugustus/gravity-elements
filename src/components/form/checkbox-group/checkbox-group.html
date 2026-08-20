@@ -1,0 +1,60 @@
+<div class="{{ vm.classes.root }}">
+  <fieldset
+    class="{{ vm.classes.fieldset }}"
+    role="group"
+    aria-invalid="{{ !!(vm.ngModelCtrl.$invalid && vm.ngModelCtrl.$dirty) }}"
+    ng-attr-aria-required="{{ vm.ngModelCtrl.$validators.required ? 'true' : undefined }}"
+    ng-attr-aria-labelledby="{{ vm.legendIdAttr }}"
+    ng-attr-aria-describedby="{{ vm.describedByAttr }}"
+    ng-attr-data-is-disabled="{{ vm.dataDisabled }}"
+  >
+    <legend
+      ng-if="vm.hasLegend"
+      id="{{ vm.legendId }}"
+      class="{{ vm.classes.legend }}"
+    >
+      {{ vm.legend }}
+    </legend>
+    <div
+      ng-repeat="item in vm.items track by item.id"
+      class="{{ vm.classes.item }}"
+      ng-attr-data-is-checked="{{ item.dataChecked }}"
+      ng-attr-data-is-disabled="{{ item.dataDisabled }}"
+    >
+      <label
+        class="{{ item.classes.root }}"
+        ng-attr-data-is-checked="{{ item.dataChecked }}"
+        ng-attr-data-is-disabled="{{ item.dataDisabled }}"
+      >
+        <div class="{{ item.classes.container }}">
+          <span class="relative inline-flex shrink-0 overflow-hidden rounded">
+            <input
+              type="checkbox"
+              id="{{ item.inputId }}"
+              class="{{ item.classes.base }}"
+              ng-checked="item.checked"
+              ng-click="vm.onToggle(item, $event)"
+              ng-disabled="item.isDisabled"
+              ng-attr-data-is-checked="{{ item.dataChecked }}"
+              ng-attr-data-is-disabled="{{ item.dataDisabled }}"
+            />
+            <span ng-if="item.showIndicator" class="{{ item.classes.indicator }}">
+              <i
+                class="{{ item.resolvedIcon }} {{ item.classes.icon }}"
+                aria-hidden="true"
+              ></i>
+            </span>
+          </span>
+        </div>
+        <div ng-if="item.hasText" class="{{ item.classes.wrapper }}">
+          <span ng-if="item.hasLabel" class="{{ item.classes.label }}">{{
+            item.label
+          }}</span>
+          <p ng-if="item.hasDescription" class="{{ item.classes.description }}">
+            {{ item.description }}
+          </p>
+        </div>
+      </label>
+    </div>
+  </fieldset>
+</div>
